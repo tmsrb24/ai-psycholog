@@ -242,6 +242,8 @@ export default function Home() {
     setLoading(true);
 
     try {
+      console.log("Odesílám zprávu na API:", input);
+      
       // Prepare request data
       const requestData = {
         messages: newMessages,
@@ -250,7 +252,11 @@ export default function Home() {
         saveHistory
       };
       
+      console.log("Request data:", JSON.stringify(requestData, null, 2));
+      
       const res = await axios.post<ApiResponse>('/api/chat', requestData);
+      
+      console.log("API odpověď:", res.data);
       
       // Create a properly typed assistant message
       const assistantMessage: Message = {

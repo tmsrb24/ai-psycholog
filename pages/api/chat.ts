@@ -134,10 +134,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     apiKey: anthropicApiKey,
   });
 
+  // Logování pro debugging
+  console.log("API Handler spuštěn");
+  console.log("API klíč k dispozici:", !!anthropicApiKey);
+  console.log("Počet zpráv:", messages.length);
+  
   try {
     // Kontrola poslední zprávy uživatele na krizová slova
     const lastUserMessage = messages.find((msg) => msg.role === 'user');
+    console.log("Poslední zpráva uživatele:", lastUserMessage?.content);
+    
     if (lastUserMessage && detectCrisis(lastUserMessage.content)) {
+      console.log("Detekována krizová situace");
       return res.status(200).json({ 
         role: 'assistant', 
         content: `Děkuji za vaši upřímnost. Zdá se, že procházíte velmi náročným obdobím. Chtěl bych vám připomenout, že jako AI asistent vám mohu poskytnout podporu, ale v situacích, kdy se cítíte v ohrožení, je důležité kontaktovat odborníky, kteří vám mohou okamžitě pomoci.\n\n${CRISIS_RESOURCES}\n\nJsem tu pro vás a můžeme pokračovat v rozhovoru, ale prosím, zvažte kontaktování některé z těchto služeb pro okamžitou podporu.`,
@@ -225,9 +233,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
   } catch (error) {
     console.error('Chyba při komunikaci s Anthropic API:', error);
+    
+    // Detailnější logování chyby
+    if (error instanceof Error) {
+      console.error('Typ chyby:', error.name);
+      console.error('Zpráva chyby:', error.message);
+      console.error('Stack trace:', error.stack);
+    }
+    
+    // Pokud je to chyba z Anthropic API, logujeme více detailů
+    if (error && typeof error === 'object' && 'status' in error) {
+      console.error('API status:', (error as any).status);
+      console.error('API error:', JSON.stringify(error, null, 2));
+    }
+    
     return res.status(500).json({ 
       role: 'assistant', 
-      content: 'Omlouvám se, nastala chyba při zpracování vaší zprávy. Zkuste to prosím znovu za chvíli.' 
+      content: 'Omlouvám se, nastala chyba při zpracování vaší zprávy. Zkuste to prosím znovu za chvíli. Chyba: ' + (error instanceof Error ? error.message : String(error))
     });
   }
 }
