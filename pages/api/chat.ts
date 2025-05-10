@@ -199,14 +199,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       });
     }
 
-    // Volání Anthropic API
+    console.log("Připravené zprávy pro Anthropic API:", JSON.stringify(anthropicMessages, null, 2));
+    console.log("Systémový prompt:", systemPrompt);
+    
+    // Volání Anthropic API s novějším modelem
+    console.log("Volání Anthropic API...");
     const response = await anthropic.messages.create({
-      model: 'claude-3-opus-20240229',
+      model: 'claude-3-haiku-20240307', // Použijeme menší a novější model, který je pravděpodobně dostupný
       max_tokens: 1000,
       temperature: 0.7,
       messages: anthropicMessages,
       system: systemPrompt, // Použijeme také system parametr, který Claude podporuje
     });
+    
+    console.log("Odpověď od Anthropic API obdržena");
 
     // Zpracování odpovědi
     if (response && response.content && response.content.length > 0) {
