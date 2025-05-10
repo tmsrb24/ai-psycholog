@@ -202,13 +202,42 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     console.log("Volání Anthropic API...");
     let response;
     try {
-      response = await anthropic.messages.create({
-        model: 'claude-3-haiku-20240307', // Použijeme původní model, který byl v kódu
-        max_tokens: 1000,
-        temperature: 0.7,
-        messages: anthropicMessages,
-        system: systemPrompt, // Použijeme pouze system parametr pro předání systémového promptu
-      });
+      // Zkusíme několik modelů, které by mohly být dostupné
+      const availableModels = [
+        'claude-3-haiku-20240307',
+        'claude-3-haiku',
+        'claude-3-opus',
+        'claude-3-sonnet',
+        'claude-2',
+        'claude-instant-1.2'
+      ];
+      
+      let modelError = null;
+      
+      // Zkusíme postupně všechny modely
+      for (const model of availableModels) {
+        try {
+          console.log(`Zkouším model: ${model}`);
+          response = await anthropic.messages.create({
+            model: model,
+            max_tokens: 1000,
+            temperature: 0.7,
+            messages: anthropicMessages,
+            system: systemPrompt,
+          });
+          console.log(`Model ${model} funguje!`);
+          break; // Pokud model funguje, ukončíme cyklus
+        } catch (err) {
+          console.error(`Chyba s modelem ${model}:`, err);
+          modelError = err;
+          // Pokračujeme dalším modelem
+        }
+      }
+      
+      // Pokud žádný model nefungoval, vyhodíme poslední chybu
+      if (!response) {
+        throw modelError || new Error('Žádný model nefunguje');
+      }
       console.log("Odpověď od Anthropic API obdržena");
     } catch (apiError) {
       console.error("Chyba při volání Anthropic API:", apiError);
