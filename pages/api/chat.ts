@@ -126,10 +126,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   // Získání dat z požadavku
   const { messages, topic, personality, saveHistory } = req.body as ChatRequest;
   
-  // Hardcoded API klíč
+  // Hardcoded API klíč pro webové nasazení
   const anthropicApiKey = "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";
 
-  // Inicializace Anthropic klienta
+  // Kontrola, zda je API klíč k dispozici a má správný formát
+  if (!anthropicApiKey || !anthropicApiKey.startsWith('sk-ant-')) {
+    console.error("Neplatný API klíč pro Anthropic");
+    return res.status(500).json({ 
+      role: 'assistant', 
+      content: 'Neplatný API klíč pro Anthropic. Kontaktujte správce aplikace.'
+    });
+  }
+
+  // Inicializace Anthropic klienta s explicitními parametry
   const anthropic = new Anthropic({
     apiKey: anthropicApiKey,
   });
@@ -162,7 +171,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     // Příprava zpráv pro Anthropic API
-    // Anthropic API nepodporuje přímo "system" zprávy, proto je přidáme jako instrukce do první zprávy uživatele
     const anthropicMessages: AnthropicMessage[] = [];
     
     // Filtrujeme zprávy, které nejsou systémové
@@ -186,33 +194,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         content: 'Ahoj'
       });
     }
-    
-    // Přidáme systémový prompt do první zprávy uživatele, pokud existuje
-    if (anthropicMessages[0].role === 'user') {
-      // Přidáme systémový prompt na začátek první zprávy uživatele
-      anthropicMessages[0].content = `${systemPrompt}\n\n${anthropicMessages[0].content}`;
-    } else if (anthropicMessages.length > 0) {
-      // Pokud první zpráva není od uživatele, přidáme novou zprávu na začátek
-      anthropicMessages.unshift({
-        role: 'user',
-        content: systemPrompt
-      });
-    }
 
     console.log("Připravené zprávy pro Anthropic API:", JSON.stringify(anthropicMessages, null, 2));
     console.log("Systémový prompt:", systemPrompt);
     
     // Volání Anthropic API s novějším modelem
     console.log("Volání Anthropic API...");
-    const response = await anthropic.messages.create({
-      model: 'claude-3-haiku-20240307', // Použijeme menší a novější model, který je pravděpodobně dostupný
-      max_tokens: 1000,
-      temperature: 0.7,
-      messages: anthropicMessages,
-      system: systemPrompt, // Použijeme také system parametr, který Claude podporuje
-    });
-    
-    console.log("Odpověď od Anthropic API obdržena");
+    let response;
+    try {
+      response = await anthropic.messages.create({
+        model: 'claude-3-haiku-20240307', // Použijeme původní model, který byl v kódu
+        max_tokens: 1000,
+        temperature: 0.7,
+        messages: anthropicMessages,
+        system: systemPrompt, // Použijeme pouze system parametr pro předání systémového promptu
+      });
+      console.log("Odpověď od Anthropic API obdržena");
+    } catch (apiError) {
+      console.error("Chyba při volání Anthropic API:", apiError);
+      if (apiError instanceof Error) {
+        console.error("Detaily chyby:", apiError.message);
+        if ('status' in apiError) {
+          console.error("Status kód:", (apiError as any).status);
+        }
+      }
+      throw apiError; // Přehodíme chybu pro zpracování v hlavním try-catch bloku
+    }
 
     // Zpracování odpovědi
     if (response && response.content && response.content.length > 0) {
