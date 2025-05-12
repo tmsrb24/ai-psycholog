@@ -126,8 +126,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   // Získání dat z požadavku
   const { messages, topic, personality, saveHistory } = req.body as ChatRequest;
   
-  // Hardcoded API klíč
-  const anthropicApiKey = "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";
+  // Použití API klíče z proměnné prostředí
+  const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
 
   // Inicializace Anthropic klienta
   const anthropic = new Anthropic({
