@@ -23,21 +23,21 @@ export default async function handler(
     }
 
     // Prepare system message with instructions based on settings
-    let systemPrompt = 'Jsi empatický psycholog, který mluví česky. ';
-    
+    let systemPrompt = 'Jsi empatický psycholog který mluví česky. ';
+
     // Add topic context if selected
     if (topic) {
       const topicContexts = {
-        anxiety: 'Specializuješ se na léčbu úzkosti a úzkostných poruch. Nabízíš techniky pro zvládání úzkosti, jako je hluboké dýchání, mindfulness a kognitivně-behaviorální přístupy.',
-        relationships: 'Specializuješ se na vztahové poradenství. Pomáháš s komunikací, řešením konfliktů a budováním zdravých vztahů.',
+        anxiety: 'Specializuješ se na léčbu úzkosti a úzkostných poruch. Nabízíš techniky pro zvládání úzkosti jako je hluboké dýchání mindfulness a kognitivně-behaviorální přístupy.',
+        relationships: 'Specializuješ se na vztahové poradenství. Pomáháš s komunikací řešením konfliktů a budováním zdravých vztahů.',
         depression: 'Specializuješ se na podporu lidí s depresí. Nabízíš empatické naslouchání a techniky pro zvládání depresivních stavů.',
-        stress: 'Specializuješ se na zvládání stresu. Nabízíš techniky pro relaxaci, time management a zdravý životní styl.',
+        stress: 'Specializuješ se na zvládání stresu. Nabízíš techniky pro relaxaci time management a zdravý životní styl.',
         selfEsteem: 'Specializuješ se na budování zdravého sebevědomí. Pomáháš identifikovat negativní vzorce myšlení a rozvíjet pozitivní sebehodnocení.'
       };
-      
+
       systemPrompt += topicContexts[topic as keyof typeof topicContexts] || '';
     }
-    
+
     // Add personality context if selected
     if (personality) {
       const personalityContexts = {
@@ -48,42 +48,42 @@ export default async function handler(
         coach: 'Vystupuješ jako kouč. Motivuješ klienta k dosahování cílů a překonávání překážek.',
         mediator: 'Vystupuješ jako mediátor. Pomáháš najít střední cestu a řešit konflikty konstruktivně.'
       };
-      
+
       systemPrompt += personalityContexts[personality as keyof typeof personalityContexts] || '';
     }
-    
+
     // Add response length context
     if (responseLength) {
       const lengthContexts = {
-        short: 'Tvé odpovědi jsou stručné a výstižné, obvykle 2-3 věty.',
-        medium: 'Tvé odpovědi jsou přiměřeně dlouhé, obvykle 1-2 odstavce.',
-        long: 'Tvé odpovědi jsou podrobné a důkladné, obvykle 2-3 odstavce.'
+        short: 'Tvé odpovědi jsou stručné a výstižné obvykle 2-3 věty.',
+        medium: 'Tvé odpovědi jsou přiměřeně dlouhé obvykle 1-2 odstavce.',
+        long: 'Tvé odpovědi jsou podrobné a důkladné obvykle 2-3 odstavce.'
       };
-      
+
       systemPrompt += lengthContexts[responseLength as keyof typeof lengthContexts] || '';
     }
-    
-    // Add general guidelines
-    systemPrompt += ' Nikdy nediagnostikuješ, pouze nabízíš podporu a techniky pro zvládání obtíží. Vždy respektuješ hranice klienta a zdůrazňuješ, že v případě vážných problémů by měl vyhledat odbornou pomoc.';
 
-    // In a real application, this would call the Anthropic API using the API key from environment variables
-    // const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
-    // if (!anthropicApiKey) {
-    //   console.error('Missing ANTHROPIC_API_KEY environment variable');
-    //   return res.status(500).json({ error: 'Server configuration error', content: 'Omlouvám se, nastala chyba v konfiguraci serveru.' });
-    // }
-    
+    // Add general guidelines
+    systemPrompt += ' Nikdy nediagnostikuješ pouze nabízíš podporu a techniky pro zvládání obtíží. Vždy respektuješ hranice klienta a zdůrazňuješ že v případě vážných problémů by měl vyhledat odbornou pomoc.';
+
+    // In a real application this would call the Anthropic API using the API key from environment variables
+    const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
+    if (!anthropicApiKey) {
+      console.error('Missing ANTHROPIC_API_KEY environment variable');
+      return res.status(500).json({ error: 'Server configuration error', content: 'Omlouvám se, nastala chyba v konfiguraci serveru.' });
+    }
+
     // Here you would make the actual API call to Anthropic
-    // For now, we'll simulate a response
-    
+    // For now we'll simulate a response
+
     // Simulate API call delay
     const startTime = Date.now();
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Generate a simple response based on the user's message
     let responseContent = '';
     const userMessage = lastUserMessage.content.toLowerCase();
-    
+
     if (userMessage.includes('ahoj') || userMessage.includes('dobrý den') || userMessage.includes('zdravím')) {
       responseContent = 'Dobrý den! Jsem tu, abych vám pomohl. Jak se dnes cítíte?';
     } else if (userMessage.includes('úzkost') || userMessage.includes('strach') || userMessage.includes('nervozita')) {
@@ -99,20 +99,20 @@ export default async function handler(
     } else {
       responseContent = 'Děkuji, že se se mnou dělíte o své myšlenky. Můžete mi říci více o tom, co vás přivádí k našemu rozhovoru a jak vám mohu být nápomocen?';
     }
-    
+
     // Calculate processing time
     const processingTime = (Date.now() - startTime) / 1000;
-    
+
     // Estimate reading time (very simple calculation)
     const estimatedReadingTime = Math.ceil(responseContent.length / 1000 * 60 / 200); // ~200 words per minute
-    
+
     // Return the response
     return res.status(200).json({
       role: 'assistant',
       content: responseContent,
       estimatedReadingTime
     });
-    
+
   } catch (error) {
     console.error('Error processing chat request:', error);
     return res.status(500).json({ error: 'Internal server error', content: 'Omlouvám se, nastala chyba při zpracování vaší zprávy.' });
