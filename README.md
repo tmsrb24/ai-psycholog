@@ -57,20 +57,7 @@ Pro správné fungování aplikace na Vercel je potřeba nastavit environment va
 
 5. Klikněte na "Save" pro uložení proměnné
 
-### Automatické nasazení pomocí GitHub Actions
-
-Projekt je nakonfigurován pro automatické nasazení na Vercel pomocí GitHub Actions. Pro správné fungování je potřeba nastavit následující secrets v GitHub repozitáři:
-
-1. Přejděte do nastavení GitHub repozitáře
-2. Vyberte "Settings" > "Secrets and variables" > "Actions"
-3. Přidejte následující secrets:
-   - `VERCEL_TOKEN`: Váš Vercel token (získáte v [Vercel Dashboard](https://vercel.com/account/tokens))
-   - `VERCEL_ORG_ID`: ID vaší organizace na Vercel (získáte v URL Vercel Dashboard)
-   - `VERCEL_PROJECT_ID`: ID vašeho projektu na Vercel (získáte v nastavení projektu)
-
-Po nastavení těchto secrets bude každý push do větve `main` automaticky nasazen na Vercel.
-
-### Manuální nasazení
+### Nasazení
 
 Pokud preferujete manuální nasazení, můžete použít Vercel CLI:
 
