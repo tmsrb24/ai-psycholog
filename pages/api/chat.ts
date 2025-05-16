@@ -43,15 +43,6 @@ export default async function handler(
       });
     }
 
-    // For testing, always return a simulated response
-    // This will help us determine if the issue is with the API call or something else
-    return res.status(200).json({
-      role: 'assistant',
-      content: `Dobrý den! Jsem tu, abych vám pomohl. Jak se dnes cítíte? (Toto je testovací odpověď)`,
-      estimatedReadingTime: 3
-    });
-
-    /* Commenting out the actual API call for now to test if the endpoint works at all
     // Prepare system message with instructions based on settings
     let systemPrompt = `Jsi empatický psycholog, který mluví česky a pomáhá lidem s jejich psychickými problémy.`;
 
@@ -162,7 +153,6 @@ export default async function handler(
         estimatedReadingTime: 3
       });
     }
-    */
 
   } catch (error: any) {
     console.error('Error processing chat request:', error);
