@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Message, ApiResponse } from '../../types';
+import axios from 'axios';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ApiResponse | { error: string }>
+  res: NextApiResponse<ApiResponse | { error: string, content?: string }>
 ) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -42,6 +43,15 @@ export default async function handler(
       });
     }
 
+    // For testing, always return a simulated response
+    // This will help us determine if the issue is with the API call or something else
+    return res.status(200).json({
+      role: 'assistant',
+      content: `Dobrý den! Jsem tu, abych vám pomohl. Jak se dnes cítíte? (Toto je testovací odpověď)`,
+      estimatedReadingTime: 3
+    });
+
+    /* Commenting out the actual API call for now to test if the endpoint works at all
     // Prepare system message with instructions based on settings
     let systemPrompt = `Jsi empatický psycholog, který mluví česky a pomáhá lidem s jejich psychickými problémy.`;
 
@@ -100,13 +110,14 @@ export default async function handler(
 
     try {
       console.log('Making API call to Gemini');
-      // Make the API call to Gemini
-      const response = await fetch(`${GEMINI_API_URL}?key=${geminiApiKey}`, {
-        method: 'POST',
+      // Make the API call to Gemini using axios instead of fetch
+      const response = await axios({
+        method: 'post',
+        url: `${GEMINI_API_URL}?key=${geminiApiKey}`,
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
+        data: {
           contents: formattedMessages,
           generationConfig: {
             temperature: 0.7,
@@ -114,10 +125,10 @@ export default async function handler(
             topP: 0.95,
             maxOutputTokens: 800
           }
-        })
+        }
       });
 
-      const data = await response.json();
+      const data = response.data;
       console.log('Gemini API response:', JSON.stringify(data, null, 2));
 
       // Handle potential API errors
@@ -151,6 +162,7 @@ export default async function handler(
         estimatedReadingTime: 3
       });
     }
+    */
 
   } catch (error: any) {
     console.error('Error processing chat request:', error);
