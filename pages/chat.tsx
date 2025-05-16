@@ -174,21 +174,32 @@ const ChatPage = () => {
         userProfile
       };
       
-      const res = await axios.post('/api/chat', requestData);
-      
-      if (res.data.estimatedReadingTime) {
-        setLoadingEstimatedTime(prev => Math.round((prev * 0.7) + (res.data.estimatedReadingTime || 5) * 0.3));
+      console.log('Sending request to API:', requestData);
+      try {
+        const res = await axios.post('/api/chat', requestData);
+        console.log('API response:', res.data);
+
+        if (res.data.estimatedReadingTime) {
+          setLoadingEstimatedTime(prev => Math.round((prev * 0.7) + (res.data.estimatedReadingTime || 5) * 0.3));
+        }
+
+        const assistantMessage: Message = {
+          role: 'assistant',
+          content: res.data.content || 'Omlouvám se, nastala chyba.',
+          timestamp: new Date()
+        };
+
+        setMessages([...newMessages, assistantMessage]);
+      } catch (error) {
+        console.error('Chyba při volání API:', error);
+        // Add a fallback message for errors
+        const errorMessage: Message = {
+          role: 'assistant',
+          content: 'Omlouvám se, nastala chyba při komunikaci se serverem. Zkuste to prosím znovu za chvíli.',
+          timestamp: new Date()
+        };
+        setMessages([...newMessages, errorMessage]);
       }
-      
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: res.data.content || 'Omlouvám se, nastala chyba.',
-        timestamp: new Date()
-      };
-      
-      setMessages([...newMessages, assistantMessage]);
-    } catch (error) {
-      console.error('Chyba:', error);
     } finally {
       setLoading(false);
     }

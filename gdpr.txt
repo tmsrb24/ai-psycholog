@@ -1,0 +1,87 @@
+export default function GDPRPage() {
+  return (
+    <main className="max-w-3xl mx-auto p-6 text-gray-800">
+      <h1 className="text-2xl font-bold mb-4">Zásady ochrany osobních údajů (GDPR)</h1>
+
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">1. Kdo jsme</h2>
+        <p>
+          Jsme provozovatel online služby Psychollog.cz, která nabízí konverzaci s AI psychologickým chatbotem.
+          <br />
+          <strong>Správce údajů:</strong><br />
+          Tomáš Srb<br />
+          Přední 343/6, Praha 6, 161 00<br />
+          IČO: 08217271<br />
+          E-mail: <a href="mailto:privacy@psychollog.cz" className="underline">privacy@psychollog.cz</a>
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">2. Jaké údaje zpracováváme a proč</h2>
+        <p>
+          Vaše důvěra je pro nás zásadní. Tato služba je navržena tak, aby maximálně respektovala vaše soukromí.
+          <strong> Neukládáme obsah vašich zpráv </strong> ani žádné citlivé osobní údaje bez vašeho výslovného souhlasu.
+        </p>
+        <ul className="list-disc list-inside mt-2">
+          <li>IP adresa – Zajištění bezpečnosti a ochrana proti zneužití</li>
+          <li>Čas přístupu / typ zařízení – Zajištění kompatibility a provozu webu</li>
+          <li>Anonymní statistiky – Vylepšování služby a výkonu</li>
+        </ul>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">3. Právní základ zpracování</h2>
+        <p>
+          Zpracování těchto údajů probíhá na základě oprávněného zájmu správce (provoz a bezpečnost služby)
+          a v některých případech na základě vašeho souhlasu.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">4. Kdo má k údajům přístup</h2>
+        <p>
+          Vaše data nesdílíme s žádnými třetími stranami a nevyužíváme je k reklamním účelům.
+          Web běží na zabezpečené infrastruktuře poskytovatelů jako je Vercel a OpenAI/Google,
+          s přístupem pouze v rozsahu nezbytném pro běh služby.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">5. Jak dlouho údaje uchováváme</h2>
+        <p>
+          Technická data (např. IP adresa) se uchovávají po nezbytně nutnou dobu,
+          většinou jen několik hodin až dní – výhradně pro detekci chyb a ochranu proti útokům.
+          Obsah vašich zpráv nikdy neuchováváme.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">6. Jaká máte práva</h2>
+        <p>
+          Máte právo:
+        </p>
+        <ul className="list-disc list-inside mt-2">
+          <li>Požádat o informace o tom, jaké údaje zpracováváme</li>
+          <li>Požadovat opravu nebo výmaz údajů</li>
+          <li>Vznést námitku proti zpracování</li>
+          <li>Podat stížnost u Úřadu pro ochranu osobních údajů (www.uoou.cz)</li>
+        </ul>
+        <p className="mt-2">
+          Pro jakékoliv dotazy nám napište na <a href="mailto:privacy@psychollog.cz" className="underline">privacy@psychollog.cz</a>.
+          Odpovíme rychle a lidsky.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">7. Závěrem</h2>
+        <p>
+          Chápeme, že mluvit s někým o svých pocitech vyžaduje důvěru.
+          Proto jsme naši službu vytvořili s respektem k vašemu soukromí.
+          Nejsme dokonalí, ale děláme maximum pro to, aby byl Psychollog.cz bezpečný,
+          anonymní a podpůrný prostor pro každého.
+        </p>
+      </section>
+    </main>
+  );
+}
+
