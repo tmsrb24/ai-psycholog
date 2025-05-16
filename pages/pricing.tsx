@@ -90,6 +90,13 @@ const PricingPage = () => {
                 <FaCheck className="text-green-500 mr-2" />
                 <span className="text-gray-600 dark:text-gray-300">Gamifikační prvky a odznaky</span>
               </li>
+              <li className="flex items-center">
+                <FaCheck className="text-green-500 mr-2" />
+                <span className="text-gray-600 dark:text-gray-300 font-semibold">Pokročilá znalostní báze</span>
+                <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-1 rounded-full">
+                  NOVINKA
+                </span>
+              </li>
             </ul>
             <button className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
               Předplatit
@@ -142,6 +149,19 @@ const PricingPage = () => {
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
                 Vaše konverzace jsou šifrované a ukládají se pouze na vašem zařízení. Neukládáme žádná data na našich serverech, pokud si to výslovně nevyžádáte. Vaše soukromí je pro nás prioritou.
+              </p>
+            </div>
+            
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-2 border-blue-500">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
+                <FaQuestionCircle className="text-blue-600 dark:text-blue-400 mr-2" />
+                Co je pokročilá znalostní báze?
+                <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-1 rounded-full">
+                  NOVINKA
+                </span>
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Naše pokročilá znalostní báze je unikátní technologie, která umožňuje AI asistentovi poskytovat přesnější a odbornější odpovědi. Systém v reálném čase vyhledává relevantní informace z rozsáhlé databáze psychologických znalostí a využívá je k formulaci odpovědí. Díky tomu získáte fundované rady podložené aktuálními odbornými poznatky, což nás odlišuje od konkurence.
               </p>
             </div>
           </div>

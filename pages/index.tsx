@@ -51,7 +51,7 @@ const HomePage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105">
               <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
@@ -80,6 +80,19 @@ const HomePage = () => {
               <p className="text-gray-600 dark:text-gray-300">
                 Analýza nálady a gamifikační prvky vám pomohou sledovat váš pokrok a motivovat vás.
               </p>
+            </div>
+
+            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105 border-2 border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+                <FaRobot className="text-blue-600 dark:text-blue-300" size={24} />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Pokročilá znalostní báze</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                Náš AI asistent využívá rozsáhlou databázi odborných psychologických znalostí pro přesné a fundované odpovědi na vaše dotazy.
+              </p>
+              <div className="mt-2 inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-1 rounded-full">
+                NOVINKA
+              </div>
             </div>
           </div>
         </div>

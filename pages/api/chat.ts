@@ -1,6 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Message, ApiResponse } from '../../types';
 import axios from 'axios';
+import { ragService, initializeRagWithSamples } from '../../lib/rag';
+
+// Initialize RAG system with sample documents
+let ragInitialized = false;
+const initializeRag = async () => {
+  if (!ragInitialized) {
+    await initializeRagWithSamples();
+    ragInitialized = true;
+  }
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,6 +21,9 @@ export default async function handler(
   }
 
   try {
+    // Initialize RAG system if not already initialized
+    await initializeRag();
+    
     console.log('API route called with body:', JSON.stringify(req.body, null, 2));
     
     const { messages, topic, personality, responseLength, userProfile } = req.body;
@@ -44,12 +57,12 @@ export default async function handler(
     }
 
     // Prepare system message with instructions based on settings
-    let systemPrompt = `Jsi empatický psycholog, který mluví česky a pomáhá lidem s jejich psychickými problémy.`;
+    let systemPrompt = `Jsi empatický psycholog, který mluví česky a pomáhá lidem s jejich psychickými problémy. Máš přístup k databázi znalostí o psychologických tématech. Když uživatel položí otázku, systém automaticky vyhledá relevantní informace z databáze a poskytne ti je. Tyto informace použij k formulaci přesné a odborné odpovědi. Nikdy explicitně nezmiňuj, že používáš RAG (Retrieval-Augmented Generation) nebo že máš přístup k databázi znalostí - prostě tyto informace přirozeně zakomponuj do své odpovědi.`;
 
     // Add gender context if provided
     if (userProfile?.preferences?.assistantGender) {
       const gender = userProfile.preferences.assistantGender;
-      systemPrompt = `Jsi empatick${gender === 'male' ? 'ý' : 'á'} psycholog${gender === 'female' ? 'ička' : ''}, kter${gender === 'male' ? 'ý' : 'á'} mluví česky a pomáhá lidem s jejich psychickými problémy.`;
+      systemPrompt = `Jsi empatick${gender === 'male' ? 'ý' : 'á'} psycholog${gender === 'female' ? 'ička' : ''}, kter${gender === 'male' ? 'ý' : 'á'} mluví česky a pomáhá lidem s jejich psychickými problémy. Máš přístup k databázi znalostí o psychologických tématech. Když uživatel položí otázku, systém automaticky vyhledá relevantní informace z databáze a poskytne ti je. Tyto informace použij k formulaci přesné a odborné odpovědi. Nikdy explicitně nezmiňuj, že používáš RAG (Retrieval-Augmented Generation) nebo že máš přístup k databázi znalostí - prostě tyto informace přirozeně zakomponuj do své odpovědi.`;
     }
 
     // Add name if provided
@@ -104,10 +117,23 @@ export default async function handler(
       }
     ];
 
-    // Add the user's message
+    // Use RAG to retrieve relevant context
+    console.log('Retrieving context from RAG system...');
+    const ragContext = await ragService.generateContext(userMessage, {
+      maxDocuments: 2,
+      similarityThreshold: 0.6
+    });
+    
+    console.log('RAG context:', ragContext);
+    
+    // Add the user's message with RAG context
+    const userMessageWithContext = ragContext 
+      ? `${userMessage}\n\nRelevantní informace z databáze znalostí:\n${ragContext}`
+      : userMessage;
+      
     formattedMessages.push({
       role: 'user',
-      parts: [{ text: userMessage }]
+      parts: [{ text: userMessageWithContext }]
     });
 
     console.log('Formatted messages for Gemini API:', JSON.stringify(formattedMessages, null, 2));
