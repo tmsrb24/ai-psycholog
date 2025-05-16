@@ -41,6 +41,11 @@ const Footer: React.FC = () => {
                   Ceník
                 </Link>
               </li>
+              <li>
+                <Link href="/gdpr" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                  GDPR
+                </Link>
+              </li>
             </ul>
           </div>
           
