@@ -58,16 +58,27 @@ const Navbar: React.FC = () => {
             >
               Chat
             </Link>
-            <Link 
-              href="/pricing" 
+            <Link
+              href="/pricing"
               className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive('/pricing') 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
+                isActive('/pricing')
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
               }`}
               onClick={closeMenu}
             >
               Ceník
+            </Link>
+            <Link
+              href="/gdpr"
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                isActive('/gdpr')
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+              }`}
+              onClick={closeMenu}
+            >
+              GDPR
             </Link>
             <button
               onClick={toggleTheme}
@@ -134,6 +145,17 @@ const Navbar: React.FC = () => {
               onClick={closeMenu}
             >
               Ceník
+            </Link>
+            <Link 
+              href="/gdpr" 
+              className={`block px-3 py-2 rounded-md text-base font-medium ${
+                isActive('/gdpr') 
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+              }`}
+              onClick={closeMenu}
+            >
+              GDPR
             </Link>
           </div>
         </div>

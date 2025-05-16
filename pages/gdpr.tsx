@@ -17,13 +17,7 @@ const GDPRPage = () => {
         <section className="mb-6">
           <h2 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">1. Kdo jsme</h2>
           <p className="text-gray-600 dark:text-gray-300">
-            Jsme provozovatel online služby Psychollog.cz, která nabízí konverzaci s AI psychologickým chatbotem.
-            <br />
-            <strong>Správce údajů:</strong><br />
-            Tomáš Srb<br />
-            Přední 343/6, Praha 6, 161 00<br />
-            IČO: 08217271<br />
-            E-mail: <a href="mailto:privacy@psychollog.cz" className="text-blue-600 dark:text-blue-400 underline">privacy@psychollog.cz</a>
+            {/* Obsah bude doplněn */}
           </p>
         </section>
 
