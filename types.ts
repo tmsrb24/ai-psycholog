@@ -23,6 +23,7 @@ export interface ApiResponse {
 export type ResponseLength = 'short' | 'medium' | 'long';
 export type CommunicationStyle = 'formal' | 'casual';
 export type NotificationFrequency = 'none' | 'daily' | 'weekly';
+export type AssistantGender = 'male' | 'female';
 
 export interface UserProfileData {
   name: string;
@@ -31,5 +32,7 @@ export interface UserProfileData {
     responseLength: ResponseLength;
     communicationStyle: CommunicationStyle;
     notificationFrequency: NotificationFrequency;
+    assistantGender?: AssistantGender;
+    assistantName?: string;
   };
 }

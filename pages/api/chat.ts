@@ -13,7 +13,7 @@ export default async function handler(
   try {
     console.log('API route called with body:', JSON.stringify(req.body, null, 2));
     
-    const { messages, topic, personality, responseLength } = req.body;
+    const { messages, topic, personality, responseLength, userProfile } = req.body;
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Invalid messages format' });
@@ -45,6 +45,18 @@ export default async function handler(
 
     // Prepare system message with instructions based on settings
     let systemPrompt = `Jsi empatický psycholog, který mluví česky a pomáhá lidem s jejich psychickými problémy.`;
+
+    // Add gender context if provided
+    if (userProfile?.preferences?.assistantGender) {
+      const gender = userProfile.preferences.assistantGender;
+      systemPrompt = `Jsi empatick${gender === 'male' ? 'ý' : 'á'} psycholog${gender === 'female' ? 'ička' : ''}, kter${gender === 'male' ? 'ý' : 'á'} mluví česky a pomáhá lidem s jejich psychickými problémy.`;
+    }
+
+    // Add name if provided
+    if (userProfile?.preferences?.assistantName) {
+      const name = userProfile.preferences.assistantName;
+      systemPrompt += ` Jmenuješ se ${name}.`;
+    }
 
     // Add topic context if selected
     if (topic) {
@@ -88,7 +100,7 @@ export default async function handler(
       },
       {
         role: 'model',
-        parts: [{ text: 'Rozumím. Budu empatický psycholog, který mluví česky.' }]
+        parts: [{ text: 'Rozumím. Budu se řídit vašimi instrukcemi.' }]
       }
     ];
 

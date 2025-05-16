@@ -35,6 +35,8 @@ const ChatPage = () => {
   const [selectedPersonality, setSelectedPersonality] = useState<'supportive' | 'practical' | 'analytical' | 'mentor' | 'coach' | 'mediator' | null>(null);
   const [saveHistory, setSaveHistory] = useState(false);
   const [responseLength, setResponseLength] = useState<'short' | 'medium' | 'long'>('medium');
+  const [assistantGender, setAssistantGender] = useState<'male' | 'female'>('male');
+  const [assistantName, setAssistantName] = useState<string>('');
   
   // State for TTS
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -165,13 +167,23 @@ const ChatPage = () => {
     setLoading(true);
 
     try {
+      // Update userProfile with assistant gender and name
+      const updatedUserProfile = {
+        ...userProfile,
+        preferences: {
+          ...userProfile.preferences,
+          assistantGender,
+          assistantName: assistantName.trim() || undefined
+        }
+      };
+
       const requestData = {
         messages: newMessages,
         topic: selectedTopic,
         personality: selectedPersonality,
         saveHistory,
         responseLength,
-        userProfile
+        userProfile: updatedUserProfile
       };
       
       console.log('Sending request to API:', requestData);
@@ -407,6 +419,39 @@ const ChatPage = () => {
                     </button>
                   </div>
                 </div>
+
+                <div className="mb-4">
+                  <h3 className="font-medium mb-2 dark:text-white">Pohlaví asistenta</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setAssistantGender('male')}
+                      className={`p-2 rounded-md text-center ${
+                        assistantGender === 'male' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white'
+                      }`}
+                    >
+                      Muž
+                    </button>
+                    <button
+                      onClick={() => setAssistantGender('female')}
+                      className={`p-2 rounded-md text-center ${
+                        assistantGender === 'female' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white'
+                      }`}
+                    >
+                      Žena
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mb-4">
+                  <h3 className="font-medium mb-2 dark:text-white">Jméno asistenta</h3>
+                  <input
+                    type="text"
+                    value={assistantName}
+                    onChange={(e) => setAssistantName(e.target.value)}
+                    placeholder="Zadejte jméno (nepovinné)"
+                    className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  />
+                </div>
                 
                 <div className="flex items-center mb-4">
                   <input
@@ -426,6 +471,8 @@ const ChatPage = () => {
                       setSelectedPersonality(null);
                       setSaveHistory(false);
                       setResponseLength('medium');
+                      setAssistantGender('male');
+                      setAssistantName('');
                     }}
                     className="btn btn-secondary"
                   >

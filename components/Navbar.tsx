@@ -64,22 +64,22 @@ const Navbar: React.FC = () => {
 
           {/* Desktop menu */}
           <div className="hidden md:flex md:items-center md:space-x-4">
-            <Link 
-              href="/" 
+            <Link
+              href="/"
               className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive('/') 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
+                isActive('/')
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
               }`}
               onClick={closeMenu}
             >
               Domů
             </Link>
-            <Link 
-              href="/chat" 
+            <Link
+              href="/chat"
               className={`px-3 py-2 rounded-md text-sm font-medium ${
-                isActive('/chat') 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
+                isActive('/chat')
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
               }`}
               onClick={closeMenu}
@@ -108,15 +108,6 @@ const Navbar: React.FC = () => {
             >
               GDPR
             </Link>
-            
-            {/* Theme toggle button */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-              aria-label="Toggle dark mode"
-            >
-              {theme === 'dark' ? <FaSun size={18} /> : <FaMoon size={18} />}
-            </button>
             
             {/* Authentication UI */}
             {loading ? (
@@ -190,6 +181,15 @@ const Navbar: React.FC = () => {
                 </Link>
               </div>
             )}
+            
+            {/* Theme toggle button - moved to the end */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'dark' ? <FaSun size={18} /> : <FaMoon size={18} />}
+            </button>
           </div>
 
           {/* Mobile menu button */}
