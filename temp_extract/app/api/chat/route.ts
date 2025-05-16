@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   }
 
   // 🧠 Kontextová paměť (např. posledních 3 zpráv)
-  const context = messages.slice(-3).map(m => ({ role: m.role, parts: [{ text: m.content }] }));
+  const context = messages.slice(-3).map((m: { role: string; content: string }) => ({ role: m.role, parts: [{ text: m.content }] }));
 
   const res = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
     method: "POST",
