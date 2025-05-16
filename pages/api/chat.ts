@@ -141,22 +141,22 @@ export default async function handler(
         content: responseContent,
         estimatedReadingTime: Math.ceil(responseContent.length / 1000 * 60 / 200) // ~200 words per minute
       });
-    } catch (error) {
-      console.error('Error calling Gemini API:', error);
+    } catch (apiError: any) {
+      console.error('Error calling Gemini API:', apiError);
       
       // Return a fallback response for testing
       return res.status(200).json({
         role: 'assistant',
-        content: `Omlouvám se, ale momentálně mám problém s připojením k AI službě. Zkuste to prosím znovu za chvíli. (Chyba: ${error.message})`,
+        content: `Omlouvám se, ale momentálně mám problém s připojením k AI službě. Zkuste to prosím znovu za chvíli. (Chyba: ${apiError?.message || 'Neznámá chyba'})`,
         estimatedReadingTime: 3
       });
     }
 
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error processing chat request:', error);
     return res.status(500).json({ 
       error: 'Internal server error', 
-      content: `Omlouvám se, nastala chyba při zpracování vaší zprávy. (Chyba: ${error.message})`
+      content: `Omlouvám se, nastala chyba při zpracování vaší zprávy. (Chyba: ${error?.message || 'Neznámá chyba'})`
     });
   }
 }
