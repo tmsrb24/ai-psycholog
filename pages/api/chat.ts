@@ -77,7 +77,8 @@ export default async function handler(
       });
     }
 
-    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+    // Updated URL for Gemini 2.5 Pro
+    const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent';
 
     // Simplify the message format for Gemini API
     const formattedMessages = [
@@ -146,10 +147,10 @@ export default async function handler(
     } catch (apiError: any) {
       console.error('Error calling Gemini API:', apiError);
       
-      // Return a fallback response for testing
+      // Return a fallback response with more detailed error information
       return res.status(200).json({
         role: 'assistant',
-        content: `Omlouvám se, ale momentálně mám problém s připojením k AI službě. Zkuste to prosím znovu za chvíli. (Chyba: ${apiError?.message || 'Neznámá chyba'})`,
+        content: `Omlouvám se, ale momentálně mám problém s připojením k AI službě. Zkuste to prosím znovu za chvíli. (Chyba: ${apiError?.message || 'Neznámá chyba'}, Status: ${apiError?.response?.status || 'N/A'}, Data: ${JSON.stringify(apiError?.response?.data || {})})`,
         estimatedReadingTime: 3
       });
     }
