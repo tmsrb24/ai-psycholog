@@ -66,17 +66,47 @@ export default async function handler(
     // Add general guidelines
     systemPrompt += ' Nikdy nediagnostikuješ pouze nabízíš podporu a techniky pro zvládání obtíží. Vždy respektuješ hranice klienta a zdůrazňuješ že v případě vážných problémů by měl vyhledat odbornou pomoc.';
 
-    // In a real application this would call the Anthropic API using the API key from environment variables
-    const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
-    if (!anthropicApiKey) {
-      console.error('Missing ANTHROPIC_API_KEY environment variable');
+    // In a real application this would call the Gemini API using the API key from environment variables
+    const geminiApiKey = process.env.GEMINI_API_KEY;
+    if (!geminiApiKey) {
+      console.error('Missing GEMINI_API_KEY environment variable');
       return res.status(500).json({ error: 'Server configuration error', content: 'Omlouvám se, nastala chyba v konfiguraci serveru.' });
     }
 
-    // Here you would make the actual API call to Anthropic
-    // For now we'll simulate a response
+    // Here you would make the actual API call to Gemini
+    // Example of how the Gemini API call might look:
+    /*
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': geminiApiKey
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: systemPrompt }]
+          },
+          ...messages.map(msg => ({
+            role: msg.role === 'assistant' ? 'model' : msg.role,
+            parts: [{ text: msg.content }]
+          }))
+        ],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        }
+      })
+    });
 
-    // Simulate API call delay
+    const data = await response.json();
+    const responseContent = data.candidates[0].content.parts[0].text;
+    */
+
+    // For now we'll simulate a response
     const startTime = Date.now();
     await new Promise(resolve => setTimeout(resolve, 1000));
 

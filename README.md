@@ -51,8 +51,8 @@ Pro správné fungování aplikace na Vercel je potřeba nastavit environment va
 2. Vyberte váš projekt `ai-psycholog`
 3. Přejděte do sekce "Settings" > "Environment Variables"
 4. Přidejte následující proměnnou:
-   - Název: `ANTHROPIC_API_KEY`
-   - Hodnota: Váš API klíč z Anthropic (Claude)
+   - Název: `GEMINI_API_KEY`
+   - Hodnota: Váš API klíč z Google Gemini 2.5 Pro
    - Prostředí: Production, Preview, Development (všechny)
 
 5. Klikněte na "Save" pro uložení proměnné
