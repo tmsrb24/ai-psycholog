@@ -16,6 +16,7 @@ import UserProfile from '../components/UserProfile';
 import { UserProfileData } from '../types';
 import SentimentAnalyzer from '../components/SentimentAnalyzer';
 import Gamification from '../components/Gamification';
+import CrisisNotice from '../components/CrisisNotice';
 import { Message } from '../types';
 
 const ChatPage = () => {
@@ -456,6 +457,8 @@ const ChatPage = () => {
             onSendMessage={sendMessage}
             isLoading={loading}
           />
+          
+          <CrisisNotice />
         </div>
       </div>
     </Layout>
