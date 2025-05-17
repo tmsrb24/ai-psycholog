@@ -22,7 +22,7 @@ const PricingPage = () => {
       setIsLoading(true);
       
       // Call the checkout API to create a Stripe checkout session
-      const response = await fetch('/api/checkout/session', {
+      const response = await fetch(`${process.env.NEXTAUTH_URL}/api/checkout/session`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
