@@ -18,12 +18,5 @@
   ],
   "env": {
     "NEXTAUTH_URL": "https://psychollog.cz"
-  },
-  "redirects": [
-    {
-      "source": "/api/auth/callback/google",
-      "destination": "https://psychollog.cz/api/auth/callback/google",
-      "permanent": true
-    }
-  ]
+  }
 }
