@@ -1,42 +1,38 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import AppleProvider from "next-auth/providers/apple";
-import EmailProvider from "next-auth/providers/email";
-import CredentialsProvider from "next-auth/providers/credentials";
 import { MongoClient } from "mongodb";
 
-// MongoDB connection
-const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/ai-psycholog";
-const options = {};
-let client;
+// Enhanced error handling for MongoDB connection
 let clientPromise;
-
-if (!process.env.MONGODB_URI) {
-  throw new Error("Please add your MongoDB URI to .env.local");
-}
-
-if (process.env.NODE_ENV === "development") {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  if (!global._mongoClientPromise) {
-    client = new MongoClient(uri, options);
-    global._mongoClientPromise = client.connect();
+try {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.error("MONGODB_URI is not defined in environment variables");
+  } else {
+    console.log("MongoDB URI exists in environment");
+    const client = new MongoClient(uri);
+    clientPromise = client.connect()
+      .catch(err => {
+        console.error("Failed to connect to MongoDB:", err);
+        return null;
+      });
   }
-  clientPromise = global._mongoClientPromise;
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options);
-  clientPromise = client.connect();
+} catch (error) {
+  console.error("Error setting up MongoDB connection:", error);
 }
 
-// Log environment variables for debugging (will be removed in production)
-console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
-console.log("GOOGLE_CLIENT_ID exists:", !!process.env.GOOGLE_CLIENT_ID);
-console.log("GOOGLE_CLIENT_SECRET exists:", !!process.env.GOOGLE_CLIENT_SECRET);
+// Detailed logging for debugging
+console.log("Environment variables check:");
+console.log("- NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
+console.log("- NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
+console.log("- GOOGLE_CLIENT_ID exists:", !!process.env.GOOGLE_CLIENT_ID);
+console.log("- GOOGLE_CLIENT_SECRET exists:", !!process.env.GOOGLE_CLIENT_SECRET);
+console.log("- MONGODB_URI exists:", !!process.env.MONGODB_URI);
 
+// Simplified NextAuth configuration
 export default NextAuth({
   providers: [
-    // Google OAuth provider
+    // Only Google OAuth provider for now to simplify debugging
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
@@ -47,104 +43,65 @@ export default NextAuth({
           response_type: "code"
         }
       }
-    }),
-    
-    // Apple OAuth provider
-    AppleProvider({
-      clientId: process.env.APPLE_ID || "",
-      clientSecret: process.env.APPLE_SECRET || "",
-    }),
-    
-    // Email provider for magic link authentication
-    EmailProvider({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST || "",
-        port: process.env.EMAIL_SERVER_PORT ? parseInt(process.env.EMAIL_SERVER_PORT) : 587,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER || "",
-          pass: process.env.EMAIL_SERVER_PASSWORD || "",
-        },
-      },
-      from: process.env.EMAIL_FROM || "noreply@psychollog.cz",
-    }),
-    
-    // Credentials provider for username/password login
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Heslo", type: "password" }
-      },
-      async authorize(credentials) {
-        // Here you would usually fetch the user from the database
-        if (!credentials?.email || !credentials?.password) {
-          return null;
-        }
-        
-        // For now, we'll use a simple check
-        // In a real app, you would check against the database
-        const dbUser = await clientPromise.then((client: MongoClient) => 
-          client.db().collection("users").findOne({ 
-            email: credentials.email 
-          })
-        );
-        
-        if (!dbUser) {
-          return null;
-        }
-        
-        // Here you would check the password
-        // For now, we'll just return the user
-        // Convert MongoDB document to NextAuth User
-        return {
-          id: dbUser._id.toString(),
-          name: dbUser.name,
-          email: dbUser.email,
-          image: dbUser.image,
-          role: dbUser.role
-        };
-      }
     })
   ],
   
-  // Database session handling
+  // Session configuration
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   
-  // JWT configuration
-  jwt: {
-    secret: process.env.JWT_SECRET || "default-secret-key-change-in-production",
-  },
-  
   // Pages configuration
   pages: {
     signIn: "/auth/login",
-    // Note: NextAuth.js doesn't have a built-in signUp page option
-    // The registration page is handled separately
     error: "/auth/error",
-    verifyRequest: "/auth/verify-request",
   },
   
   // Callbacks
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log("Sign in callback called with user:", user?.email);
+      return true;
+    },
+    async jwt({ token, user, account }) {
+      // Add user info to token if available
       if (user) {
         token.id = user.id as string;
-        token.role = (user.role as string) || "user";
+        token.email = user.email as string;
+      }
+      // Add account info to token if available
+      if (account) {
+        token.accessToken = account.access_token as string;
+        token.provider = account.provider as string;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token) {
+      // Add token info to session
+      if (token && session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as string;
+        // Add custom properties to session using proper types
+        session.accessToken = token.accessToken;
+        session.provider = token.provider;
       }
       return session;
     },
   },
   
-  // Debug mode (enable in development only)
-  debug: process.env.NODE_ENV === "development",
+  // Enable debug mode for detailed logs
+  debug: true,
+  
+  // Error handling
+  logger: {
+    error(code, metadata) {
+      console.error("NextAuth error:", { code, metadata });
+    },
+    warn(code) {
+      console.warn("NextAuth warning:", code);
+    },
+    debug(code, metadata) {
+      console.log("NextAuth debug:", { code, metadata });
+    }
+  }
 });

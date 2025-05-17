@@ -11,6 +11,10 @@ declare module "next-auth" {
       /** The user's role */
       role?: string;
     } & DefaultSession["user"];
+    /** OAuth access token */
+    accessToken?: string;
+    /** OAuth provider name */
+    provider?: string;
   }
 
   /**
@@ -20,5 +24,21 @@ declare module "next-auth" {
   interface User {
     /** The user's role */
     role?: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+  interface JWT {
+    /** User ID */
+    id?: string;
+    /** User email */
+    email?: string;
+    /** User role */
+    role?: string;
+    /** OAuth access token */
+    accessToken?: string;
+    /** OAuth provider name */
+    provider?: string;
   }
 }
