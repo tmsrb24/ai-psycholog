@@ -38,9 +38,9 @@ export default async function handler(
             product_data: {
               name: 'AI Psycholog Premium',
               description: 'Měsíční předplatné pro AI Psychologa',
-              images: ['https://psychollog.cz/logo.png'], // Replace with your actual logo URL
+              images: ['https://www.psychollog.cz/logo.png'], // Replace with your actual logo URL
             },
-            unit_amount: 40000, // 400 CZK in cents
+            unit_amount: 34900, // 349 CZK in cents
             recurring: {
               interval: 'month',
             },

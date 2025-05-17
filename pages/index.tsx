@@ -33,7 +33,7 @@ const HomePage = () => {
                 <div className="absolute inset-4 bg-blue-300 dark:bg-blue-600 rounded-full opacity-20 animate-pulse animation-delay-300"></div>
                 <div className="absolute inset-8 bg-blue-200 dark:bg-blue-500 rounded-full opacity-20 animate-pulse animation-delay-600"></div>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <FaRobot className="text-white" size={80} />
+                  <FaUserFriends className="text-white" size={80} />
                 </div>
               </div>
             </div>

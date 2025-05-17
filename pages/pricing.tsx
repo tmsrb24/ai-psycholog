@@ -96,7 +96,7 @@ const PricingPage = () => {
             </div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Premium</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">Pro pravidelnou psychologickou podporu</p>
-            <div className="text-4xl font-bold text-gray-900 dark:text-white mb-6">400 Kč<span className="text-xl font-normal text-gray-600 dark:text-gray-400">/měsíc</span></div>
+            <div className="text-4xl font-bold text-gray-900 dark:text-white mb-6">349 Kč<span className="text-xl font-normal text-gray-600 dark:text-gray-400">/měsíc</span></div>
             <ul className="space-y-3 mb-8">
               <li className="flex items-center">
                 <FaCheck className="text-green-500 mr-2" />
