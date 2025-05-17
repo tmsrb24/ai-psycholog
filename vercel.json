@@ -21,7 +21,7 @@
   },
   "redirects": [
     {
-      "source": "https://www.psychollog.cz/api/auth/callback/google",
+      "source": "/api/auth/callback/google",
       "destination": "https://psychollog.cz/api/auth/callback/google",
       "permanent": true
     }
