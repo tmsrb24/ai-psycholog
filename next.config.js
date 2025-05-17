@@ -21,7 +21,19 @@ const nextConfig = {
     ];
   },
   async redirects() {
-    return [];
+    return [
+      {
+        source: '/',
+        has: [
+          {
+            type: 'host',
+            value: 'www.psychollog.cz',
+          },
+        ],
+        destination: 'https://psychollog.cz',
+        permanent: true,
+      },
+    ];
   },
 }
 
