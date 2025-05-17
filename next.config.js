@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
   // swcMinify is now enabled by default in Next.js 15+
+  env: {
+    NEXTAUTH_URL: 'https://www.psychollog.cz',
+  },
   async headers() {
     return [
       {
@@ -21,19 +24,7 @@ const nextConfig = {
     ];
   },
   async redirects() {
-    return [
-      {
-        source: '/',
-        has: [
-          {
-            type: 'host',
-            value: 'www.psychollog.cz',
-          },
-        ],
-        destination: 'https://psychollog.cz',
-        permanent: true,
-      },
-    ];
+    return [];
   },
 }
 

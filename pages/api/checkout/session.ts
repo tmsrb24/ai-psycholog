@@ -49,8 +49,8 @@ export default async function handler(
         },
       ],
       mode: 'subscription',
-      success_url: `${process.env.NEXTAUTH_URL || 'https://psychollog.cz'}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXTAUTH_URL || 'https://psychollog.cz'}/checkout/cancel`,
+      success_url: `${process.env.NEXTAUTH_URL || 'https://www.psychollog.cz'}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXTAUTH_URL || 'https://www.psychollog.cz'}/checkout/cancel`,
       customer_email: userEmail,
       metadata: {
         userId: session.user.id || '',
