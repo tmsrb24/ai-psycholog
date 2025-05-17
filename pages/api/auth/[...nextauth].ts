@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import AppleProvider from "next-auth/providers/apple";
 import EmailProvider from "next-auth/providers/email";
