@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import AppleProvider from "next-auth/providers/apple";
 import EmailProvider from "next-auth/providers/email";
@@ -31,7 +30,6 @@ if (process.env.NODE_ENV === "development") {
 }
 
 export default NextAuth({
-  adapter: MongoDBAdapter(clientPromise),
   providers: [
     // Google OAuth provider
     GoogleProvider({
