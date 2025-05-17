@@ -82,7 +82,7 @@ const Register = () => {
 
   const handleOAuthSignIn = (provider: string) => {
     setIsLoading(true);
-    signIn(provider, { callbackUrl: callbackUrl as string || '/' });
+    signIn(provider, { callbackUrl: process.env.NEXTAUTH_URL + (callbackUrl as string || '/') });
   };
 
   return (
