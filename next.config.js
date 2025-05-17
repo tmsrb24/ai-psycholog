@@ -2,9 +2,6 @@
 const nextConfig = {
   reactStrictMode: true,
   // swcMinify is now enabled by default in Next.js 15+
-  env: {
-    NEXTAUTH_URL: 'https://psychollog.cz',
-  },
   async headers() {
     return [
       {
