@@ -92,7 +92,7 @@ const PricingPage = () => {
               </li>
               <li className="flex items-center">
                 <FaCheck className="text-green-500 mr-2" />
-                <span className="text-gray-600 dark:text-gray-300 font-semibold">Pokročilá znalostní báze</span>
+                <span className="text-gray-600 dark:text-gray-300 font-semibold">RAG systém nové generace</span>
                 <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-1 rounded-full">
                   NOVINKA
                 </span>
@@ -155,13 +155,13 @@ const PricingPage = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-2 border-blue-500">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
                 <FaQuestionCircle className="text-blue-600 dark:text-blue-400 mr-2" />
-                Co je pokročilá znalostní báze?
+                Co je RAG systém nové generace?
                 <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-1 rounded-full">
                   NOVINKA
                 </span>
               </h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Naše pokročilá znalostní báze je unikátní technologie, která umožňuje AI asistentovi poskytovat přesnější a odbornější odpovědi. Systém v reálném čase vyhledává relevantní informace z rozsáhlé databáze psychologických znalostí a využívá je k formulaci odpovědí. Díky tomu získáte fundované rady podložené aktuálními odbornými poznatky, což nás odlišuje od konkurence.
+                RAG systém nové generace - Náš AI asistent využívá architekturu typu Retrieval-Augmented Generation (RAG) – propojuje jazykový model s vlastní odbornou psychologickou databází. Díky tomu poskytuje přesné, kontextově přizpůsobené odpovědi v reálném čase, které vycházejí z ověřených poznatků a vaší situace.
               </p>
             </div>
           </div>
