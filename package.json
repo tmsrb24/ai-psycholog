@@ -22,6 +22,7 @@
     "react-dom": "latest",
     "react-icons": "^5.5.0",
     "react-markdown": "^8.0.7",
+    "resend": "^4.5.1",
     "sentiment": "^5.0.2",
     "stripe": "^18.1.0"
   },
