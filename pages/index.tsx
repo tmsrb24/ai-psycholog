@@ -96,7 +96,7 @@ const HomePage = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Inovativní psychologická podpora s pokročilou AI
+                Psychologická podpora s pokročilou AI
               </h1>
               <p className="text-xl mb-8">
                 Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.
