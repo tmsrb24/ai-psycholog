@@ -88,14 +88,23 @@ export default NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
-      // Add token info to session
-      if (token && session.user) {
-        session.user.id = token.id as string;
-        // Add custom properties to session using proper types
-        session.accessToken = token.accessToken;
-        session.provider = token.provider;
+    async session({ session, token, user }) { // `user` is the user from the database for "database" strategy
+      console.log("Session callback. User from DB:", JSON.stringify(user), "Token:", JSON.stringify(token), "Initial session:", JSON.stringify(session));
+      // Populate session.user with essential fields from the database user
+      if (user && session.user) { // `user` is the user object from the database
+        session.user.id = user.id;
+        session.user.name = user.name; // Ensure these fields are on your user model in DB
+        session.user.email = user.email;
+        session.user.image = user.image;
       }
+      // If you were previously adding custom properties like accessToken to the session object directly
+      // (not session.user), and these were populated into `token` by the `jwt` callback:
+      if (token) {
+        // Example: if you need these directly on session and they are on the token
+        // (session as any).accessToken = token.accessToken;
+        // (session as any).provider = token.provider;
+      }
+      console.log("Final session object being returned:", JSON.stringify(session));
       return session;
     },
   },
