@@ -122,10 +122,7 @@ const PricingPage = () => {
                 <FaCheck className="text-green-500 mr-2" />
                 <span className="text-gray-600 dark:text-gray-300">Prioritní podpora</span>
               </li>
-              <li className="flex items-center">
-                <FaCheck className="text-green-500 mr-2" />
-                <span className="text-gray-600 dark:text-gray-300">Gamifikační prvky a odznaky</span>
-              </li>
+              {/* Gamifikační prvky a odznaky odstraněny */}
               <li className="flex items-center">
                 <FaCheck className="text-green-500 mr-2" />
                 <span className="text-gray-600 dark:text-gray-300 font-semibold">RAG systém nové generace</span>

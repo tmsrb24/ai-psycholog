@@ -198,6 +198,10 @@ const HomePage = () => {
                 </li>
                 <li className="flex items-center">
                   <FaCheck className="text-green-500 mr-2" />
+                  <span className="text-gray-600 dark:text-gray-300">Všechna témata konverzace</span>
+                </li>
+                <li className="flex items-center">
+                  <FaCheck className="text-green-500 mr-2" />
                   <span className="text-gray-600 dark:text-gray-300">Neomezená historie konverzací</span>
                 </li>
                 <li className="flex items-center">
@@ -207,6 +211,13 @@ const HomePage = () => {
                 <li className="flex items-center">
                   <FaCheck className="text-green-500 mr-2" />
                   <span className="text-gray-600 dark:text-gray-300">Prioritní podpora</span>
+                </li>
+                <li className="flex items-center">
+                  <FaCheck className="text-green-500 mr-2" />
+                  <span className="text-gray-600 dark:text-gray-300 font-semibold">RAG systém nové generace</span>
+                  <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-1 rounded-full">
+                    NOVINKA
+                  </span>
                 </li>
               </ul>
               <Link href="/pricing" className="block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
