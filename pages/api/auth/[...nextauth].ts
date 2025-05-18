@@ -1,33 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { MongoClient } from "mongodb";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 
-let clientPromise: Promise<MongoClient>;
-
-if (!process.env.MONGODB_URI) {
-  throw new Error("Please add your MONGODB_URI to .env.local or Vercel environment variables");
-}
-
-const uri = process.env.MONGODB_URI;
-
-// Standard Next.js MongoDB connection pattern
-if (process.env.NODE_ENV === "development") {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  let globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>
-  }
-  if (!globalWithMongo._mongoClientPromise) {
-    const client = new MongoClient(uri);
-    globalWithMongo._mongoClientPromise = client.connect();
-  }
-  clientPromise = globalWithMongo._mongoClientPromise;
-} else {
-  // In production mode, it's best to not use a global variable.
-  const client = new MongoClient(uri);
-  clientPromise = client.connect();
-}
+// MongoDB related imports and code removed
 
 // Detailed logging for debugging
 console.log("Environment variables check:");
@@ -39,9 +13,7 @@ console.log("- MONGODB_URI exists:", !!process.env.MONGODB_URI);
 
 // Simplified NextAuth configuration
 export default NextAuth({
-  adapter: MongoDBAdapter(clientPromise, {
-    databaseName: "psycholog_db", // Můžete si zvolit jiný název databáze
-  }),
+  // Adapter removed
   providers: [
     // Only Google OAuth provider for now to simplify debugging
     GoogleProvider({
@@ -59,7 +31,7 @@ export default NextAuth({
   
   // Session configuration
   session: {
-    strategy: "database", // Používá databázi pro ukládání sezení
+    strategy: "jwt", // Using JWT strategy
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   
@@ -76,34 +48,34 @@ export default NextAuth({
       return true;
     },
     async jwt({ token, user, account }) {
-      // Add user info to token if available
+      // Add user info to token if available (on initial sign in)
       if (user) {
         token.id = user.id as string;
         token.email = user.email as string;
+        token.name = user.name as string; // Add name to token
+        token.image = user.image as string; // Add image to token
       }
-      // Add account info to token if available
+      // Add account info to token if available (on initial sign in)
       if (account) {
         token.accessToken = account.access_token as string;
         token.provider = account.provider as string;
       }
       return token;
     },
-    async session({ session, token, user }) { // `user` is the user from the database for "database" strategy
-      console.log("Session callback. User from DB:", JSON.stringify(user), "Token:", JSON.stringify(token), "Initial session:", JSON.stringify(session));
-      // Populate session.user with essential fields from the database user
-      if (user && session.user) { // `user` is the user object from the database
-        session.user.id = user.id;
-        session.user.name = user.name; // Ensure these fields are on your user model in DB
-        session.user.email = user.email;
-        session.user.image = user.image;
+    async session({ session, token }) { // For JWT strategy, `user` (from DB) is not available here. Token is the source.
+      console.log("Session callback (JWT strategy). Token:", JSON.stringify(token), "Initial session:", JSON.stringify(session));
+      // Populate session.user with info from the token
+      if (token && session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.image = token.image as string;
       }
-      // If you were previously adding custom properties like accessToken to the session object directly
-      // (not session.user), and these were populated into `token` by the `jwt` callback:
-      if (token) {
-        // Example: if you need these directly on session and they are on the token
-        // (session as any).accessToken = token.accessToken;
-        // (session as any).provider = token.provider;
-      }
+      // If you need custom properties like accessToken directly on the session object:
+      // if (token) {
+      //   (session as any).accessToken = token.accessToken;
+      //   (session as any).provider = token.provider;
+      // }
       console.log("Final session object being returned:", JSON.stringify(session));
       return session;
     },
