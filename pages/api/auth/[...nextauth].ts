@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoClient } from "mongodb";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 
 // Enhanced error handling for MongoDB connection
 let clientPromise;
@@ -31,6 +32,9 @@ console.log("- MONGODB_URI exists:", !!process.env.MONGODB_URI);
 
 // Simplified NextAuth configuration
 export default NextAuth({
+  adapter: MongoDBAdapter(clientPromise, {
+    databaseName: "psycholog_db", // Můžete si zvolit jiný název databáze
+  }),
   providers: [
     // Only Google OAuth provider for now to simplify debugging
     GoogleProvider({
@@ -48,7 +52,7 @@ export default NextAuth({
   
   // Session configuration
   session: {
-    strategy: "jwt",
+    strategy: "database", // Používá databázi pro ukládání sezení
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   
