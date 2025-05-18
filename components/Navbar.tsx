@@ -108,6 +108,17 @@ const Navbar: React.FC = () => {
             >
               GDPR
             </Link>
+            <Link
+              href="/kontakt"
+              className={`px-3 py-2 rounded-md text-sm font-medium ${
+                isActive('/kontakt')
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+              }`}
+              onClick={closeMenu}
+            >
+              Kontakt
+            </Link>
             
             {/* Authentication UI */}
             {loading ? (
@@ -280,6 +291,17 @@ const Navbar: React.FC = () => {
               onClick={closeMenu}
             >
               GDPR
+            </Link>
+            <Link 
+              href="/kontakt" 
+              className={`block px-3 py-2 rounded-md text-base font-medium ${
+                isActive('/kontakt') 
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+              }`}
+              onClick={closeMenu}
+            >
+              Kontakt
             </Link>
             
             {/* Authentication links for mobile */}
