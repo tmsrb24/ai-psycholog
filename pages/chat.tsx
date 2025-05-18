@@ -5,7 +5,7 @@ import axios from 'axios';
 import { 
   FaMicrophone, FaVolumeUp, FaVolumeMute, FaCog, FaHistory, 
   FaBookMedical, FaUserFriends, FaSadTear, FaRunning, FaHeart,
-  FaSun, FaMoon, FaRobot, FaUser, FaChartLine, FaTrophy
+  FaSun, FaMoon, FaRobot, FaUser, FaChartLine, FaTrophy, FaTimes
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../components/ThemeProvider';
@@ -352,36 +352,54 @@ const ChatPage = () => {
 
             {/* Settings panel */}
             {showSettings && (
-              <div className="col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4">
-                <h2 className="text-lg font-bold mb-3 dark:text-white">Nastavení</h2>
-                
-                <div className="mb-4">
-                  <h3 className="font-medium mb-2 dark:text-white">Témata</h3>
-                  <div className="grid grid-cols-2 gap-2">
+              <div className="col-span-2 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 space-y-6 mb-4">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+                    <FaCog className="mr-3 text-blue-500" />
+                    Nastavení Chatu
+                  </h2>
+                  <button
+                    onClick={() => setShowSettings(false)}
+                    className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                    title="Zavřít nastavení"
+                  >
+                    <FaTimes size={20} />
+                  </button>
+                </div>
+
+                {/* Témata */}
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Hlavní téma konverzace</h3>
+                  <div className="flex flex-wrap gap-2">
                     {Object.entries(TOPICS).map(([key, topic]) => (
                       <button
                         key={key}
                         onClick={() => setSelectedTopic(key as any)}
-                        className={`p-2 rounded-md flex items-center ${
-                          selectedTopic === key ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white'
+                        className={`px-3 py-2 rounded-lg text-sm flex items-center transition-colors ${
+                          selectedTopic === key 
+                            ? 'bg-blue-500 text-white shadow-md' 
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
                         }`}
                       >
-                        {topic.icon}
-                        <span>{topic.title}</span>
+                        {topic.icon && React.cloneElement(topic.icon, { className: "mr-2 text-current" })}
+                        {topic.title}
                       </button>
                     ))}
                   </div>
                 </div>
                 
-                <div className="mb-4">
-                  <h3 className="font-medium mb-2 dark:text-white">Osobnost asistenta</h3>
-                  <div className="grid grid-cols-2 gap-2">
+                {/* Osobnost asistenta */}
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Preferovaná osobnost asistenta</h3>
+                  <div className="flex flex-wrap gap-2">
                     {Object.entries(PERSONALITIES).map(([key, personality]) => (
                       <button
                         key={key}
                         onClick={() => setSelectedPersonality(key as any)}
-                        className={`p-2 rounded-md text-center ${
-                          selectedPersonality === key ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white'
+                        className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                          selectedPersonality === key 
+                            ? 'bg-blue-500 text-white shadow-md' 
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
                         }`}
                       >
                         {personality.title}
@@ -390,81 +408,77 @@ const ChatPage = () => {
                   </div>
                 </div>
                 
-                <div className="mb-4">
-                  <h3 className="font-medium mb-2 dark:text-white">Délka odpovědí</h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    <button
-                      onClick={() => setResponseLength('short')}
-                      className={`p-2 rounded-md text-center ${
-                        responseLength === 'short' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white'
-                      }`}
-                    >
-                      Krátké
-                    </button>
-                    <button
-                      onClick={() => setResponseLength('medium')}
-                      className={`p-2 rounded-md text-center ${
-                        responseLength === 'medium' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white'
-                      }`}
-                    >
-                      Střední
-                    </button>
-                    <button
-                      onClick={() => setResponseLength('long')}
-                      className={`p-2 rounded-md text-center ${
-                        responseLength === 'long' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white'
-                      }`}
-                    >
-                      Dlouhé
-                    </button>
+                {/* Délka odpovědí */}
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Preferovaná délka odpovědí</h3>
+                  <div className="flex rounded-lg shadow-sm">
+                    {(['short', 'medium', 'long'] as const).map((length, idx, arr) => (
+                      <button
+                        key={length}
+                        onClick={() => setResponseLength(length)}
+                        className={`flex-1 px-3 py-2 text-sm transition-colors ${
+                          responseLength === length 
+                            ? 'bg-blue-500 text-white z-10' 
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
+                        } ${idx === 0 ? 'rounded-l-lg' : ''} ${idx === arr.length - 1 ? 'rounded-r-lg' : ''} ${idx > 0 ? '-ml-px' : ''}`}
+                      >
+                        {length === 'short' ? 'Krátké' : length === 'medium' ? 'Střední' : 'Dlouhé'}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                <div className="mb-4">
-                  <h3 className="font-medium mb-2 dark:text-white">Pohlaví asistenta</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => setAssistantGender('male')}
-                      className={`p-2 rounded-md text-center ${
-                        assistantGender === 'male' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white'
-                      }`}
-                    >
-                      Muž
-                    </button>
-                    <button
-                      onClick={() => setAssistantGender('female')}
-                      className={`p-2 rounded-md text-center ${
-                        assistantGender === 'female' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white'
-                      }`}
-                    >
-                      Žena
-                    </button>
+                {/* Pohlaví asistenta */}
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Preferované pohlaví asistenta</h3>
+                  <div className="flex rounded-lg shadow-sm">
+                    {(['male', 'female'] as const).map((gender, idx, arr) => (
+                      <button
+                        key={gender}
+                        onClick={() => setAssistantGender(gender)}
+                        className={`flex-1 px-3 py-2 text-sm transition-colors ${
+                          assistantGender === gender 
+                            ? 'bg-blue-500 text-white z-10' 
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
+                        } ${idx === 0 ? 'rounded-l-lg' : ''} ${idx === arr.length - 1 ? 'rounded-r-lg' : ''} ${idx > 0 ? '-ml-px' : ''}`}
+                      >
+                        {gender === 'male' ? 'Muž' : 'Žena'}
+                      </button>
+                    ))}
                   </div>
                 </div>
 
-                <div className="mb-4">
-                  <h3 className="font-medium mb-2 dark:text-white">Jméno asistenta</h3>
+                {/* Jméno asistenta */}
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <label htmlFor="assistantName" className="block text-md font-medium text-gray-700 dark:text-gray-300 mb-2">Jméno asistenta (nepovinné)</label>
                   <input
                     type="text"
+                    id="assistantName"
                     value={assistantName}
                     onChange={(e) => setAssistantName(e.target.value)}
-                    placeholder="Zadejte jméno (nepovinné)"
-                    className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    placeholder="Např. David, Lucie..."
+                    className="block w-full px-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:border-blue-500 shadow-sm"
                   />
                 </div>
                 
-                <div className="flex items-center mb-4">
-                  <input
-                    type="checkbox"
-                    id="saveHistory"
-                    checked={saveHistory}
-                    onChange={(e) => setSaveHistory(e.target.checked)}
-                    className="mr-2"
-                  />
-                  <label htmlFor="saveHistory" className="dark:text-white">Ukládat historii konverzací</label>
+                {/* Ukládat historii */}
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="saveHistory"
+                      checked={saveHistory}
+                      onChange={(e) => setSaveHistory(e.target.checked)}
+                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label htmlFor="saveHistory" className="ml-2 block text-sm text-gray-900 dark:text-gray-200">
+                      Ukládat historii konverzací (lokálně)
+                    </label>
+                  </div>
                 </div>
                 
-                <div className="flex justify-between">
+                {/* Tlačítka Akce */}
+                <div className="pt-6 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-end space-y-3 sm:space-y-0 sm:space-x-3">
                   <button
                     onClick={() => {
                       setSelectedTopic(null);
@@ -474,16 +488,11 @@ const ChatPage = () => {
                       setAssistantGender('male');
                       setAssistantName('');
                     }}
-                    className="btn btn-secondary"
+                    className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
                   >
-                    Resetovat
+                    Resetovat nastavení
                   </button>
-                  <button
-                    onClick={() => setShowSettings(false)}
-                    className="btn btn-primary"
-                  >
-                    Zavřít
-                  </button>
+                  {/* Tlačítko Zavřít je nyní v záhlaví panelu */}
                 </div>
               </div>
             )}
