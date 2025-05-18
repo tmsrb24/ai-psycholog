@@ -262,7 +262,7 @@ const ChatPage = () => {
         
         {/* Chat area */}
         <div className="flex-grow flex flex-col"> {/* Removed explicit height, rely on parent and flex-grow */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[calc(100vh-16rem)]" ref={chatContainerRef}> {/* Added max-h classes */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[55vh]" ref={chatContainerRef}> {/* Adjusted md:max-h */}
             {messages.filter(msg => msg.role !== 'system').map((message, index) => (
               <ChatMessage 
                 key={index}
