@@ -3,23 +3,30 @@ import GoogleProvider from "next-auth/providers/google";
 import { MongoClient } from "mongodb";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 
-// Enhanced error handling for MongoDB connection
-let clientPromise;
-try {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    console.error("MONGODB_URI is not defined in environment variables");
-  } else {
-    console.log("MongoDB URI exists in environment");
-    const client = new MongoClient(uri);
-    clientPromise = client.connect()
-      .catch(err => {
-        console.error("Failed to connect to MongoDB:", err);
-        return null;
-      });
+let clientPromise: Promise<MongoClient>;
+
+if (!process.env.MONGODB_URI) {
+  throw new Error("Please add your MONGODB_URI to .env.local or Vercel environment variables");
+}
+
+const uri = process.env.MONGODB_URI;
+
+// Standard Next.js MongoDB connection pattern
+if (process.env.NODE_ENV === "development") {
+  // In development mode, use a global variable so that the value
+  // is preserved across module reloads caused by HMR (Hot Module Replacement).
+  let globalWithMongo = global as typeof globalThis & {
+    _mongoClientPromise?: Promise<MongoClient>
   }
-} catch (error) {
-  console.error("Error setting up MongoDB connection:", error);
+  if (!globalWithMongo._mongoClientPromise) {
+    const client = new MongoClient(uri);
+    globalWithMongo._mongoClientPromise = client.connect();
+  }
+  clientPromise = globalWithMongo._mongoClientPromise;
+} else {
+  // In production mode, it's best to not use a global variable.
+  const client = new MongoClient(uri);
+  clientPromise = client.connect();
 }
 
 // Detailed logging for debugging
