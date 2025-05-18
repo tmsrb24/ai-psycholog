@@ -46,6 +46,11 @@ const Footer: React.FC = () => {
                   GDPR
                 </Link>
               </li>
+              <li>
+                <Link href="/kontakt" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                  Kontakt
+                </Link>
+              </li>
             </ul>
           </div>
           
