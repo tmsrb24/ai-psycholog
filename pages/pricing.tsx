@@ -117,9 +117,9 @@ const PricingPage = () => {
     },
     {
       name: 'Ultra',
-      price: '599 Kč',
+      price: '549 Kč',
       priceSuffix: '/měsíc',
-      description: 'Pro nejnáročnější uživatele a rodiny',
+      description: 'Pro nejnáročnější uživatele a rodinné sdílení',
       borderColor: 'border-purple-600',
       features: [
         { text: 'Vše z Premium plánu', included: true, bold: true },

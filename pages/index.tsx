@@ -72,9 +72,9 @@ const HomePage = () => {
     },
     {
       name: 'Ultra',
-      price: '599 Kč',
+      price: '549 Kč',
       priceSuffix: '/měsíc',
-      description: 'Pro nejnáročnější uživatele a rodiny',
+      description: 'Pro nejnáročnější uživatele a rodinné sdílení',
       borderColor: 'border-purple-600',
       features: [
         { text: 'Vše z Premium plánu', included: true, bold: true },
@@ -96,7 +96,7 @@ const HomePage = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0">
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Psychologická podpora s umělou inteligencí
+                Inovativní psychologická podpora s pokročilou AI
               </h1>
               <p className="text-xl mb-8">
                 Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.
