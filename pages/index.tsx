@@ -2,9 +2,92 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/Layout';
-import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck } from 'react-icons/fa';
+import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes } from 'react-icons/fa';
+import type { IconType } from 'react-icons';
+
+interface Feature {
+  text: string;
+  included: boolean;
+  bold?: boolean;
+  icon?: IconType;
+  tag?: string;
+}
+
+interface Plan {
+  name: string;
+  price: string;
+  priceSuffix: string;
+  description: string;
+  borderColor: string;
+  features: Feature[];
+  buttonText: string;
+  buttonLink: string;
+  isRecommended?: boolean;
+}
 
 const HomePage = () => {
+  const plans: Plan[] = [
+    {
+      name: 'Základní',
+      price: 'Zdarma',
+      priceSuffix: '',
+      description: 'Ideální pro vyzkoušení služby',
+      borderColor: 'border-gray-400',
+      features: [
+        { text: '5 zpráv denně', included: true },
+        { text: 'Základní analýza nálady', included: true },
+        { text: 'Základní témata konverzace', included: true },
+        { text: 'Historie konverzací', included: false },
+        { text: 'Přizpůsobení osobnosti asistenta', included: false },
+        { text: 'RAG systém nové generace', included: false },
+        { text: 'Prioritní podpora', included: false },
+        { text: 'Rodinné sdílení', included: false },
+        { text: 'Integrace s kalendářem', included: false },
+        { text: 'Přístup k beta verzím', included: false },
+      ],
+      buttonText: 'Vyzkoušet zdarma',
+      buttonLink: '/chat',
+    },
+    {
+      name: 'Premium',
+      price: '349 Kč',
+      priceSuffix: '/měsíc',
+      description: 'Pro pravidelnou psychologickou podporu',
+      borderColor: 'border-blue-600',
+      features: [
+        { text: 'Neomezené zprávy', included: true },
+        { text: 'Pokročilá analýza nálady', included: true },
+        { text: 'Všechna témata konverzace', included: true },
+        { text: 'Neomezená historie konverzací', included: true },
+        { text: 'Přizpůsobení osobnosti asistenta', included: true },
+        { text: 'RAG systém nové generace', included: true, tag: 'NOVINKA' },
+        { text: 'Prioritní podpora', included: false },
+        { text: 'Rodinné sdílení', included: false },
+        { text: 'Integrace s kalendářem', included: false },
+        { text: 'Přístup k beta verzím', included: false },
+      ],
+      buttonText: 'Vybrat Premium',
+      buttonLink: '/pricing', // Nebo přímý odkaz na checkout pro premium
+      isRecommended: true,
+    },
+    {
+      name: 'Ultra',
+      price: '599 Kč',
+      priceSuffix: '/měsíc',
+      description: 'Pro nejnáročnější uživatele a rodiny',
+      borderColor: 'border-purple-600',
+      features: [
+        { text: 'Vše z Premium plánu', included: true, bold: true },
+        { text: 'Prioritní podpora', included: true, icon: FaStar },
+        { text: 'Rodinné sdílení (až 3 členové)', included: true, icon: FaUsers },
+        { text: 'Integrace s kalendářem', included: true, icon: FaCalendarAlt },
+        { text: 'Přístup k beta verzím', included: true, icon: FaFlask },
+      ],
+      buttonText: 'Vybrat Ultra',
+      buttonLink: '/pricing', // Nebo přímý odkaz na checkout pro ultra
+    }
+  ];
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -78,7 +161,7 @@ const HomePage = () => {
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sledování pokroku</h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Analýza nálady a gamifikační prvky vám pomohou sledovat váš pokrok a motivovat vás.
+                Analýza nálady vám pomůže sledovat váš pokrok a motivovat vás.
               </p>
             </div>
           </div>
@@ -148,7 +231,7 @@ const HomePage = () => {
 
       {/* Pricing Preview Section */}
       <section className="py-16 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> {/* max-w-7xl pro 3 plány */}
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Dostupné cenové plány</h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -156,74 +239,50 @@ const HomePage = () => {
             </p>
           </div>
 
-          <div className="flex flex-col md:flex-row gap-8 justify-center">
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-8 border-t-4 border-gray-400 flex-1 max-w-md">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Základní</h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">Ideální pro vyzkoušení služby</p>
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-6">Zdarma</div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">5 zpráv denně</span>
-                </li>
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">Základní analýza nálady</span>
-                </li>
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">Bez historie konverzací</span>
-                </li>
-              </ul>
-              <Link href="/chat" className="block text-center bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-3 px-6 rounded-lg transition-colors">
-                Vyzkoušet zdarma
-              </Link>
-            </div>
-
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-xl p-8 border-t-4 border-blue-600 flex-1 max-w-md transform scale-105">
-              <div className="absolute top-0 right-0 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
-                DOPORUČENO
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch"> {/* Změna na grid */}
+            {plans.map((plan) => (
+              <div 
+                key={plan.name} 
+                className={`bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 border-t-4 ${plan.borderColor} flex flex-col ${plan.isRecommended ? 'lg:scale-105 ring-2 ring-offset-2 ring-blue-500 dark:ring-blue-400' : ''} relative`}
+              >
+                {plan.isRecommended && (
+                  <div className="absolute top-0 right-0 bg-blue-600 dark:bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-lg">
+                    DOPORUČENO
+                  </div>
+                )}
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{plan.name}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-6 min-h-[3em]">{plan.description}</p>
+                <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">{plan.price}</div>
+                {plan.priceSuffix && <p className="text-md text-gray-500 dark:text-gray-400 mb-6">{plan.priceSuffix}</p>}
+                
+                <ul className="space-y-3 mb-8 flex-grow">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-start">
+                      {feature.included ? 
+                        (feature.icon ? <feature.icon className="text-green-500 mr-2 mt-1 flex-shrink-0" /> : <FaCheck className="text-green-500 mr-2 mt-1 flex-shrink-0" />)
+                        : <FaTimes className="text-red-500 mr-2 mt-1 flex-shrink-0" />
+                      }
+                      <span className={`${feature.included ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-500 line-through'} ${feature.bold ? 'font-semibold' : ''}`}>
+                        {feature.text}
+                        {feature.tag && (
+                          <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-0.5 rounded-full">
+                            {feature.tag}
+                          </span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href={plan.buttonLink} className={`block w-full text-center mt-auto ${
+                    plan.name === 'Základní' ? 'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100' : 
+                    plan.borderColor === 'border-blue-600' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 
+                    'bg-purple-600 hover:bg-purple-700 text-white'
+                  } font-semibold py-3 px-6 rounded-lg transition-colors shadow-md`}
+                >
+                  {plan.buttonText}
+                </Link>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Premium</h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">Pro pravidelnou psychologickou podporu</p>
-              <div className="text-4xl font-bold text-gray-900 dark:text-white mb-6">349 Kč<span className="text-xl font-normal text-gray-600 dark:text-gray-400">/měsíc</span></div>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">Neomezené zprávy</span>
-                </li>
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">Pokročilá analýza nálady</span>
-                </li>
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">Všechna témata konverzace</span>
-                </li>
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">Neomezená historie konverzací</span>
-                </li>
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">Přizpůsobení osobnosti asistenta</span>
-                </li>
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300">Prioritní podpora</span>
-                </li>
-                <li className="flex items-center">
-                  <FaCheck className="text-green-500 mr-2" />
-                  <span className="text-gray-600 dark:text-gray-300 font-semibold">RAG systém nové generace</span>
-                  <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-1 rounded-full">
-                    NOVINKA
-                  </span>
-                </li>
-              </ul>
-              <Link href="/pricing" className="block text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-                Vybrat plán
-              </Link>
-            </div>
+            ))}
           </div>
         </div>
       </section>
