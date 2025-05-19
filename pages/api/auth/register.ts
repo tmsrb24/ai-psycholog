@@ -3,7 +3,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 // import bcrypt from 'bcryptjs'; // Bcrypt not used if not storing passwords
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resendApiKey = process.env.RESEND_API_KEY;
+let resend: Resend | null = null;
+
+if (resendApiKey) {
+  resend = new Resend(resendApiKey);
+} else {
+  console.warn('RESEND_API_KEY is not set. Email sending will be disabled.');
+}
 
 // MongoDB connection details removed as MongoDB is not used for now
 // const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/ai-psycholog";
@@ -34,13 +41,20 @@ export default async function handler(
 
   // MongoDB logic (user creation, duplicate check, password hashing) is removed for now.
   // This means users registered via this endpoint are not stored in a database.
-  // This endpoint will only attempt to send a welcome email.
+  // This endpoint will only attempt to send a welcome email if Resend is configured.
+
+  if (!resend) {
+    console.error('Resend client is not initialized. RESEND_API_KEY might be missing.');
+    // Still return a "success" to the client as user data was validated, but email part failed.
+    // Or, decide if this should be a server error. For now, let's inform about email part.
+    return res.status(200).json({ 
+      message: 'Žádost o registraci přijata. Problém s konfigurací odesílání e-mailů. Kontaktujte podporu.',
+      emailSent: false
+    });
+  }
 
   try {
-    // Send confirmation email
-    // This email is sent regardless of whether the user is actually stored,
-    // as per current requirement to remove DB but keep email.
-    await resend.emails.send({
+    const { data, error: emailSendError } = await resend.emails.send({
       from: 'AI Psycholog <noreply@psychollog.cz>',
       to: [email],
       subject: 'Vítejte v AI Psycholog!',
@@ -58,17 +72,23 @@ export default async function handler(
         </div>
       `,
     });
-    console.log(`"Registration" email sent to ${email} (user not stored in DB).`);
+
+    if (emailSendError) {
+      console.error('Error sending registration email:', JSON.stringify(emailSendError, null, 2));
+      return res.status(500).json({ message: 'Chyba při odesílání potvrzovacího e-mailu.', errorDetail: emailSendError.message, emailSent: false });
+    }
     
-    // Return a response indicating email was sent, but be clear about registration status
+    console.log(`"Registration" email sent to ${email} with ID ${data?.id} (user not stored in DB).`);
+    
     return res.status(200).json({ 
-      message: 'Potvrzovací e-mail byl odeslán. Registrace e-mailem a heslem je momentálně ve vývoji.' 
-      // We don't return a userId as no user is created in DB
+      message: 'Potvrzovací e-mail byl odeslán. Registrace e-mailem a heslem je momentálně ve vývoji.',
+      emailSent: true,
+      emailId: data?.id
     });
 
-  } catch (error) {
-    console.error('Error processing registration request / sending email:', error);
-    return res.status(500).json({ message: 'Internal server error during email dispatch.' });
+  } catch (error) { // Catch any other unexpected errors
+    console.error('Unexpected error in registration request / sending email:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Neznámá chyba serveru.';
+    return res.status(500).json({ message: 'Interní chyba serveru při odesílání e-mailu.', errorDetail: errorMessage, emailSent: false });
   }
-  // No client.close() as no DB client was opened
 }
