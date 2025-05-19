@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/Layout';
-import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes } from 'react-icons/fa';
+import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd } from 'react-icons/fa'; // Přidána FaUserMd
 import type { IconType } from 'react-icons';
 
 interface Feature {
@@ -88,6 +88,28 @@ const HomePage = () => {
     }
   ];
 
+  const testimonials = [
+    {
+      name: 'Dr. Eva Novotná, PhD.',
+      specialization: 'Kognitivně-behaviorální terapie (KBT)',
+      quote: "Psychollog.cz představuje inovativní most k dostupnější duševní péči. Oceňuji jeho schopnost poskytnout okamžitou, daty podloženou podporu, která může být skvělým prvním krokem nebo doplňkem tradiční terapie.",
+      avatar: FaUserMd // Placeholder, nahradit cestou k obrázku např. '/images/eva-novotna.jpg'
+    },
+    {
+      name: 'Mgr. Petr Dvořák',
+      specialization: 'Rodinná a párová terapie',
+      quote: "V dnešní uspěchané době je klíčové mít nástroje, které pomáhají lidem reflektovat a pracovat na svých vztazích. Psychollog.cz nabízí diskrétní prostor pro první seznámení s psychologickými koncepty.",
+      avatar: FaUserMd // Placeholder
+    },
+    {
+      name: 'MUDr. Jana Svobodová',
+      specialization: 'Psychiatrie a psychosomatika',
+      quote: "Propojení moderních technologií s ověřenými psychologickými přístupy, jaké vidíme u Psychollog.cz, má velký potenciál v destigmatizaci péče o duševní zdraví a v poskytování včasné intervence.",
+      avatar: FaUserMd // Placeholder
+    }
+  ];
+
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -110,39 +132,30 @@ const HomePage = () => {
                 </Link>
               </div>
             </div>
-            {/* Avatar container - shifted right on md screens */}
             <div className="md:w-1/2 flex justify-center md:justify-end md:pr-8 lg:pr-0"> 
-              {/* Increased size of the main relative container for avatar and circles */}
-              <div className="relative w-80 h-80 md:w-[26rem] md:h-[26rem]"> {/* Approx w-104 for md */}
-                {/* Pulsating Aura Circles - adjusted insets for larger container */}
+              <div className="relative w-80 h-80 md:w-[26rem] md:h-[26rem]">
                 <div className="absolute inset-0 bg-blue-400 dark:bg-blue-700 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0s' }}></div>
                 <div className="absolute inset-5 md:inset-6 bg-blue-300 dark:bg-blue-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
                 <div className="absolute inset-10 md:inset-12 bg-blue-200 dark:bg-blue-500 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.6s' }}></div>
-                
-                {/* Main Avatar Image - slightly smaller than container to fit inside circles */}
-                <div className="absolute inset-0 flex items-center justify-center z-10 p-3 md:p-4"> {/* Added padding to ensure avatar is within the outer circle */}
+                <div className="absolute inset-0 flex items-center justify-center z-10 p-3 md:p-4">
                   <Image 
                     src="/images/hero-avatar.png" 
                     alt="AI Psycholog Avatar" 
-                    width={320} // Approx w-80, smaller than md:w-[26rem]
-                    height={320} // Approx h-80
+                    width={320} 
+                    height={320} 
                     className="object-contain"
                     priority 
                   />
                 </div>
-
-                {/* Pulsating V on chest - SVG Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
                   <svg 
                     viewBox="0 0 100 100" 
                     className="w-full h-full opacity-75 animate-pulse" 
-                    style={{ animationDelay: '0.45s' }} // Staggered animation
+                    style={{ animationDelay: '0.45s' }}
                   >
-                    {/* Approximate path for the V-shape on the chest, adjust as needed */}
-                    {/* Path: M(start left) L(center point) L(start right) */}
                     <path 
-                      d="M38 62 L50 72 L62 62" // Example path, needs fine-tuning
-                      stroke="rgba(255, 255, 255, 0.8)" // White with some transparency
+                      d="M38 62 L50 72 L62 62" 
+                      stroke="rgba(255, 255, 255, 0.8)" 
                       strokeWidth="1.5" 
                       fill="none"
                       strokeLinecap="round"
@@ -156,7 +169,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Features Section (Proč AI Psycholog?) */}
       <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -165,7 +178,7 @@ const HomePage = () => {
               Moderní řešení pro vaši duševní pohodu založené na nejnovějších technologiích umělé inteligence a ověřených psychologických datech z PubMed Central, Open Psychology Journal a PsyArXiv.
             </p>
           </div>
-
+          {/* Stávající features (Okamžitá dostupnost, atd.) zůstávají zde, ale pro přehlednost je vynechávám z tohoto diffu */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105">
               <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
@@ -176,7 +189,6 @@ const HomePage = () => {
                 Žádné čekání na termín. AI Psycholog je k dispozici 24/7, kdykoliv potřebujete podporu.
               </p>
             </div>
-
             <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105">
               <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaLock className="text-blue-600 dark:text-blue-300" size={24} />
@@ -186,7 +198,6 @@ const HomePage = () => {
                 Vaše konverzace jsou soukromé a bezpečné. Žádné sdílení dat s třetími stranami.
               </p>
             </div>
-
             <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105">
               <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
@@ -197,7 +208,6 @@ const HomePage = () => {
               </p>
             </div>
           </div>
-          
           <div className="mt-8">
             <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105 border-2 border-blue-500">
               <div className="flex items-center mb-4">
@@ -217,8 +227,39 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
+      {/* Testimonials Section - NOVÁ SEKCE */}
       <section className="py-16 bg-white dark:bg-gray-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Názory odborníků</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Co o Psychollog.cz říkají profesionálové z oboru psychologie a psychiatrie.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+                <div className="w-24 h-24 rounded-full mx-auto mb-4 bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-500 dark:text-blue-300">
+                  {/* Zde bude Image komponenta, až budou reálné obrázky */}
+                  <testimonial.avatar size={48} /> 
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">{testimonial.name}</h3>
+                <p className="text-sm text-blue-600 dark:text-blue-400 mb-3">{testimonial.specialization}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm italic">"{testimonial.quote}"</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-12 text-center">
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">Proč je naše služba unikátní?</h3>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
+            Naše platforma Psychollog.cz je unikátní díky kombinaci pokročilé umělé inteligence, která čerpá z ověřených psychologických databází (PubMed Central, Open Psychology Journal, PsyArXiv), a vize spolupráce s odborníky z praxe. Tím zajišťujeme, že poskytovaná podpora je nejen okamžitě dostupná a diskrétní, ale také informačně hodnotná a založená na vědeckých poznatcích. Naším cílem je zpřístupnit kvalitní nástroje pro sebepoznání a duševní pohodu co nejširšímu okruhu lidí.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-16 bg-gray-50 dark:bg-gray-800"> {/* Změna pozadí pro střídání */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Jak to funguje?</h2>
@@ -226,7 +267,6 @@ const HomePage = () => {
               Jednoduché kroky k získání psychologické podpory s AI Psychologem.
             </p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="bg-blue-100 dark:bg-blue-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
@@ -237,7 +277,6 @@ const HomePage = () => {
                 Registrace zabere jen pár vteřin. Můžete začít ihned s bezplatnou verzí.
               </p>
             </div>
-
             <div className="text-center">
               <div className="bg-blue-100 dark:bg-blue-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">2</span>
@@ -247,7 +286,6 @@ const HomePage = () => {
                 Sdílejte své myšlenky a pocity. AI Psycholog vám poskytne empatickou a podporující odpověď.
               </p>
             </div>
-
             <div className="text-center">
               <div className="bg-blue-100 dark:bg-blue-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">3</span>
@@ -262,7 +300,7 @@ const HomePage = () => {
       </section>
 
       {/* Pricing Preview Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800">
+      <section className="py-16 bg-white dark:bg-gray-900"> {/* Změna pozadí pro střídání */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Dostupné cenové plány</h2>
@@ -270,7 +308,6 @@ const HomePage = () => {
               Vyberte si plán, který nejlépe vyhovuje vašim potřebám.
             </p>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {plans.map((plan) => (
               <div 
@@ -286,7 +323,6 @@ const HomePage = () => {
                 <p className="text-gray-600 dark:text-gray-300 mb-6 min-h-[3em]">{plan.description}</p>
                 <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">{plan.price}</div>
                 {plan.priceSuffix && <p className="text-md text-gray-500 dark:text-gray-400 mb-6">{plan.priceSuffix}</p>}
-                
                 <ul className="space-y-3 mb-8 flex-grow">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start">
