@@ -93,19 +93,19 @@ const HomePage = () => {
       name: 'Dr. Eva Novotná, PhD.',
       specialization: 'Kognitivně-behaviorální terapie (KBT)',
       quote: "Psychollog.cz představuje inovativní most k dostupnější duševní péči. Oceňuji jeho schopnost poskytnout okamžitou, daty podloženou podporu, která může být skvělým prvním krokem nebo doplňkem tradiční terapie.",
-      avatar: FaUserMd // Placeholder, nahradit cestou k obrázku např. '/images/eva-novotna.jpg'
+      avatar: '/images/psychologist-avatar.png' 
     },
     {
       name: 'Mgr. Petr Dvořák',
       specialization: 'Rodinná a párová terapie',
       quote: "V dnešní uspěchané době je klíčové mít nástroje, které pomáhají lidem reflektovat a pracovat na svých vztazích. Psychollog.cz nabízí diskrétní prostor pro první seznámení s psychologickými koncepty.",
-      avatar: FaUserMd // Placeholder
+      avatar: '/images/psychologist-avatar.png'
     },
     {
       name: 'MUDr. Jana Svobodová',
       specialization: 'Psychiatrie a psychosomatika',
       quote: "Propojení moderních technologií s ověřenými psychologickými přístupy, jaké vidíme u Psychollog.cz, má velký potenciál v destigmatizaci péče o duševní zdraví a v poskytování včasné intervence.",
-      avatar: FaUserMd // Placeholder
+      avatar: '/images/psychologist-avatar.png'
     }
   ];
 
@@ -242,9 +242,14 @@ Zastavte se. Popovídejte si. Ulevte si.
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <div key={index} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
-                <div className="w-24 h-24 rounded-full mx-auto mb-4 bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-500 dark:text-blue-300">
-                  {/* Zde bude Image komponenta, až budou reálné obrázky */}
-                  <testimonial.avatar size={48} /> 
+                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-700">
+                  <Image 
+                    src={testimonial.avatar} 
+                    alt={`Fotografie ${testimonial.name}`} 
+                    layout="fill" 
+                    objectFit="cover" 
+                    className="rounded-full"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">{testimonial.name}</h3>
                 <p className="text-sm text-blue-600 dark:text-blue-400 mb-3">{testimonial.specialization}</p>
