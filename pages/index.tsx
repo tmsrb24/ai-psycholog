@@ -175,7 +175,10 @@ const HomePage = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Proč AI Psycholog?</h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-              Moderní řešení pro vaši duševní pohodu založené na nejnovějších technologiích umělé inteligence a ověřených psychologických datech z PubMed Central, Open Psychology Journal a PsyArXiv.
+              Malé rozhovory, které mohou změnit hodně.<br />
+V prostoru, kde vás nikdo nesoudí a kde můžete mluvit tak, jak to právě cítíte.<br />
+Psychollog je tu pro vás kdykoli – klidně jen na pár vět, nebo i na hlubší zamyšlení.<br />
+Zastavte se. Popovídejte si. Ulevte si.
             </p>
           </div>
           {/* Stávající features (Okamžitá dostupnost, atd.) zůstávají zde, ale pro přehlednost je vynechávám z tohoto diffu */}
