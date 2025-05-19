@@ -110,21 +110,23 @@ const HomePage = () => {
                 </Link>
               </div>
             </div>
-            <div className="md:w-1/2 flex justify-center">
-              <div className="relative w-72 h-72 md:w-96 md:h-96">
-                {/* Pulsating Aura Circles */}
-                <div className="absolute inset-0 bg-blue-400 dark:bg-blue-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0s' }}></div>
-                <div className="absolute inset-4 bg-blue-300 dark:bg-blue-500 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-                <div className="absolute inset-8 bg-blue-200 dark:bg-blue-400 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+            {/* Avatar container - shifted right on md screens */}
+            <div className="md:w-1/2 flex justify-center md:justify-end md:pr-8 lg:pr-0"> 
+              {/* Increased size of the main relative container for avatar and circles */}
+              <div className="relative w-80 h-80 md:w-[26rem] md:h-[26rem]"> {/* Approx w-104 for md */}
+                {/* Pulsating Aura Circles - adjusted insets for larger container */}
+                <div className="absolute inset-0 bg-blue-400 dark:bg-blue-700 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0s' }}></div>
+                <div className="absolute inset-5 md:inset-6 bg-blue-300 dark:bg-blue-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                <div className="absolute inset-10 md:inset-12 bg-blue-200 dark:bg-blue-500 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.6s' }}></div>
                 
-                {/* Main Avatar Image */}
-                <div className="absolute inset-0 flex items-center justify-center z-10">
+                {/* Main Avatar Image - slightly smaller than container to fit inside circles */}
+                <div className="absolute inset-0 flex items-center justify-center z-10 p-3 md:p-4"> {/* Added padding to ensure avatar is within the outer circle */}
                   <Image 
                     src="/images/hero-avatar.png" 
                     alt="AI Psycholog Avatar" 
-                    width={384} // Corresponds to w-96
-                    height={384} // Corresponds to h-96
-                    className="object-contain" // Or object-cover if preferred
+                    width={320} // Approx w-80, smaller than md:w-[26rem]
+                    height={320} // Approx h-80
+                    className="object-contain"
                     priority 
                   />
                 </div>
