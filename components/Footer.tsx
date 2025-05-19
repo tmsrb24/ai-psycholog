@@ -81,25 +81,27 @@ const Footer: React.FC = () => {
           </div>
         </div>
         
-        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
+        {/* Disclaimer, Crisis Notice, and Copyright Section */}
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 text-center space-y-6">
+          {/* Disclaimer and Crisis Notice Section */}
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-1">Důležité upozornění:</h4>
+              <p className="text-sm text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                AI Psycholog není náhradou za profesionální psychologickou péči. Je to doplňkový nástroj pro podporu psychické pohody. V případě vážných problémů vždy doporučujeme vyhledat odbornou pomoc.
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                <span className="font-semibold">🛟 Pokud jste v krizové situaci, zavolejte na <strong>116 123</strong> (Linka první psychické pomoci) nebo <strong>116 111</strong> (Linka bezpečí). Pomoc je anonymní a nonstop.</span>
+              </p>
+            </div>
+          </div>
+
+          {/* Copyright */}
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             &copy; {currentYear} AI Psycholog. Všechna práva vyhrazena.
           </p>
-        </div>
-
-        {/* Disclaimer and Crisis Notice Section */}
-        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center space-y-4">
-          <div>
-            <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-1">Důležité upozornění:</h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-              AI Psycholog není náhradou za profesionální psychologickou péči. Je to doplňkový nástroj pro podporu psychické pohody. V případě vážných problémů vždy doporučujeme vyhledat odbornou pomoc.
-            </p>
-          </div>
-          <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
-              <span className="font-semibold">🛟 Pokud jste v krizové situaci, zavolejte na <strong>116 123</strong> (Linka první psychické pomoci) nebo <strong>116 111</strong> (Linka bezpečí). Pomoc je anonymní a nonstop.</span>
-            </p>
-          </div>
         </div>
       </div>
     </footer>
