@@ -86,6 +86,21 @@ const Footer: React.FC = () => {
             &copy; {currentYear} AI Psycholog. Všechna práva vyhrazena.
           </p>
         </div>
+
+        {/* Disclaimer and Crisis Notice Section */}
+        <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center space-y-4">
+          <div>
+            <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-1">Důležité upozornění:</h4>
+            <p className="text-xs text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+              AI Psycholog není náhradou za profesionální psychologickou péči. Je to doplňkový nástroj pro podporu psychické pohody. V případě vážných problémů vždy doporučujeme vyhledat odbornou pomoc.
+            </p>
+          </div>
+          <div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+              <span className="font-semibold">🛟 Pokud jste v krizové situaci, zavolejte na <strong>116 123</strong> (Linka první psychické pomoci) nebo <strong>116 111</strong> (Linka bezpečí). Pomoc je anonymní a nonstop.</span>
+            </p>
+          </div>
+        </div>
       </div>
     </footer>
   );
