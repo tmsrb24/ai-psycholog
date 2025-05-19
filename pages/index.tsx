@@ -67,7 +67,7 @@ const HomePage = () => {
         { text: 'Přístup k beta verzím', included: false },
       ],
       buttonText: 'Vybrat Premium',
-      buttonLink: '/pricing', // Nebo přímý odkaz na checkout pro premium
+      buttonLink: '/pricing',
       isRecommended: true,
     },
     {
@@ -84,7 +84,7 @@ const HomePage = () => {
         { text: 'Přístup k beta verzím', included: true, icon: FaFlask },
       ],
       buttonText: 'Vybrat Ultra',
-      buttonLink: '/pricing', // Nebo přímý odkaz na checkout pro ultra
+      buttonLink: '/pricing',
     }
   ];
 
@@ -112,11 +112,41 @@ const HomePage = () => {
             </div>
             <div className="md:w-1/2 flex justify-center">
               <div className="relative w-72 h-72 md:w-96 md:h-96">
-                <div className="absolute inset-0 bg-blue-400 dark:bg-blue-700 rounded-full opacity-20 animate-pulse"></div>
-                <div className="absolute inset-4 bg-blue-300 dark:bg-blue-600 rounded-full opacity-20 animate-pulse animation-delay-300"></div>
-                <div className="absolute inset-8 bg-blue-200 dark:bg-blue-500 rounded-full opacity-20 animate-pulse animation-delay-600"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <FaUserFriends className="text-white" size={80} />
+                {/* Pulsating Aura Circles */}
+                <div className="absolute inset-0 bg-blue-400 dark:bg-blue-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0s' }}></div>
+                <div className="absolute inset-4 bg-blue-300 dark:bg-blue-500 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                <div className="absolute inset-8 bg-blue-200 dark:bg-blue-400 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+                
+                {/* Main Avatar Image */}
+                <div className="absolute inset-0 flex items-center justify-center z-10">
+                  <Image 
+                    src="/images/hero-avatar.png" 
+                    alt="AI Psycholog Avatar" 
+                    width={384} // Corresponds to w-96
+                    height={384} // Corresponds to h-96
+                    className="object-contain" // Or object-cover if preferred
+                    priority 
+                  />
+                </div>
+
+                {/* Pulsating V on chest - SVG Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+                  <svg 
+                    viewBox="0 0 100 100" 
+                    className="w-full h-full opacity-75 animate-pulse" 
+                    style={{ animationDelay: '0.45s' }} // Staggered animation
+                  >
+                    {/* Approximate path for the V-shape on the chest, adjust as needed */}
+                    {/* Path: M(start left) L(center point) L(start right) */}
+                    <path 
+                      d="M38 62 L50 72 L62 62" // Example path, needs fine-tuning
+                      stroke="rgba(255, 255, 255, 0.8)" // White with some transparency
+                      strokeWidth="1.5" 
+                      fill="none"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </div>
               </div>
             </div>
@@ -231,7 +261,7 @@ const HomePage = () => {
 
       {/* Pricing Preview Section */}
       <section className="py-16 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> {/* max-w-7xl pro 3 plány */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Dostupné cenové plány</h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
@@ -239,7 +269,7 @@ const HomePage = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch"> {/* Změna na grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
             {plans.map((plan) => (
               <div 
                 key={plan.name} 
