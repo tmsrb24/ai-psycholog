@@ -55,10 +55,9 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center" onClick={closeMenu}>
-              <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white p-2 rounded-lg mr-2">
-                <span className="font-bold text-xl">AI</span>
+              <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-2 px-3 rounded-lg">
+                <span className="font-bold text-xl">Psychollog.cz</span>
               </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">Psycholog</span>
             </Link>
           </div>
 
