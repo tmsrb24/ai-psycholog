@@ -60,17 +60,25 @@
   }
   
   .btn-primary {
-    /* Použije akcentní barvu tématu */
-    @apply bg-accent text-white hover:bg-accent-hover;
+    background-color: rgb(var(--color-accent));
+    color: white; /* Předpokládáme, že text na akcentní barvě je vždy bílý, nebo přidat --color-text-on-accent */
+    @apply hover:opacity-80; /* Nahradit hover:bg-accent-hover, pokud chceme použít proměnnou */
+    /* Alternativně pro hover: background-color: rgb(var(--color-accent-hover)); */
   }
   
   .btn-secondary {
-    /* Světlejší varianta, nebo kontrastní k primárnímu pozadí */
-    @apply bg-bg-secondary text-text-primary hover:opacity-80 border border-border;
+    background-color: rgb(var(--color-bg-secondary));
+    color: rgb(var(--color-text-primary));
+    border-color: rgb(var(--color-border));
+    @apply border hover:opacity-80;
   }
   
   .input {
-    @apply px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-ring bg-bg-secondary text-text-primary;
+    background-color: rgb(var(--color-bg-secondary));
+    color: rgb(var(--color-text-primary));
+    border-color: rgb(var(--color-border));
+    /* Pro focus:ring-ring, 'ring-color' je definován v tailwind.config.js, takže by měl fungovat */
+    @apply px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-ring-color;
   }
   
   /* Původní user/assistant message styly - bude potřeba je také refaktorovat, pokud se používají */
