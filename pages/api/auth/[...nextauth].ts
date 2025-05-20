@@ -63,9 +63,11 @@ export const authOptions: NextAuthOptions = {
         }
         
         if (!idFromProvider) {
-          console.warn(`[NextAuth] JWT: Could not determine a valid ID for provider ${account.provider}. Token.id will be undefined.`);
+          console.error(`[NextAuth] JWT CRITICAL: Could not determine a valid ID for provider ${account.provider}. Setting token.id to empty string.`);
+          token.id = ""; // TypeScript vyžaduje string, ale toto ID je neplatné
+        } else {
+          token.id = idFromProvider;
         }
-        token.id = idFromProvider;
         
         token.email = user.email ?? undefined;
         token.name = user.name ?? undefined;
