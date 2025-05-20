@@ -83,32 +83,31 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+    // async session({ session, token }) { // Původní začátek duplicitního bloku
+    //   console.log("[NextAuth] Session callback START. Token:", JSON.stringify(token, null, 2), "Initial session.user:", JSON.stringify(session?.user, null, 2));
+    // } // Konec duplicitního řádku, který způsoboval chybu
+    // Správný session callback začíná zde:
     async session({ session, token }) {
       console.log("[NextAuth] Session callback START. Token:", JSON.stringify(token, null, 2), "Initial session.user:", JSON.stringify(session?.user, null, 2));
       
-      // Vytvoříme nový user objekt, abychom se vyhnuli problémům s referencemi
-      const newSessionUser = {
-        // Převezmeme existující vlastnosti z session.user, pokud existují (name, email, image z DefaultSession)
-        name: session.user?.name ?? null,
-        email: session.user?.email ?? null,
-        image: session.user?.image ?? null,
-        // Přidáme/přepíšeme id z tokenu
-        id: token.id ? String(token.id) : "", 
-      };
-
-      if (!newSessionUser.id) {
-          console.warn("[NextAuth] Session: newSessionUser.id is empty after assignment from token.id. Original token.id was:", token?.id);
+      if (!session.user) { // Pokud session.user z nějakého důvodu neexistuje, vytvoříme ho
+        session.user = {} as { id: string; name?: string | null; email?: string | null; image?: string | null };
       }
       
-      // session.user = newSessionUser; // Přiřadíme nový, kompletní user objekt
-      // console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(newSessionUser, null, 2));
-      // Vrátíme nový session objekt s upraveným user objektem
-      return {
-        ...session, // zachová expires a další případné vlastnosti session
-        user: newSessionUser,
-      };
+      // Přímo modifikujeme session.user
+      session.user.id = token.id ? String(token.id) : ""; 
+      session.user.name = (token.name as string | null | undefined) ?? null;
+      session.user.email = (token.email as string | null | undefined) ?? null;
+      session.user.image = (token.image as string | null | undefined) ?? null;
+
+      if (!session.user.id) {
+          console.warn("[NextAuth] Session: session.user.id is empty after assignment from token.id. Original token.id was:", token?.id);
+      }
+      
+      console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(session.user, null, 2));
+      return session; // Vrátíme modifikovaný session objekt
     },
-  },
+  }, // Konec callbacks
   debug: true, // Ponecháme debug zapnutý pro více logů
   logger: {
     error(code: any, metadata: any) {
