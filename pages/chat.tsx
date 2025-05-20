@@ -17,7 +17,7 @@ import { UserProfileData } from '../types';
 import SentimentAnalyzer from '../components/SentimentAnalyzer';
 import Gamification from '../components/Gamification';
 import CrisisNotice from '../components/CrisisNotice';
-import ChatSettingsModal from '../components/ChatSettingsModal'; // Import nového modálu
+import ChatSettingsModal from '../components/ChatSettingsModal';
 import { Message } from '../types';
 
 const ChatPage = () => {
@@ -29,7 +29,6 @@ const ChatPage = () => {
   const [loading, setLoading] = useState(false);
   const [loadingEstimatedTime, setLoadingEstimatedTime] = useState(5);
   
-  // Stavy pro nastavení chatu (budou předány do modálu)
   const [selectedTopic, setSelectedTopic] = useState<'anxiety' | 'relationships' | 'depression' | 'stress' | 'selfEsteem' | null>(null);
   const [selectedPersonality, setSelectedPersonality] = useState<'supportive' | 'practical' | 'analytical' | 'mentor' | 'coach' | 'mediator' | null>(null);
   const [saveHistory, setSaveHistory] = useState(false);
@@ -37,12 +36,13 @@ const ChatPage = () => {
   const [assistantGender, setAssistantGender] = useState<'male' | 'female'>('male');
   const [assistantName, setAssistantName] = useState<string>('');
   
-  const [showSettingsModal, setShowSettingsModal] = useState(false); // Stav pro zobrazení modálu
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
   
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null);
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   
-  const [showHistory, setShowHistory] = useState(false); // Tento stav zůstává pro panel historie
+  const [showHistory, setShowHistory] = useState(false);
   const [conversationHistory, setConversationHistory] = useState<{
     id: string;
     title: string;
@@ -70,8 +70,23 @@ const ChatPage = () => {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setSpeechSynthesis(window.speechSynthesis);
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const synth = window.speechSynthesis;
+      setSpeechSynthesis(synth);
+
+      const loadVoices = () => {
+        const voices = synth.getVoices();
+        if (voices.length > 0) {
+          setAvailableVoices(voices);
+        }
+      };
+
+      // Voices might load asynchronously
+      if (synth.getVoices().length === 0) {
+        synth.onvoiceschanged = loadVoices;
+      } else {
+        loadVoices();
+      }
     }
   }, []);
   
@@ -114,6 +129,16 @@ const ChatPage = () => {
       speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'cs-CZ';
+
+      // Try to find a Czech voice
+      const czechVoice = availableVoices.find(voice => voice.lang === 'cs-CZ');
+      if (czechVoice) {
+        utterance.voice = czechVoice;
+      } else {
+        // Fallback if no specific Czech voice is found, browser will use lang attribute
+        console.warn('Český hlas pro TTS nebyl nalezen, použije se výchozí hlas pro cs-CZ.');
+      }
+      
       speechSynthesis.speak(utterance);
       setIsSpeaking(true);
       utterance.onend = () => setIsSpeaking(false);
@@ -206,19 +231,16 @@ const ChatPage = () => {
 
   return (
     <Layout title="Chat | AI Psycholog" description="Chatujte s AI psychologem a získejte podporu kdykoliv potřebujete.">
-      <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]"> {/* Adjusted max-width and min-height */}
-        {/* Sidebar */}
-        <div className="w-full md:w-72 md:mr-6 mb-4 md:mb-0 flex-shrink-0"> {/* Increased width of sidebar */}
-          <div className="space-y-4"> {/* Use space-y for consistent spacing */}
-            
-            {/* Controls - always visible */}
+      <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
+        <div className="w-full md:w-72 md:mr-6 mb-4 md:mb-0 flex-shrink-0">
+          <div className="space-y-4">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
               <div className="grid grid-cols-2 gap-3">
                 {[
                   { label: 'Profil', icon: FaUser, action: () => setShowProfile(!showProfile), active: showProfile },
                   { label: 'Analýza', icon: FaChartLine, action: () => setShowAnalytics(!showAnalytics), active: showAnalytics, disabled: messages.length <= 1 },
                   { label: 'Úspěchy', icon: FaTrophy, action: () => setShowGamification(!showGamification), active: showGamification },
-                  { label: 'Nastavení', icon: FaCog, action: () => setShowSettingsModal(true), active: showSettingsModal } // Otevírá modál
+                  { label: 'Nastavení', icon: FaCog, action: () => setShowSettingsModal(true), active: showSettingsModal }
                 ].map(item => (
                   <button 
                     key={item.label}
@@ -235,8 +257,6 @@ const ChatPage = () => {
                 ))}
               </div>
             </div>
-
-            {/* Dynamically shown panels (Profil, Analýza, Úspěchy) */}
             {showProfile && (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
                 <UserProfile onProfileChange={handleProfileChange} />
@@ -256,13 +276,11 @@ const ChatPage = () => {
                 />
               </div>
             )}
-            {/* Původní panel nastavení byl odstraněn */}
           </div>
         </div>
         
-        {/* Chat area */}
-        <div className="flex-grow flex flex-col"> {/* Removed explicit height, rely on parent and flex-grow */}
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]" ref={chatContainerRef}> {/* Further adjusted md:max-h */}
+        <div className="flex-grow flex flex-col">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]" ref={chatContainerRef}>
             {messages.filter(msg => msg.role !== 'system').map((message, index) => (
               <ChatMessage 
                 key={index}
@@ -289,7 +307,6 @@ const ChatPage = () => {
         </div>
       </div>
 
-      {/* Modál pro nastavení chatu */}
       <ChatSettingsModal
         isOpen={showSettingsModal}
         onClose={() => setShowSettingsModal(false)}
