@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Message, ApiResponse, UserProfileData } from '../../types'; // Přidán UserProfileData
+import { Message, ApiResponse, UserProfileData } from '../../types';
 import axios from 'axios';
 import { ragService, initializeRagWithSamples } from '../../lib/rag';
-import { supabase } from '../../lib/supabaseClient'; // Import Supabase klienta
+import { supabase } from '../../lib/supabaseClient';
 import { getServerSession } from "next-auth/next";
-import authOptions from "./auth/[...nextauth]"; // Import authOptions
+import type { Session } from "next-auth"; // Import Session typu
+import authOptions from "./auth/[...nextauth]";
 
 let ragInitialized = false;
 const initializeRag = async () => {
@@ -22,11 +23,12 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const session = await getServerSession(req, res, authOptions);
-  if (!session || !session.user?.id) {
-    return res.status(401).json({ error: 'Nejste přihlášeni.' });
+  const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce
+
+  if (!session || !session.user || typeof session.user.id !== 'string') { // Přísnější kontrola
+    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí ID uživatele v session.' });
   }
-  const userId = session.user.id;
+  const userId: string = session.user.id;
 
   try {
     await initializeRag();
