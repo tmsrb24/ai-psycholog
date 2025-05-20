@@ -84,18 +84,25 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      console.log("[NextAuth] Session callback START. Token.id:", token?.id, "Session.user.id_before:", session?.user?.id);
-      if (session.user) {
-        // Zajistíme, že id je vždy string. Pokud token.id je undefined/null, session.user.id bude prázdný string.
-        session.user.id = token.id ? String(token.id) : ""; 
-        if (!session.user.id) {
-            console.warn("[NextAuth] Session: session.user.id is empty after assignment from token.id. Original token.id was:", token?.id);
-        }
-        session.user.name = (token.name as string | null | undefined) ?? null;
-        session.user.email = (token.email as string | null | undefined) ?? null;
-        session.user.image = (token.image as string | null | undefined) ?? null;
+      console.log("[NextAuth] Session callback START. Token:", JSON.stringify(token, null, 2), "Initial session.user:", JSON.stringify(session?.user, null, 2));
+      
+      // Vytvoříme nový user objekt, abychom se vyhnuli problémům s referencemi
+      const newSessionUser = {
+        // Převezmeme existující vlastnosti z session.user, pokud existují (name, email, image z DefaultSession)
+        name: session.user?.name ?? null,
+        email: session.user?.email ?? null,
+        image: session.user?.image ?? null,
+        // Přidáme/přepíšeme id z tokenu
+        id: token.id ? String(token.id) : "", 
+      };
+
+      if (!newSessionUser.id) {
+          console.warn("[NextAuth] Session: newSessionUser.id is empty after assignment from token.id. Original token.id was:", token?.id);
       }
-      console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(session?.user, null, 2));
+      
+      session.user = newSessionUser; // Přiřadíme nový, kompletní user objekt
+
+      console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(session.user, null, 2));
       return session;
     },
   },
