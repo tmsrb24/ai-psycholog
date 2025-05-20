@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { type NextAuthOptions } from "next-auth"; // Přidán import NextAuthOptions
 import GoogleProvider from "next-auth/providers/google";
 
 // MongoDB related imports and code removed
@@ -12,7 +12,7 @@ console.log("- GOOGLE_CLIENT_SECRET exists:", !!process.env.GOOGLE_CLIENT_SECRET
 console.log("- MONGODB_URI exists:", !!process.env.MONGODB_URI);
 
 // Simplified NextAuth configuration
-export default NextAuth({
+export const authOptions: NextAuthOptions = { // Extrahováno do konstanty a exportováno
   // Adapter removed
   providers: [
     // Only Google OAuth provider for now to simplify debugging
@@ -96,4 +96,6 @@ export default NextAuth({
       console.log("NextAuth debug:", { code, metadata });
     }
   }
-});
+};
+
+export default NextAuth(authOptions); // Použití konstanty
