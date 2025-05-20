@@ -1,6 +1,7 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import { useState, useEffect, useRef } from 'react';
+import { useSession } from 'next-auth/react'; // Přidán import
 import axios from 'axios';
 import { 
   FaMicrophone, FaVolumeUp, FaVolumeMute, FaCog, FaHistory, 
@@ -50,7 +51,7 @@ const ChatPage = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [userProfile, setUserProfile] = useState<UserProfileData>({
     name: 'Uživatel',
-    avatar: null,
+    avatar_url: null, // Změněno z avatar na avatar_url
     preferences: {
       responseLength: 'medium',
       communicationStyle: 'casual',
@@ -67,6 +68,8 @@ const ChatPage = () => {
   
   const chatContainerRef = useRef<HTMLDivElement>(null);
   
+  const { data: session, status: authStatus } = useSession(); // Přidáno pro získání session
+
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       const synth = window.speechSynthesis;
@@ -78,8 +81,36 @@ const ChatPage = () => {
       if (synth.getVoices().length === 0) synth.onvoiceschanged = loadVoices;
       else loadVoices();
     }
-    // TODO: Načíst userProfile, sessionCount, streakDays, lastSessionDate z DB (až bude API)
-  }, []);
+
+    const fetchUserProfile = async () => {
+      if (authStatus === "authenticated" && session?.user) {
+        try {
+          const response = await fetch('/api/user/profile');
+          if (response.ok) {
+            const profileData = await response.json();
+            setUserProfile(profileData);
+            // Nastavení preferencí z profilu do stavů chatu
+            if (profileData.preferences) {
+              setResponseLength(profileData.preferences.responseLength || 'medium');
+              if (profileData.preferences.assistantGender) {
+                setAssistantGender(profileData.preferences.assistantGender);
+              }
+              if (profileData.preferences.assistantName) {
+                setAssistantName(profileData.preferences.assistantName);
+              }
+            }
+          } else {
+            console.error('Nepodařilo se načíst profil uživatele:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Chyba při načítání profilu uživatele:', error);
+        }
+      }
+    };
+
+    fetchUserProfile();
+    // TODO: Načíst sessionCount, streakDays, lastSessionDate z DB (až bude API)
+  }, [authStatus, session]); // Závislost na authStatus a session
   
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -154,10 +185,33 @@ const ChatPage = () => {
     }
   };
 
-  const handleProfileChange = (profile: UserProfileData) => {
-    setUserProfile(profile);
-    setResponseLength(profile.preferences.responseLength);
-    // TODO: Uložit změny profilu do DB přes API
+  const handleProfileChange = async (updatedProfile: UserProfileData) => {
+    setUserProfile(updatedProfile); // Optimistické UI
+    setResponseLength(updatedProfile.preferences.responseLength);
+    if (updatedProfile.preferences.assistantGender) {
+      setAssistantGender(updatedProfile.preferences.assistantGender);
+    }
+    if (updatedProfile.preferences.assistantName) {
+      setAssistantName(updatedProfile.preferences.assistantName);
+    }
+
+    try {
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedProfile), // Posíláme celý profil, API si vezme, co potřebuje
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Nepodařilo se uložit profil:', errorData.error || response.statusText);
+        // TODO: Možná vrátit UI do původního stavu nebo zobrazit chybu uživateli
+      } else {
+        console.log('Profil úspěšně uložen.');
+      }
+    } catch (error) {
+      console.error('Chyba při ukládání profilu:', error);
+      // TODO: Zobrazit chybu uživateli
+    }
   };
 
   const TOPICS = { /* ... beze změny ... */ };

@@ -28,7 +28,7 @@ export type AssistantGender = 'male' | 'female';
 
 export interface UserProfileData {
   name: string;
-  avatar: string | null;
+  avatar_url: string | null; // Změněno z avatar na avatar_url
   preferences: {
     responseLength: ResponseLength;
     communicationStyle: CommunicationStyle;
