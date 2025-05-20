@@ -33,49 +33,62 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log("[NextAuth] signIn callback", { userEmail: user?.email, accountProvider: account?.provider, profileSub: (profile as any)?.sub });
+      console.log("[NextAuth] signIn callback:", { 
+        userId: user?.id, 
+        userEmail: user?.email, 
+        accountProvider: account?.provider, 
+        profileSub: (profile as any)?.sub 
+      });
       return true;
     },
     async jwt({ token, user, account, profile }) {
-      // Tento callback se volá při vytvoření/aktualizaci JWT.
-      // `user`, `account`, `profile` jsou k dispozici pouze při prvním přihlášení.
-      if (account && user) { // První přihlášení
-        token.id = user.id; // Standardní user.id z NextAuth (mělo by být profile.sub pro OAuth)
-        
-        // Pro Google explicitně použijeme 'sub' z profilu, pokud je k dispozici,
-        // protože to je garantované unikátní ID uživatele od Google.
+      console.log("[NextAuth] JWT callback START:", { 
+        tokenId_before: token?.id, 
+        userId: user?.id, 
+        profileSub: (profile as any)?.sub,
+        accountProvider: account?.provider
+      });
+      
+      if (account && user) {
+        let newId = user.id; // user.id by mělo být nastaveno NextAuth z profile.sub
         if (account.provider === "google" && (profile as any)?.sub) {
-          token.id = (profile as any).sub;
+          newId = (profile as any).sub; // Preferujeme 'sub' od Google jako spolehlivější ID
+          console.log(`[NextAuth] JWT: Google provider, using profile.sub (${newId}) as token.id`);
+        } else if (!newId) {
+          console.warn(`[NextAuth] JWT: user.id is missing for provider ${account.provider}. Token.id will be undefined.`);
         }
+        token.id = newId;
         
-        token.email = user.email ?? undefined; // Zajistí string | undefined
-        token.name = user.name ?? undefined;   // Zajistí string | undefined
-        token.image = user.image ?? undefined; // Zajistí string | undefined
+        token.email = user.email ?? undefined;
+        token.name = user.name ?? undefined;
+        token.image = user.image ?? undefined;
         
         if (account.access_token) {
           token.accessToken = account.access_token;
         }
         token.provider = account.provider;
         console.log("[NextAuth] JWT callback - initial sign in. Token populated:", JSON.stringify(token, null, 2));
+      } else {
+        // console.log("[NextAuth] JWT callback - subsequent call (user/account/profile not present). Token:", JSON.stringify(token, null, 2));
       }
       return token;
     },
     async session({ session, token }) {
-      // Tento callback se volá vždy, když se přistupuje k session.
-      // Přidáváme data z tokenu do `session.user` objektu.
+      console.log("[NextAuth] Session callback START. Token.id:", token?.id, "Session.user.id_before:", session?.user?.id);
       if (session.user) {
-        // Zajistíme, že id je vždy string. Pokud by token.id bylo undefined, session.user.id bude prázdný string.
-        // To by mělo být ošetřeno v jwt callbacku, aby token.id vždy mělo hodnotu.
-        session.user.id = (token.id as string) || ""; 
+        session.user.id = (token.id as string) || ""; // Pokud token.id není string, bude prázdný string
+        if (!session.user.id) {
+            console.warn("[NextAuth] Session: session.user.id is empty after assignment from token.id. Original token.id was:", token?.id);
+        }
         session.user.name = (token.name as string | null | undefined) ?? null;
         session.user.email = (token.email as string | null | undefined) ?? null;
         session.user.image = (token.image as string | null | undefined) ?? null;
       }
-      // console.log("[NextAuth] Session callback. Final session object:", JSON.stringify(session, null, 2));
+      console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(session?.user, null, 2));
       return session;
     },
   },
-  debug: process.env.NODE_ENV === 'development', // Zapnout debug jen ve vývoji
+  debug: true, // Ponecháme debug zapnutý pro více logů
   logger: {
     error(code: any, metadata: any) {
       console.error("[NextAuth ERROR]", { code, ...metadata });
@@ -84,7 +97,7 @@ export const authOptions: NextAuthOptions = {
       console.warn("[NextAuth WARN]", code);
     },
     debug(code: any, metadata: any) {
-      // console.log("[NextAuth DEBUG]", { code, ...metadata }); // Příliš ukecané, zapnout jen při potřebě
+      console.log("[NextAuth DEBUG]", { code, ...metadata }); // Povolíme debug logy
     }
   }
 };
