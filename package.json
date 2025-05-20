@@ -16,6 +16,8 @@
     "axios": "^1.6.7",
     "bcryptjs": "^3.0.2",
     "framer-motion": "^10.16.4",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.1",
     "mongodb": "^5.9.2",
     "next": "latest",
     "next-auth": "^4.24.7",

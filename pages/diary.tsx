@@ -1,34 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Layout from '../components/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { FaBookMedical, FaPlus, FaSave, FaSmile, FaTag, FaFilePdf } from 'react-icons/fa';
+import { FaBookMedical, FaSave, FaSmile, FaTag, FaFilePdf, FaRegMeh, FaRegSmile, FaRegFrown, FaRegAngry, FaRegSurprise } from 'react-icons/fa';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas'; // Bude potřeba pro komplexnější PDF export, zatím jen text
 
-// TODO: Definovat typ pro deníkový zápis
+interface DiaryTag {
+  id: string;
+  name: string;
+  color: string; // Tailwind color class, e.g., 'bg-blue-500'
+}
+
+interface DiaryMood {
+  id: string;
+  emoji: string; // Actual emoji character
+  name: string; // Name of the mood
+  icon?: React.ElementType; // Optional: React Icon component
+}
+
 interface DiaryEntry {
   id: string;
-  date: string; // Nebo Date objekt
+  date: string;
   content: string;
-  mood?: string; // Emoji nebo klíč pro smajlíka
-  tags?: string[]; // Pole barevných kódů nebo názvů štítků
+  mood?: DiaryMood['id']; 
+  tags?: DiaryTag['id'][];
 }
+
+const availableMoods: DiaryMood[] = [
+  { id: 'happy', emoji: '😄', name: 'Šťastný/á', icon: FaRegSmile },
+  { id: 'sad', emoji: '😔', name: 'Smutný/á', icon: FaRegFrown },
+  { id: 'neutral', emoji: '😐', name: 'Neutrální', icon: FaRegMeh },
+  { id: 'angry', emoji: '😠', name: 'Naštvaný/á', icon: FaRegAngry },
+  { id: 'surprised', emoji: '😮', name: 'Překvapený/á', icon: FaRegSurprise },
+];
+
+const availableTags: DiaryTag[] = [
+  { id: 'work', name: 'Práce', color: 'bg-blue-500' },
+  { id: 'personal', name: 'Osobní', color: 'bg-green-500' },
+  { id: 'relationships', name: 'Vztahy', color: 'bg-pink-500' },
+  { id: 'health', name: 'Zdraví', color: 'bg-red-500' },
+  { id: 'ideas', name: 'Nápady', color: 'bg-yellow-500' },
+  { id: 'other', name: 'Ostatní', color: 'bg-gray-500' },
+];
 
 const DiaryPage: React.FC = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [entries, setEntries] = useState<DiaryEntry[]>([]); // Zatím prázdné, bude se načítat
+  const [entries, setEntries] = useState<DiaryEntry[]>([]);
   const [currentContent, setCurrentContent] = useState('');
-  const [currentMood, setCurrentMood] = useState('');
-  const [currentTags, setCurrentTags] = useState<string[]>([]);
+  const [currentMoodId, setCurrentMoodId] = useState<DiaryMood['id'] | undefined>(undefined);
+  const [currentTagIds, setCurrentTagIds] = useState<DiaryTag['id'][]>([]);
+  const entriesContainerRef = useRef<HTMLDivElement>(null);
+
 
   const getLocalStorageKey = () => {
-    if (session?.user?.email) { // Použijeme email jako součást klíče pro unikátnost per uživatel
+    if (session?.user?.email) {
       return `diaryEntries-${session.user.email}`;
     }
-    return null; // Nebo nějaký fallback, pokud by session/email nebyl dostupný
+    return null;
   };
 
-  // Načítání zápisů z localStorage při prvním načtení
   useEffect(() => {
     if (session && typeof window !== 'undefined') {
       const key = getLocalStorageKey();
@@ -39,14 +71,13 @@ const DiaryPage: React.FC = () => {
             setEntries(JSON.parse(storedEntries));
           } catch (e) {
             console.error("Chyba při parsování deníkových zápisů z localStorage:", e);
-            setEntries([]); // Reset na prázdné pole v případě chyby
+            setEntries([]);
           }
         }
       }
     }
-  }, [session]); // Závislost na session, aby se klíč aktualizoval
+  }, [session]);
 
-  // Ukládání zápisů do localStorage vždy, když se změní stav entries
   useEffect(() => {
     if (session && typeof window !== 'undefined') {
       const key = getLocalStorageKey();
@@ -54,46 +85,87 @@ const DiaryPage: React.FC = () => {
         localStorage.setItem(key, JSON.stringify(entries));
       }
     }
-  }, [entries, session]); // Závislost na entries a session
+  }, [entries, session]);
 
   if (status === "loading") {
     return <Layout title="Deník"><p className="text-center p-8">Načítání...</p></Layout>;
   }
 
   if (!session) {
-    // Přesměrování na login, pokud uživatel není přihlášen
-    // Můžeme přidat callbackUrl, aby se po přihlášení vrátil sem
-    if (typeof window !== 'undefined') { // Zajistí, že se router.push volá jen na klientovi
-        router.push(`/auth/login?callbackUrl=${encodeURIComponent(router.pathname)}`);
+    if (typeof window !== 'undefined') {
+      router.push(`/auth/login?callbackUrl=${encodeURIComponent(router.pathname)}`);
     }
     return <Layout title="Deník"><p className="text-center p-8">Pro přístup k deníku se prosím přihlaste.</p></Layout>;
   }
   
   const handleAddEntry = () => {
-    // TODO: Logika pro uložení zápisu na server
-    // Prozatím jen ukázka přidání do lokálního stavu
     const newEntry: DiaryEntry = {
-      id: new Date().toISOString(), // Dočasné ID
-      date: new Date().toLocaleDateString('cs-CZ'),
+      id: new Date().toISOString(),
+      date: new Date().toLocaleString('cs-CZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
       content: currentContent,
-      mood: currentMood,
-      tags: currentTags,
+      mood: currentMoodId,
+      tags: currentTagIds,
     };
     setEntries(prevEntries => [newEntry, ...prevEntries]);
     setCurrentContent('');
-    setCurrentMood('');
-    setCurrentTags([]);
+    setCurrentMoodId(undefined);
+    setCurrentTagIds([]);
+  };
+
+  const toggleTag = (tagId: string) => {
+    setCurrentTagIds(prev => 
+      prev.includes(tagId) ? prev.filter(id => id !== tagId) : [...prev, tagId]
+    );
   };
 
   const handleExportToPdf = () => {
-    // TODO: Implementovat export do PDF
-    alert('Funkce exportu do PDF bude brzy dostupná!');
+    const doc = new jsPDF();
+    doc.setFont("helvetica", "normal"); // Použití standardního fontu
+    doc.text("Můj Deník - Psychollog.cz", 14, 16);
+    let yPos = 30;
+
+    entries.forEach((entry, index) => {
+      if (index > 0) { // Přidá mezeru mezi zápisy
+        yPos += 5; 
+      }
+      if (yPos > 270) { // Nová stránka, pokud je potřeba
+        doc.addPage();
+        yPos = 20;
+      }
+      
+      doc.setFontSize(10);
+      doc.setTextColor(100); // Šedá barva pro datum
+      doc.text(entry.date, 14, yPos);
+      yPos += 6;
+
+      if (entry.mood) {
+        const moodObj = availableMoods.find(m => m.id === entry.mood);
+        if (moodObj) {
+          doc.text(`Nálada: ${moodObj.emoji} ${moodObj.name}`, 14, yPos);
+          yPos += 5;
+        }
+      }
+
+      if (entry.tags && entry.tags.length > 0) {
+        const tagNames = entry.tags.map(tagId => availableTags.find(t => t.id === tagId)?.name).filter(Boolean).join(', ');
+        doc.text(`Štítky: ${tagNames}`, 14, yPos);
+        yPos += 5;
+      }
+      
+      doc.setFontSize(12);
+      doc.setTextColor(0); // Černá barva pro text
+      const splitContent = doc.splitTextToSize(entry.content, 180); // Zalomení textu na šířku 180mm
+      doc.text(splitContent, 14, yPos);
+      yPos += (splitContent.length * 5) + 5; // Odhad výšky textu + mezera
+    });
+
+    doc.save(`muj-denik-psychollog-cz-${new Date().toISOString().split('T')[0]}.pdf`);
   };
+
 
   return (
     <Layout title="Můj Deník | AI Psycholog" description="Váš osobní prostor pro myšlenky a pocity.">
-      {/* Hero sekce pro Deník */}
-      <section className="bg-gradient-to-r from-green-600 via-emerald-500 to-teal-400 dark:from-green-700 dark:via-emerald-600 dark:to-teal-500 text-white py-12 md:py-16">
+      <section className="bg-gradient-to-r from-emerald-600 via-green-500 to-teal-500 dark:from-emerald-700 dark:via-green-600 dark:to-teal-600 text-white py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center justify-center">
             <FaBookMedical className="mr-3" /> Můj Deník
@@ -104,8 +176,7 @@ const DiaryPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Hlavní obsah Deníku */}
-      <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8"> {/* Zvětšeno max-w pro "knižní" vzhled */}
         <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 md:p-8">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">Nový zápis</h2>
           
@@ -116,21 +187,39 @@ const DiaryPage: React.FC = () => {
             onChange={(e) => setCurrentContent(e.target.value)}
           />
 
-          <div className="flex flex-wrap items-center gap-4 mb-6">
-            {/* TODO: Výběr nálady (smajlíci) */}
-            <div className="flex items-center gap-2">
-              <FaSmile className="text-gray-500 dark:text-gray-400" />
-              <span className="text-sm text-gray-700 dark:text-gray-300">Nálada:</span>
-              {/* Placeholder pro výběr smajlíků */}
-              <span className="px-2 py-1 bg-yellow-200 text-yellow-800 rounded-full text-xs">TODO</span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Nálada:</label>
+              <div className="flex flex-wrap gap-2">
+                {availableMoods.map(mood => (
+                  <button 
+                    key={mood.id} 
+                    onClick={() => setCurrentMoodId(mood.id)}
+                    title={mood.name}
+                    className={`p-2 rounded-full text-2xl transition-transform hover:scale-110 ${currentMoodId === mood.id ? 'ring-2 ring-emerald-500 ring-offset-2 dark:ring-offset-gray-800' : ''}`}
+                  >
+                    {mood.emoji}
+                  </button>
+                ))}
+              </div>
             </div>
-
-            {/* TODO: Výběr štítků (barvy) */}
-            <div className="flex items-center gap-2">
-              <FaTag className="text-gray-500 dark:text-gray-400" />
-              <span className="text-sm text-gray-700 dark:text-gray-300">Štítky:</span>
-              {/* Placeholder pro výběr štítků */}
-              <span className="px-2 py-1 bg-blue-200 text-blue-800 rounded-full text-xs">TODO</span>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Štítky:</label>
+              <div className="flex flex-wrap gap-2">
+                {availableTags.map(tag => (
+                  <button 
+                    key={tag.id}
+                    onClick={() => toggleTag(tag.id)}
+                    className={`px-3 py-1 text-xs font-medium rounded-full transition-colors ${
+                      currentTagIds.includes(tag.id) 
+                        ? `${tag.color} text-white shadow-md` 
+                        : 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500'
+                    }`}
+                  >
+                    {tag.name}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -144,26 +233,40 @@ const DiaryPage: React.FC = () => {
             </button>
             <button
               onClick={handleExportToPdf}
-              className="btn bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-md shadow-md flex items-center justify-center sm:w-auto"
+              disabled={entries.length === 0}
+              className="btn bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-md shadow-md flex items-center justify-center sm:w-auto disabled:opacity-50"
             >
               <FaFilePdf className="mr-2" /> Exportovat vše do PDF
             </button>
           </div>
 
-          {/* Zobrazení existujících zápisů */}
-          <div className="mt-10">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Moje zápisy</h3>
+          <div className="mt-10" ref={entriesContainerRef}>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Moje zápisy</h3>
             {entries.length === 0 ? (
               <p className="text-gray-500 dark:text-gray-400">Zatím nemáte žádné zápisy.</p>
             ) : (
-              <div className="space-y-6">
-                {entries.map(entry => (
-                  <div key={entry.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700/50">
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{entry.date}</p>
-                    <p className="text-gray-700 dark:text-gray-200 whitespace-pre-line">{entry.content}</p>
-                    {/* TODO: Zobrazit náladu a štítky */}
-                  </div>
-                ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> {/* "Knižní" layout */}
+                {entries.map(entry => {
+                  const moodObj = availableMoods.find(m => m.id === entry.mood);
+                  const entryTags = entry.tags?.map(tagId => availableTags.find(t => t.id === tagId)).filter(Boolean) as DiaryTag[];
+
+                  return (
+                    <div key={entry.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700/50 flex flex-col break-inside-avoid-column"> {/* break-inside-avoid pro lepší PDF */}
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{entry.date}</span>
+                        <div className="flex items-center gap-2">
+                          {moodObj && <span title={moodObj.name} className="text-xl">{moodObj.emoji}</span>}
+                          <div className="flex gap-1">
+                            {entryTags?.map(tag => (
+                              <span key={tag.id} title={tag.name} className={`block w-3 h-3 rounded-full ${tag.color}`}></span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-200 whitespace-pre-line flex-grow">{entry.content}</p>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
