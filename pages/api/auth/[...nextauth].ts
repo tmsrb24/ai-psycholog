@@ -100,10 +100,13 @@ export const authOptions: NextAuthOptions = {
           console.warn("[NextAuth] Session: newSessionUser.id is empty after assignment from token.id. Original token.id was:", token?.id);
       }
       
-      session.user = newSessionUser; // Přiřadíme nový, kompletní user objekt
-
-      console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(session.user, null, 2));
-      return session;
+      // session.user = newSessionUser; // Přiřadíme nový, kompletní user objekt
+      // console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(newSessionUser, null, 2));
+      // Vrátíme nový session objekt s upraveným user objektem
+      return {
+        ...session, // zachová expires a další případné vlastnosti session
+        user: newSessionUser,
+      };
     },
   },
   debug: true, // Ponecháme debug zapnutý pro více logů
