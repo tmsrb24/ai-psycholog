@@ -5,6 +5,7 @@ export interface Message {
   role: MessageRole;
   content: string;
   timestamp?: Date;
+  isCrisis?: boolean; // Přidána volitelná vlastnost
 }
 
 // Define the API response type
