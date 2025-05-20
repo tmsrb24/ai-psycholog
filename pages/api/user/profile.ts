@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth"; // Import Session typu
-import { authOptions } from "../auth/[...nextauth]"; // Změna na pojmenovaný import
-import { supabase } from '../../../lib/supabaseClient';
+import type { Session } from "next-auth"; 
+import { authOptions } from "../auth/[...nextauth]"; 
+import { getSupabaseAdmin } from '../../../lib/supabaseClient'; // Změna importu
 import { UserProfileData } from '../../../types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -22,7 +22,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     try {
-      let { data: profile, error } = await supabase
+      const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
+      let { data: profile, error } = await supabaseAdmin
         .from('user_profiles')
         .select('*')
         .eq('id', userId)
@@ -37,7 +38,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           notificationFrequency: 'none',
           assistantGender: 'male',
         };
-        const { data: newProfile, error: insertError } = await supabase
+        const supabaseAdminInsert = getSupabaseAdmin(); // Získání admin klienta pro insert
+        const { data: newProfile, error: insertError } = await supabaseAdminInsert
           .from('user_profiles')
           .insert({ 
             id: userId, 
@@ -78,8 +80,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (typeof preferences !== 'undefined') updateData.preferences = preferences;
       updateData.updated_at = new Date().toISOString();
 
-
-      const { data, error } = await supabase
+      const supabaseAdminUpdate = getSupabaseAdmin(); // Získání admin klienta pro update
+      const { data, error } = await supabaseAdminUpdate
         .from('user_profiles')
         .update(updateData)
         .eq('id', userId)

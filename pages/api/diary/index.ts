@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth"; // Import Session typu
-import { authOptions } from "../auth/[...nextauth]"; // Změna na pojmenovaný import
-import { supabase } from '../../../lib/supabaseClient'; 
+import type { Session } from "next-auth"; 
+import authOptions from "../auth/[...nextauth]"; 
+import { getSupabaseAdmin } from '../../../lib/supabaseClient'; // Změna importu
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce
@@ -17,7 +17,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     try {
-      const { data, error } = await supabase
+      const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
+      const { data, error } = await supabaseAdmin
         .from('diary_entries')
         .select('*')
         .eq('user_id', userId)
@@ -36,8 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!content || !entry_date) {
         return res.status(400).json({ error: 'Chybí obsah nebo datum zápisu.' });
       }
-
-      const { data, error } = await supabase
+      const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
+      const { data, error } = await supabaseAdmin
         .from('diary_entries')
         .insert([{ 
           user_id: userId, 

@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth"; // Import Session typu
-import { authOptions } from "../auth/[...nextauth]"; // Změna na pojmenovaný import
-import { supabase } from '../../../lib/supabaseClient';
+import type { Session } from "next-auth"; 
+import { authOptions } from "../auth/[...nextauth]"; 
+import { getSupabaseAdmin } from '../../../lib/supabaseClient'; // Změna importu
 
 // Předpokládáme, že ADMIN_EMAIL je nastaven v .env.local a na Vercelu
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
@@ -31,8 +31,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // Pro jednoduchost zde předpokládáme, že admin má právo číst všechny profily.
       // V reálné aplikaci by se zde použil Supabase klient inicializovaný se service_role klíčem,
       // pokud by RLS bránilo v přístupu.
-      
-      const { data: profiles, error } = await supabase
+      const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
+      const { data: profiles, error } = await supabaseAdmin
         .from('user_profiles')
         .select('id, email, name, created_at, avatar_url') // Vybereme jen potřebné sloupce
         .order('created_at', { ascending: false });

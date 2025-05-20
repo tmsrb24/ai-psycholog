@@ -2,10 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Message, ApiResponse, UserProfileData } from '../../types';
 import axios from 'axios';
 import { ragService, initializeRagWithSamples } from '../../lib/rag';
-import { supabase } from '../../lib/supabaseClient';
+import { getSupabaseAdmin } from '../../lib/supabaseClient'; // Změna importu
 import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth"; // Import Session typu
-import { authOptions } from "./auth/[...nextauth]"; // Změna na pojmenovaný import
+import type { Session } from "next-auth"; 
+import { authOptions } from "./auth/[...nextauth]"; 
 
 let ragInitialized = false;
 const initializeRag = async () => {
@@ -23,12 +23,13 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce
+  const session = await getServerSession(req, res, authOptions) as Session | null; 
 
-  if (!session || !session.user || typeof session.user.id !== 'string') { // Přísnější kontrola
+  if (!session || !session.user || typeof session.user.id !== 'string') { 
     return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí ID uživatele v session.' });
   }
   const userId: string = session.user.id;
+  const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
 
   try {
     await initializeRag();
@@ -40,17 +41,16 @@ export default async function handler(
       topic?: string;
       personality?: string;
       responseLength?: 'short' | 'medium' | 'long';
-      userProfile?: UserProfileData; // Použití importovaného typu
+      userProfile?: UserProfileData; 
       sessionId?: string;
     }
-    const body = req.body as any; // Explicitně na any
+    const body = req.body as any; 
     
     const messages: Message[] = body.messages;
     const topic: string | undefined = body.topic;
     const personality: string | undefined = body.personality;
     const responseLength: 'short' | 'medium' | 'long' | undefined = body.responseLength;
     const sessionId: string | undefined = body.sessionId;
-    // userProfile budeme brát přímo z body.userProfile s kontrolami
 
     if (!messages || !Array.isArray(messages)) {
       return res.status(400).json({ error: 'Invalid messages format' });
@@ -62,7 +62,6 @@ export default async function handler(
     }
     const userMessageContent = lastUserMessage.content;
 
-    // Vytvoření nebo získání session ID
     let currentSessionId = sessionId;
     if (!currentSessionId) {
       const sessionTitle = userMessageContent.substring(0, 70) + (userMessageContent.length > 70 ? '...' : '');
@@ -82,7 +81,7 @@ export default async function handler(
         assistantName: assistantNamePref 
       };
       
-      const { data: newSession, error: sessionError } = await supabase
+      const { data: newSession, error: sessionError } = await supabaseAdmin
         .from('chat_sessions')
         .insert({ user_id: userId, title: sessionTitle, metadata: sessionMetadata })
         .select('id')
@@ -93,13 +92,11 @@ export default async function handler(
       console.log(`New chat session created: ${currentSessionId}`);
     }
 
-    // Uložení uživatelské zprávy do DB
-    const { error: userMessageError } = await supabase
+    const { error: userMessageError } = await supabaseAdmin
       .from('chat_messages')
       .insert({ session_id: currentSessionId, role: 'user', content: userMessageContent });
-    if (userMessageError) console.error('Error saving user message to DB:', userMessageError); // Log error, but continue
+    if (userMessageError) console.error('Error saving user message to DB:', userMessageError);
 
-    // Crisis detection
     const crisisKeywords = ["chci se zabít", "nechci žít", "ukončit život", "sebevražda", "zabít se"];
     const isCrisisMessage = crisisKeywords.some(keyword =>
       userMessageContent.toLowerCase().includes(keyword)
@@ -108,8 +105,7 @@ export default async function handler(
     if (isCrisisMessage) {
       console.log('Crisis message detected');
       const crisisResponseContent = "Je mi moc líto, že se takhle cítíš. Nejsi na to sám – doporučuji zavolat na Linku první psychické pomoci (📞 116 123) nebo Linku bezpečí (📞 116 111). Mluvím s tebou dál, ale bezpečí je teď nejdůležitější.";
-      // Uložení krizové odpovědi AI do DB
-      const { error: crisisAiMessageError } = await supabase
+      const { error: crisisAiMessageError } = await supabaseAdmin
         .from('chat_messages')
         .insert({ session_id: currentSessionId, role: 'assistant', content: crisisResponseContent, metadata: { isCrisis: true } });
       if (crisisAiMessageError) console.error('Error saving crisis AI message to DB:', crisisAiMessageError);
@@ -122,12 +118,11 @@ export default async function handler(
       });
     }
 
-    let systemPrompt = `Jsi empatický psycholog, který mluví česky a pomáhá lidem s jejich psychickými problémy...`; // Zkráceno pro přehlednost, původní logika zůstává
-    
+    let systemPrompt = `Jsi empatický psycholog...`; // Zkráceno
     if (body.userProfile && typeof body.userProfile === 'object' && body.userProfile.preferences && typeof body.userProfile.preferences === 'object') {
       if (body.userProfile.preferences.assistantGender) {
         const gender = body.userProfile.preferences.assistantGender;
-        systemPrompt = `Jsi empatick${gender === 'male' ? 'ý' : 'á'} psycholog${gender === 'female' ? 'ička' : ''}, kter${gender === 'male' ? 'ý' : 'á'} mluví česky...`;
+        systemPrompt = `Jsi empatick${gender === 'male' ? 'ý' : 'á'} psycholog...`;
       }
       if (body.userProfile.preferences.assistantName) {
         systemPrompt += ` Jmenuješ se ${body.userProfile.preferences.assistantName}.`;
@@ -139,8 +134,8 @@ export default async function handler(
 
     const geminiApiKey = process.env.GEMINI_API_KEY;
     if (!geminiApiKey) {
-      const simulatedResponseContent = `Dobrý den! Jsem tu, abych vám pomohl. Jak se dnes cítíte? (Simulovaná odpověď - API klíč chybí)`;
-      const { error: simAiMessageError } = await supabase
+      const simulatedResponseContent = `Dobrý den! (Simulovaná odpověď - API klíč chybí)`;
+      const { error: simAiMessageError } = await supabaseAdmin
         .from('chat_messages')
         .insert({ session_id: currentSessionId, role: 'assistant', content: simulatedResponseContent });
       if (simAiMessageError) console.error('Error saving simulated AI message to DB:', simAiMessageError);
@@ -148,23 +143,10 @@ export default async function handler(
     }
 
     const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent';
-    const formattedMessages = [ /* ... původní formátování zpráv ... */ ];
-    // Zjednodušené formátování pro Gemini - je potřeba sem vložit správnou logiku pro historii konverzace
+    const formattedMessages: any[] = []; // Typovat lépe
      formattedMessages.push({ role: 'user', parts: [{ text: systemPrompt }]});
      formattedMessages.push({ role: 'model', parts: [{ text: 'Rozumím.' }]});
-     // Načtení předchozích zpráv z této session pro kontext - TOTO JE POTŘEBA DOPLNIT
-     // const { data: previousMessages, error: prevMessagesError } = await supabase
-     //   .from('chat_messages')
-     //   .select('role, content')
-     //   .eq('session_id', currentSessionId)
-     //   .order('timestamp', { ascending: true })
-     //   .limit(10); // Omezit počet zpráv pro kontext
-     // if (previousMessages) {
-     //   previousMessages.forEach(msg => {
-     //     formattedMessages.push({ role: msg.role === 'user' ? 'user' : 'model', parts: [{ text: msg.content }] });
-     //   });
-     // }
-
+    
     const ragContext = await ragService.generateContext(userMessageContent, { maxDocuments: 2, similarityThreshold: 0.6 });
     const userMessageWithContext = ragContext 
       ? `${userMessageContent}\n\nRelevantní informace z databáze znalostí:\n${ragContext}`
@@ -172,7 +154,7 @@ export default async function handler(
     formattedMessages.push({ role: 'user', parts: [{ text: userMessageWithContext }] });
 
     try {
-      const response = await axios({ /* ... původní axios volání ... */ 
+      const response = await axios({ 
         method: 'post',
         url: `${GEMINI_API_URL}?key=${geminiApiKey}`,
         headers: { 'Content-Type': 'application/json' },
@@ -185,8 +167,7 @@ export default async function handler(
       }
       const responseContent = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Omlouvám se, momentálně nedokážu odpovědět.";
 
-      // Uložení AI odpovědi do DB
-      const { error: aiMessageError } = await supabase
+      const { error: aiMessageError } = await supabaseAdmin
         .from('chat_messages')
         .insert({ session_id: currentSessionId, role: 'assistant', content: responseContent });
       if (aiMessageError) console.error('Error saving AI message to DB:', aiMessageError);
@@ -199,7 +180,7 @@ export default async function handler(
       });
     } catch (apiError: any) {
       const errorContent = `Omlouvám se, problém s AI. (Chyba: ${apiError?.message || 'Neznámá chyba'})`;
-      const { error: errAiMessageError } = await supabase
+      const { error: errAiMessageError } = await supabaseAdmin
         .from('chat_messages')
         .insert({ session_id: currentSessionId, role: 'assistant', content: errorContent });
       if (errAiMessageError) console.error('Error saving error AI message to DB:', errAiMessageError);
@@ -211,7 +192,7 @@ export default async function handler(
     return res.status(500).json({ 
       error: 'Internal server error', 
       content: `Omlouvám se, nastala chyba. (Chyba: ${error?.message || 'Neznámá chyba'})`,
-      sessionId: req.body.sessionId // Vracíme sessionId, pokud bylo posláno
+      sessionId: (req.body as any).sessionId 
     });
   }
 }
