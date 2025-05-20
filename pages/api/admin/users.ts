@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from "next-auth/next";
+import type { Session } from "next-auth"; // Import Session typu
 import authOptions from "../auth/[...nextauth]";
 import { supabase } from '../../../lib/supabaseClient';
 
@@ -7,17 +8,16 @@ import { supabase } from '../../../lib/supabaseClient';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce na Session | null
 
-  // Explicitní typová aserce a kontrola pro session.user
-  const user = session?.user as ({ id?: string; email?: string | null; name?: string | null; image?: string | null; } | undefined);
-
-  if (!session || !user || typeof user.email !== 'string') {
-    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí email v session.' });
+  // Kontrola session a session.user, nyní s typem Session
+  if (!session || !session.user || typeof session.user.email !== 'string' || typeof session.user.id !== 'string') {
+    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí potřebné údaje v session (id, email).' });
   }
+  
+  const userEmail: string = session.user.email; // session.user.email by mělo být string
+  // const userId: string = session.user.id; // session.user.id by mělo být string (prozatím nepoužito v této route)
 
-  // Nyní TypeScript ví, že user.email existuje a je string
-  const userEmail: string = user.email;
 
   if (userEmail !== ADMIN_EMAIL) {
     return res.status(403).json({ error: 'Nemáte oprávnění k přístupu k této stránce.' });

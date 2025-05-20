@@ -1,16 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "../auth/[...nextauth]"; // Upravit cestu podle struktury
-import { supabase } from '../../../lib/supabaseClient'; // Upravit cestu podle struktury
+import type { Session } from "next-auth"; // Import Session typu
+import authOptions from "../auth/[...nextauth]"; 
+import { supabase } from '../../../lib/supabaseClient'; 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce
 
-  if (!session || !session.user?.id) {
-    return res.status(401).json({ error: 'Nejste přihlášeni.' });
+  if (!session || !session.user || typeof session.user.id !== 'string') { // Přísnější kontrola
+    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí ID uživatele v session.' });
   }
 
-  const userId = session.user.id; // Předpokládáme, že session.user.id je unikátní identifikátor
+  const userId: string = session.user.id; 
 
   if (req.method === 'GET') {
     try {

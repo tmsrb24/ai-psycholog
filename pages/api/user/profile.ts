@@ -1,21 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from "next-auth/next";
+import type { Session } from "next-auth"; // Import Session typu
 import authOptions from "../auth/[...nextauth]";
 import { supabase } from '../../../lib/supabaseClient';
 import { UserProfileData } from '../../../types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
+  const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce na Session | null
 
   // Přísnější kontrola session a session.user
   if (!session || !session.user || typeof session.user.id !== 'string' || typeof session.user.email !== 'string') {
     return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí potřebné údaje v session (id, email).' });
   }
 
-  // Nyní TypeScript ví, že session.user.id a session.user.email existují a jsou stringy
   const userId: string = session.user.id;
   const userEmail: string = session.user.email;
-  // Jméno a avatar mohou být null/undefined, ošetříme to
   const userName: string | null | undefined = session.user.name;
   const userAvatar: string | null | undefined = session.user.image;
 
