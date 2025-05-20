@@ -9,7 +9,10 @@ declare module "next-auth" {
     user: {
       /** The user's unique ID. */
       id: string;
-    } & DefaultSession["user"]; // Zachová původní name, email, image z DefaultSession
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    } // Explicitně definujeme celý user objekt
   }
 
   /**
