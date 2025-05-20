@@ -27,8 +27,14 @@ const Navbar: React.FC = () => {
   };
 
   const handleSignOut = async () => {
-    await signOut({ redirect: false });
-    router.push('/');
+    console.log("Attempting to sign out..."); // Debug log
+    try {
+      await signOut(); // Výchozí chování s přesměrováním
+      // router.push('/'); // Toto by nemělo být potřeba, signOut by měl přesměrovat
+      console.log("Sign out successful (or at least initiated).");
+    } catch (error) {
+      console.error("Error during sign out:", error);
+    }
   };
 
   const isActive = (path: string) => {
