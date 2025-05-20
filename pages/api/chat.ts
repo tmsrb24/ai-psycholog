@@ -2,10 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { Message, ApiResponse, UserProfileData } from '../../types';
 import axios from 'axios';
 import { ragService, initializeRagWithSamples } from '../../lib/rag';
-import { getSupabaseAdmin } from '../../lib/supabaseClient'; // Změna importu
-import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth"; 
-import { authOptions } from "./auth/[...nextauth]"; 
+import { getSupabaseAdmin } from '../../lib/supabaseClient';
+import { getToken } from "next-auth/jwt"; // Import getToken
+// import { getServerSession } from "next-auth/next"; // Nahrazeno getToken
+// import type { Session } from "next-auth"; 
+// import { authOptions } from "./auth/[...nextauth]"; 
 
 let ragInitialized = false;
 const initializeRag = async () => {
@@ -23,13 +24,16 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const session = await getServerSession(req, res, authOptions) as Session | null; 
+  const secret = process.env.NEXTAUTH_SECRET;
+  const token = await getToken({ req, secret });
+  console.log("API /api/chat - token object:", JSON.stringify(token, null, 2));
 
-  if (!session || !session.user || typeof session.user.id !== 'string') { 
-    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí ID uživatele v session.' });
+  if (!token || !token.sub) {
+    console.error("API /api/chat - Unauthorized access or missing sub in token. Token:", JSON.stringify(token, null, 2));
+    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí ID uživatele v tokenu.' });
   }
-  const userId: string = session.user.id;
-  const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
+  const userId: string = String(token.sub);
+  const supabaseAdmin = getSupabaseAdmin();
 
   try {
     await initializeRag();

@@ -1,23 +1,24 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth"; 
-import { authOptions } from "../auth/[...nextauth]"; 
-import { getSupabaseAdmin } from '../../../lib/supabaseClient'; // Změna importu
+import { getToken } from "next-auth/jwt"; // Import getToken
+// import { getServerSession } from "next-auth/next"; // Nahrazeno getToken
+// import type { Session } from "next-auth"; 
+// import { authOptions } from "../auth/[...nextauth]"; 
+import { getSupabaseAdmin } from '../../../lib/supabaseClient';
 
 // Předpokládáme, že ADMIN_EMAIL je nastaven v .env.local a na Vercelu
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const secret = process.env.NEXTAUTH_SECRET;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce na Session | null
+  const token = await getToken({ req, secret });
+  console.log("API /api/admin/users - token object:", JSON.stringify(token, null, 2));
 
-  // Kontrola session a session.user, nyní s typem Session
-  if (!session || !session.user || typeof session.user.email !== 'string' || typeof session.user.id !== 'string') {
-    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí potřebné údaje v session (id, email).' });
+  if (!token || !token.email) { // Pro admina potřebujeme email pro ověření
+    console.error("API /api/admin/users - Unauthorized access or missing email in token. Token:", JSON.stringify(token, null, 2));
+    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí email v tokenu.' });
   }
   
-  const userEmail: string = session.user.email; // session.user.email by mělo být string
-  // const userId: string = session.user.id; // session.user.id by mělo být string (prozatím nepoužito v této route)
-
+  const userEmail: string = String(token.email);
 
   if (userEmail !== ADMIN_EMAIL) {
     return res.status(403).json({ error: 'Nemáte oprávnění k přístupu k této stránce.' });

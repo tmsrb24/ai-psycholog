@@ -1,24 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth"; 
-import { authOptions } from "../auth/[...nextauth]"; 
-import { getSupabaseAdmin } from '../../../lib/supabaseClient'; // Změna importu
+import { getToken } from "next-auth/jwt"; // Import getToken
+// import { getServerSession } from "next-auth/next"; // Nahrazeno getToken
+// import type { Session } from "next-auth"; 
+// import { authOptions } from "../auth/[...nextauth]"; 
+import { getSupabaseAdmin } from '../../../lib/supabaseClient';
 import { UserProfileData } from '../../../types';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce na Session | null
-  console.log("API /api/user/profile - session object:", JSON.stringify(session, null, 2)); // DEBUG LOG
+const secret = process.env.NEXTAUTH_SECRET;
 
-  // Přísnější kontrola session a session.user
-  if (!session || !session.user || typeof session.user.id !== 'string' || typeof session.user.email !== 'string') {
-    console.error("API /api/user/profile - Unauthorized access or missing user ID/email. Session user:", JSON.stringify(session?.user, null, 2));
-    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí potřebné údaje v session (id, email).' });
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const token = await getToken({ req, secret });
+  console.log("API /api/user/profile - token object:", JSON.stringify(token, null, 2));
+
+  if (!token || !token.sub || !token.email) { // Potřebujeme sub (pro ID) a email
+    console.error("API /api/user/profile - Unauthorized access or missing sub/email in token. Token:", JSON.stringify(token, null, 2));
+    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí potřebné údaje v tokenu (id, email).' });
   }
 
-  const userId: string = session.user.id;
-  const userEmail: string = session.user.email;
-  const userName: string | null | undefined = session.user.name;
-  const userAvatar: string | null | undefined = session.user.image;
+  const userId: string = String(token.sub);
+  const userEmail: string = String(token.email); // token.email by měl být string
+  const userName: string | null | undefined = token.name as string | null | undefined;
+  const userAvatar: string | null | undefined = token.image as string | null | undefined; // token.image je vlastně token.picture
 
   if (req.method === 'GET') {
     try {

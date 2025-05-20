@@ -1,32 +1,22 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getServerSession } from "next-auth/next";
-import type { Session } from "next-auth"; 
-import authOptions from "../auth/[...nextauth]"; 
-import { getSupabaseAdmin } from '../../../lib/supabaseClient'; // Změna importu
+import { getToken } from "next-auth/jwt"; // Import getToken
+// import { getServerSession } from "next-auth/next"; // Už nebudeme používat getServerSession pro získání ID
+// import type { Session } from "next-auth"; 
+// import authOptions from "../auth/[...nextauth]"; 
+import { getSupabaseAdmin } from '../../../lib/supabaseClient';
+
+const secret = process.env.NEXTAUTH_SECRET;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions) as Session | null; 
-  console.log("API /api/diary - session object received by getServerSession:", JSON.stringify(session, null, 2)); 
+  const token = await getToken({ req, secret });
+  console.log("API /api/diary - token object:", JSON.stringify(token, null, 2));
 
-  // Pokus o získání ID buď z session.user.id nebo z testovací session.userIdFromToken
-  const sessionUserId = session?.user?.id;
-  const tokenUserId = (session as any)?.userIdFromToken;
-  let effectiveUserId: string | undefined = undefined;
-
-  if (sessionUserId && typeof sessionUserId === 'string' && sessionUserId !== "") {
-    effectiveUserId = sessionUserId;
-    console.log("API /api/diary - Using ID from session.user.id:", effectiveUserId);
-  } else if (tokenUserId && typeof tokenUserId === 'string' && tokenUserId !== "") {
-    effectiveUserId = tokenUserId;
-    console.log("API /api/diary - Using ID from session.userIdFromToken:", effectiveUserId);
+  if (!token || !token.sub) { // Spoléháme na standardní 'sub' v JWT pro ID uživatele
+    console.error("API /api/diary - Unauthorized access or missing sub in token. Token:", JSON.stringify(token, null, 2));
+    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí ID uživatele v tokenu.' });
   }
 
-  if (!session || !effectiveUserId) { 
-    console.error("API /api/diary - Unauthorized. session.user:", JSON.stringify(session?.user, null, 2), "session.userIdFromToken:", tokenUserId, "Effective User ID:", effectiveUserId);
-    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí ID uživatele v session.' });
-  }
-
-  const userId: string = effectiveUserId; 
+  const userId: string = String(token.sub); // token.sub by mělo být ID uživatele
 
   if (req.method === 'GET') {
     try {
