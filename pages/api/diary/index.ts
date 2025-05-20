@@ -6,8 +6,10 @@ import { supabase } from '../../../lib/supabaseClient';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce
+  console.log("API /api/diary - session object:", JSON.stringify(session, null, 2)); // DEBUG LOG
 
   if (!session || !session.user || typeof session.user.id !== 'string') { // Přísnější kontrola
+    console.error("API /api/diary - Unauthorized access or missing user ID in session. Session user:", JSON.stringify(session?.user, null, 2));
     return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí ID uživatele v session.' });
   }
 

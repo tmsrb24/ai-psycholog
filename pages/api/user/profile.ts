@@ -7,9 +7,11 @@ import { UserProfileData } from '../../../types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce na Session | null
+  console.log("API /api/user/profile - session object:", JSON.stringify(session, null, 2)); // DEBUG LOG
 
   // Přísnější kontrola session a session.user
   if (!session || !session.user || typeof session.user.id !== 'string' || typeof session.user.email !== 'string') {
+    console.error("API /api/user/profile - Unauthorized access or missing user ID/email. Session user:", JSON.stringify(session?.user, null, 2));
     return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí potřebné údaje v session (id, email).' });
   }
 
