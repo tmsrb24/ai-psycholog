@@ -5,7 +5,7 @@ import { ragService, initializeRagWithSamples } from '../../lib/rag';
 import { supabase } from '../../lib/supabaseClient';
 import { getServerSession } from "next-auth/next";
 import type { Session } from "next-auth"; // Import Session typu
-import authOptions from "./auth/[...nextauth]";
+import { authOptions } from "./auth/[...nextauth]"; // Změna na pojmenovaný import
 
 let ragInitialized = false;
 const initializeRag = async () => {

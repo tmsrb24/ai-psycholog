@@ -71,31 +71,30 @@ export const authOptions: NextAuthOptions = { // Extrahováno do konstanty a exp
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string; 
-        session.user.name = token.name ?? null; // Pokud je token.name undefined, přiřadí se null
-        session.user.email = token.email ?? null; // Pokud je token.email undefined, přiřadí se null
-        session.user.image = token.image ?? null; // Pokud je token.image undefined, přiřadí se null
+      if (session.user) { 
+        session.user.id = typeof token.id === 'string' ? token.id : ""; // Zajistí string
+        session.user.name = typeof token.name === 'string' ? token.name : null;
+        session.user.email = typeof token.email === 'string' ? token.email : null;
+        session.user.image = typeof token.image === 'string' ? token.image : null; // token.image je vlastně token.picture
       }
       return session;
     },
-  },
+  }, // Konec callbacks
   
-  // Enable debug mode for detailed logs
+  // debug a logger patří sem, na stejnou úroveň jako providers, session, pages, callbacks
   debug: true,
   
-  // Error handling
   logger: {
-    error(code, metadata) {
+    error(code: any, metadata: any) { // Přidány typy any pro potlačení implicit any
       console.error("NextAuth error:", { code, metadata });
     },
-    warn(code) {
+    warn(code: any) {
       console.warn("NextAuth warning:", code);
     },
-    debug(code, metadata) {
+    debug(code: any, metadata: any) {
       console.log("NextAuth debug:", { code, metadata });
     }
   }
 };
 
-export default NextAuth(authOptions); // Použití konstanty
+export default NextAuth(authOptions);

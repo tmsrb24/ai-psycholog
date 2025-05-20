@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from "next-auth/next";
 import type { Session } from "next-auth"; // Import Session typu
-import authOptions from "../auth/[...nextauth]";
+import { authOptions } from "../auth/[...nextauth]"; // Změna na pojmenovaný import
 import { supabase } from '../../../lib/supabaseClient';
 import { UserProfileData } from '../../../types';
 
