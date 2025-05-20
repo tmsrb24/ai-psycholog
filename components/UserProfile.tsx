@@ -13,7 +13,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
   const [profile, setProfile] = useState<UserProfileData>(
     initialProfile || {
       name: 'Uživatel',
-      avatar: null,
+      avatar_url: null, // Opraveno z avatar na avatar_url
       preferences: {
         responseLength: 'medium',
         communicationStyle: 'casual',
