@@ -28,7 +28,7 @@ declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     /** OpenID ID Token */
     id: string; // Přidáno id do JWT tokenu
-    // Můžete přidat i další vlastnosti, které ukládáte do tokenu
-    // např. accessToken?: string;
+    accessToken?: string; // Přidáno pro accessToken z účtu
+    provider?: string; // Přidáno pro providera účtu
   }
 }

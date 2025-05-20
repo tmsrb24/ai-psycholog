@@ -44,39 +44,39 @@ export const authOptions: NextAuthOptions = { // Extrahováno do konstanty a exp
   // Callbacks
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log("Sign in callback called with user:", user?.email);
+      console.log("Sign in callback called with user:", user?.email, "profile:", profile);
+      // Pokud používáme Google, můžeme zde ověřit, zda profil obsahuje 'sub'
+      if (account?.provider === "google" && profile?.sub) {
+        // Můžeme zde např. vytvořit/aktualizovat uživatele v naší DB, pokud bychom nepoužívali Supabase Auth
+        // user.id by mělo být automaticky nastaveno NextAuth na profile.sub
+      }
       return true;
     },
-    async jwt({ token, user, account }) {
-      // Add user info to token if available (on initial sign in)
-      if (user) {
-        token.id = user.id as string;
-        token.email = user.email as string;
-        token.name = user.name as string; // Add name to token
-        token.image = user.image as string; // Add image to token
-      }
-      // Add account info to token if available (on initial sign in)
-      if (account) {
-        token.accessToken = account.access_token as string;
-        token.provider = account.provider as string;
+    async jwt({ token, user, account, profile }) {
+      if (account && user) {
+        token.id = user.id;
+        if (account.provider === "google" && profile?.sub && !token.id) {
+          token.id = profile.sub;
+        }
+        token.email = user.email ?? undefined; // Zajistí string | undefined
+        token.name = user.name ?? undefined;   // Zajistí string | undefined
+        token.image = user.image ?? undefined; // Zajistí string | undefined
+        
+        if (account.access_token) { // accessToken je volitelný v Account
+          token.accessToken = account.access_token;
+        }
+        token.provider = account.provider;
+        console.log("JWT callback - initial sign in. Token populated:", JSON.stringify(token));
       }
       return token;
     },
-    async session({ session, token }) { // For JWT strategy, `user` (from DB) is not available here. Token is the source.
-      console.log("Session callback (JWT strategy). Token:", JSON.stringify(token), "Initial session:", JSON.stringify(session));
-      // Populate session.user with info from the token
-      if (token && session.user) {
-        session.user.id = token.id as string;
-        session.user.name = token.name as string;
-        session.user.email = token.email as string;
-        session.user.image = token.image as string;
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id as string; 
+        session.user.name = token.name ?? null; // Pokud je token.name undefined, přiřadí se null
+        session.user.email = token.email ?? null; // Pokud je token.email undefined, přiřadí se null
+        session.user.image = token.image ?? null; // Pokud je token.image undefined, přiřadí se null
       }
-      // If you need custom properties like accessToken directly on the session object:
-      // if (token) {
-      //   (session as any).accessToken = token.accessToken;
-      //   (session as any).provider = token.provider;
-      // }
-      console.log("Final session object being returned:", JSON.stringify(session));
       return session;
     },
   },
