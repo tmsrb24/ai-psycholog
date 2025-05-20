@@ -49,9 +49,10 @@ const Navbar: React.FC = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    // Použijeme 'click' místo 'mousedown', aby se menu nezavřelo dříve, než se provede akce na tlačítku uvnitř
+    document.addEventListener('click', handleClickOutside, true); // Použijeme capturing fázi pro jistotu
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('click', handleClickOutside, true);
     };
   }, []);
 
