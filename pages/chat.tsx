@@ -8,7 +8,7 @@ import {
   FaSun, FaMoon, FaRobot, FaUser, FaChartLine, FaTrophy, FaTimes
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme, Theme } from '../components/ThemeProvider'; // Import Theme
+import { useTheme } from '../components/ThemeProvider'; // Odebrán import Theme
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -21,7 +21,7 @@ import ChatSettingsModal from '../components/ChatSettingsModal';
 import { Message } from '../types';
 
 const ChatPage = () => {
-  const { theme, setTheme } = useTheme(); // Změna toggleTheme na setTheme
+  const { theme, toggleTheme } = useTheme(); // Zpět na toggleTheme
   
   const [messages, setMessages] = useState<Message[]>([
     { role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' },

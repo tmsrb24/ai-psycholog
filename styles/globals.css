@@ -2,55 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Původní jednoduché styly, pokud nějaké byly nad rámec Tailwindu */
+/* Například, pokud byl nějaký globální font nebo základní styl pro body */
 @layer base {
-  :root {
-    --color-bg-primary: 249 250 251; /* gray-50 */
-    --color-bg-secondary: 255 255 255; /* white */
-    --color-text-primary: 17 24 39; /* gray-900 */
-    --color-text-secondary: 75 85 99; /* gray-500 */
-    --color-accent: 59 130 246; /* blue-500 */
-    --color-accent-hover: 37 99 235; /* blue-600 */
-    --color-border: 229 231 235; /* gray-200 */
-    --color-ring: 96 165 250; /* blue-400 */
-  }
-
-  html.dark {
-    --color-bg-primary: 31 41 55; /* gray-800 */
-    --color-bg-secondary: 55 65 81; /* gray-700 */
-    --color-text-primary: 243 244 246; /* gray-100 */
-    --color-text-secondary: 156 163 175; /* gray-400 */
-    --color-accent: 96 165 250; /* blue-400 */
-    --color-accent-hover: 59 130 246; /* blue-500 */
-    --color-border: 75 85 99; /* gray-600 */
-    --color-ring: 59 130 246; /* blue-500 */
-  }
-
-  html.theme-mint {
-    --color-bg-primary: 240 253 250; /* emerald-50 */
-    --color-bg-secondary: 209 250 229; /* emerald-100 */
-    --color-text-primary: 6 78 59;   /* emerald-800 */
-    --color-text-secondary: 5 150 105; /* emerald-600 */
-    --color-accent: 16 185 129; /* emerald-500 */
-    --color-accent-hover: 5 150 105; /* emerald-600 */
-    --color-border: 167 243 208; /* emerald-200 */
-    --color-ring: 52 211 153; /* emerald-400 */
-  }
-
-  html.theme-lavender {
-    --color-bg-primary: 250 245 255; /* purple-50 */
-    --color-bg-secondary: 243 232 255; /* purple-100 */
-    --color-text-primary: 88 28 135;  /* purple-800 */
-    --color-text-secondary: 126 34 206; /* purple-600 */
-    --color-accent: 168 85 247; /* purple-500 */
-    --color-accent-hover: 147 51 234; /* purple-600 */
-    --color-border: 233 213 255; /* purple-200 */
-    --color-ring: 192 132 252; /* purple-400 */
-  }
-
   body {
-    background-color: rgb(var(--color-bg-primary));
-    color: rgb(var(--color-text-primary));
-    @apply transition-colors duration-200;
+    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200;
   }
 }
 
@@ -59,32 +15,19 @@
     @apply px-4 py-2 rounded-md font-medium transition-colors;
   }
   
+  /* Příklady, jak mohly být tlačítka definována - upravit podle skutečného původního stavu */
   .btn-primary {
-    background-color: rgb(var(--color-accent));
-    color: white; /* Předpokládáme, že text na akcentní barvě je vždy bílý, nebo přidat --color-text-on-accent */
-    @apply hover:opacity-80; /* Nahradit hover:bg-accent-hover, pokud chceme použít proměnnou */
-    /* Alternativně pro hover: background-color: rgb(var(--color-accent-hover)); */
+    @apply bg-blue-600 hover:bg-blue-700 text-white;
   }
   
   .btn-secondary {
-    background-color: rgb(var(--color-bg-secondary));
-    color: rgb(var(--color-text-primary));
-    border-color: rgb(var(--color-border));
-    @apply border hover:opacity-80;
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100 border border-gray-300 dark:border-gray-600;
   }
   
   .input {
-    background-color: rgb(var(--color-bg-secondary));
-    color: rgb(var(--color-text-primary));
-    border: 1px solid rgb(var(--color-border));
-    @apply px-3 py-2 rounded-md focus:outline-none focus:ring-2;
+    @apply px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100;
   }
-  .input:focus {
-    --tw-ring-color: rgb(var(--color-ring));
-    border-color: rgb(var(--color-ring)); /* Volitelně změnit i barvu borderu při focusu */
-  }
-  
-  /* Původní user/assistant message styly - bude potřeba je také refaktorovat, pokud se používají */
+
   .user-message {
     @apply bg-blue-100 text-blue-900 p-3 rounded-lg dark:bg-blue-900 dark:text-blue-100;
   }

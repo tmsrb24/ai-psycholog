@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
-import { FaBars, FaTimes, FaMoon, FaSun, FaUser, FaSignOutAlt, FaUserCircle, FaPalette } from 'react-icons/fa'; // Přidána ikona pro témata
-import { useTheme, Theme } from './ThemeProvider'; // Import Theme typu
+import { FaBars, FaTimes, FaMoon, FaSun, FaUser, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
+import { useTheme } from './ThemeProvider'; // Odebrán import Theme typu
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme(); // Změna toggleTheme na setTheme
+  const { theme, toggleTheme } = useTheme(); // Zpět na toggleTheme
   const router = useRouter();
   const { data: session, status } = useSession();
   const loading = status === "loading";
@@ -203,46 +203,25 @@ const Navbar: React.FC = () => {
               </div>
             )}
             
-            {/* Theme toggle dropdown - nahrazuje původní tlačítko */}
-            <div className="relative ml-3">
-              <button
-                onClick={() => {
-                  // Jednoduché cyklické přepínání prozatím
-                  const themes: Theme[] = ['light', 'dark', 'mint', 'lavender'];
-                  const currentIndex = themes.indexOf(theme);
-                  const nextIndex = (currentIndex + 1) % themes.length;
-                  setTheme(themes[nextIndex]);
-                }}
-                className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                aria-label="Změnit téma"
-              >
-                {/* Ikona se může měnit podle tématu nebo být generická */}
-                {theme === 'dark' && <FaSun size={18} />}
-                {theme === 'light' && <FaMoon size={18} />}
-                {theme === 'mint' && <FaPalette size={18} className="text-emerald-500" />}
-                {theme === 'lavender' && <FaPalette size={18} className="text-purple-500" />}
-              </button>
-              {/* Zde by mohl být plnohodnotný dropdown pro výběr tématu */}
-            </div>
+            {/* Theme toggle button - vráceno původní */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
+              aria-label="Toggle dark mode"
+            >
+              {theme === 'dark' ? <FaSun size={18} /> : <FaMoon size={18} />}
+            </button>
           </div>
 
           {/* Mobile menu button */}
           <div className="flex items-center md:hidden">
-            {/* Theme toggle button for mobile */}
+            {/* Theme toggle button - vráceno původní */}
             <button
-              onClick={() => {
-                const themes: Theme[] = ['light', 'dark', 'mint', 'lavender'];
-                const currentIndex = themes.indexOf(theme);
-                const nextIndex = (currentIndex + 1) % themes.length;
-                setTheme(themes[nextIndex]);
-              }}
+              onClick={toggleTheme}
               className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mr-2"
-              aria-label="Změnit téma"
+              aria-label="Toggle dark mode"
             >
-              {theme === 'dark' && <FaSun size={18} />}
-              {theme === 'light' && <FaMoon size={18} />}
-              {theme === 'mint' && <FaPalette size={18} className="text-emerald-500" />}
-              {theme === 'lavender' && <FaPalette size={18} className="text-purple-500" />}
+              {theme === 'dark' ? <FaSun size={18} /> : <FaMoon size={18} />}
             </button>
             
             {/* Authentication UI for mobile */}
