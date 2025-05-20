@@ -1,7 +1,5 @@
-import NextAuth, { type NextAuthOptions } from "next-auth"; // Přidán import NextAuthOptions
+import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-
-// MongoDB related imports and code removed
 
 // Detailed logging for debugging
 console.log("Environment variables check:");
@@ -9,13 +7,10 @@ console.log("- NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 console.log("- NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
 console.log("- GOOGLE_CLIENT_ID exists:", !!process.env.GOOGLE_CLIENT_ID);
 console.log("- GOOGLE_CLIENT_SECRET exists:", !!process.env.GOOGLE_CLIENT_SECRET);
-console.log("- MONGODB_URI exists:", !!process.env.MONGODB_URI);
+// console.log("- MONGODB_URI exists:", !!process.env.MONGODB_URI); // MongoDB se nepoužívá
 
-// Simplified NextAuth configuration
-export const authOptions: NextAuthOptions = { // Extrahováno do konstanty a exportováno
-  // Adapter removed
+export const authOptions: NextAuthOptions = {
   providers: [
-    // Only Google OAuth provider for now to simplify debugging
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
@@ -28,71 +23,68 @@ export const authOptions: NextAuthOptions = { // Extrahováno do konstanty a exp
       }
     })
   ],
-  
-  // Session configuration
   session: {
-    strategy: "jwt", // Using JWT strategy
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  
-  // Pages configuration
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
   },
-  
-  // Callbacks
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      console.log("Sign in callback called with user:", user?.email, "profile:", profile);
-      // Pokud používáme Google, můžeme zde ověřit, zda profil obsahuje 'sub'
-      if (account?.provider === "google" && profile?.sub) {
-        // Můžeme zde např. vytvořit/aktualizovat uživatele v naší DB, pokud bychom nepoužívali Supabase Auth
-        // user.id by mělo být automaticky nastaveno NextAuth na profile.sub
-      }
+    async signIn({ user, account, profile }) {
+      console.log("[NextAuth] signIn callback", { userEmail: user?.email, accountProvider: account?.provider, profileSub: (profile as any)?.sub });
       return true;
     },
     async jwt({ token, user, account, profile }) {
-      if (account && user) {
-        token.id = user.id;
-        if (account.provider === "google" && profile?.sub && !token.id) {
-          token.id = profile.sub;
+      // Tento callback se volá při vytvoření/aktualizaci JWT.
+      // `user`, `account`, `profile` jsou k dispozici pouze při prvním přihlášení.
+      if (account && user) { // První přihlášení
+        token.id = user.id; // Standardní user.id z NextAuth (mělo by být profile.sub pro OAuth)
+        
+        // Pro Google explicitně použijeme 'sub' z profilu, pokud je k dispozici,
+        // protože to je garantované unikátní ID uživatele od Google.
+        if (account.provider === "google" && (profile as any)?.sub) {
+          token.id = (profile as any).sub;
         }
+        
         token.email = user.email ?? undefined; // Zajistí string | undefined
         token.name = user.name ?? undefined;   // Zajistí string | undefined
         token.image = user.image ?? undefined; // Zajistí string | undefined
         
-        if (account.access_token) { // accessToken je volitelný v Account
+        if (account.access_token) {
           token.accessToken = account.access_token;
         }
         token.provider = account.provider;
-        console.log("JWT callback - initial sign in. Token populated:", JSON.stringify(token));
+        console.log("[NextAuth] JWT callback - initial sign in. Token populated:", JSON.stringify(token, null, 2));
       }
       return token;
     },
     async session({ session, token }) {
-      if (session.user) { 
-        session.user.id = typeof token.id === 'string' ? token.id : ""; // Zajistí string
-        session.user.name = typeof token.name === 'string' ? token.name : null;
-        session.user.email = typeof token.email === 'string' ? token.email : null;
-        session.user.image = typeof token.image === 'string' ? token.image : null; // token.image je vlastně token.picture
+      // Tento callback se volá vždy, když se přistupuje k session.
+      // Přidáváme data z tokenu do `session.user` objektu.
+      if (session.user) {
+        // Zajistíme, že id je vždy string. Pokud by token.id bylo undefined, session.user.id bude prázdný string.
+        // To by mělo být ošetřeno v jwt callbacku, aby token.id vždy mělo hodnotu.
+        session.user.id = (token.id as string) || ""; 
+        session.user.name = (token.name as string | null | undefined) ?? null;
+        session.user.email = (token.email as string | null | undefined) ?? null;
+        session.user.image = (token.image as string | null | undefined) ?? null;
       }
+      // console.log("[NextAuth] Session callback. Final session object:", JSON.stringify(session, null, 2));
       return session;
     },
-  }, // Konec callbacks
-  
-  // debug a logger patří sem, na stejnou úroveň jako providers, session, pages, callbacks
-  debug: true,
-  
+  },
+  debug: process.env.NODE_ENV === 'development', // Zapnout debug jen ve vývoji
   logger: {
-    error(code: any, metadata: any) { // Přidány typy any pro potlačení implicit any
-      console.error("NextAuth error:", { code, metadata });
+    error(code: any, metadata: any) {
+      console.error("[NextAuth ERROR]", { code, ...metadata });
     },
     warn(code: any) {
-      console.warn("NextAuth warning:", code);
+      console.warn("[NextAuth WARN]", code);
     },
     debug(code: any, metadata: any) {
-      console.log("NextAuth debug:", { code, metadata });
+      // console.log("[NextAuth DEBUG]", { code, ...metadata }); // Příliš ukecané, zapnout jen při potřebě
     }
   }
 };
