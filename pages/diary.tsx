@@ -240,33 +240,41 @@ const DiaryPage: React.FC = () => {
             </button>
           </div>
 
-          <div className="mt-10" ref={entriesContainerRef}>
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Moje zápisy</h3>
+          <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700" ref={entriesContainerRef}>
+            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-8 text-center">Moje zápisy</h3>
             {entries.length === 0 ? (
-              <p className="text-gray-500 dark:text-gray-400">Zatím nemáte žádné zápisy.</p>
+              <p className="text-gray-500 dark:text-gray-400 text-center">Zatím nemáte žádné zápisy. Vytvořte svůj první!</p>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> {/* "Knižní" layout */}
-                {entries.map(entry => {
-                  const moodObj = availableMoods.find(m => m.id === entry.mood);
-                  const entryTags = entry.tags?.map(tagId => availableTags.find(t => t.id === tagId)).filter(Boolean) as DiaryTag[];
+              // Kontejner pro "knižní" vzhled
+              <div className="bg-yellow-50/30 dark:bg-gray-800/30 p-4 md:p-8 rounded-lg shadow-inner">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 md:gap-x-12"> {/* "Knižní" layout s mezerou uprostřed */}
+                  {entries.map(entry => {
+                    const moodObj = availableMoods.find(m => m.id === entry.mood);
+                    const entryTags = entry.tags?.map(tagId => availableTags.find(t => t.id === tagId)).filter(Boolean) as DiaryTag[];
 
-                  return (
-                    <div key={entry.id} className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm bg-gray-50 dark:bg-gray-700/50 flex flex-col break-inside-avoid-column"> {/* break-inside-avoid pro lepší PDF */}
-                      <div className="flex justify-between items-start mb-2">
-                        <span className="text-sm text-gray-500 dark:text-gray-400">{entry.date}</span>
-                        <div className="flex items-center gap-2">
-                          {moodObj && <span title={moodObj.name} className="text-xl">{moodObj.emoji}</span>}
-                          <div className="flex gap-1">
-                            {entryTags?.map(tag => (
-                              <span key={tag.id} title={tag.name} className={`block w-3 h-3 rounded-full ${tag.color}`}></span>
-                            ))}
+                    return (
+                      // Jednotlivá "stránka" deníku
+                      <div 
+                        key={entry.id} 
+                        className="bg-white dark:bg-gray-700 p-6 rounded-md shadow-lg flex flex-col min-h-[200px] border border-gray-200 dark:border-gray-600 
+                                   transform transition-transform hover:scale-[1.02]" // Lehký hover efekt
+                      >
+                        <div className="flex justify-between items-start mb-3 pb-2 border-b border-gray-200 dark:border-gray-600">
+                          <span className="text-xs font-medium text-gray-500 dark:text-gray-400">{entry.date}</span>
+                          <div className="flex items-center gap-2">
+                            {moodObj && <span title={moodObj.name} className="text-2xl">{moodObj.emoji}</span>}
+                            <div className="flex gap-1.5">
+                              {entryTags?.map(tag => (
+                                <span key={tag.id} title={tag.name} className={`block w-3 h-3 rounded-full ${tag.color} shadow-sm`}></span>
+                              ))}
+                            </div>
                           </div>
                         </div>
+                        <p className="text-gray-700 dark:text-gray-200 whitespace-pre-line flex-grow text-sm leading-relaxed">{entry.content}</p>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-200 whitespace-pre-line flex-grow">{entry.content}</p>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
