@@ -37,6 +37,7 @@ const HomePage = () => {
         { text: '5 zpráv denně', included: true },
         { text: 'Základní analýza nálady', included: true },
         { text: 'Základní témata konverzace', included: true },
+        { text: 'Přístup k osobnímu deníku', included: false },
         { text: 'Historie konverzací', included: false },
         { text: 'Přizpůsobení osobnosti asistenta', included: false },
         { text: 'RAG systém nové generace', included: false },
@@ -58,6 +59,7 @@ const HomePage = () => {
         { text: 'Neomezené zprávy', included: true },
         { text: 'Pokročilá analýza nálady', included: true },
         { text: 'Všechna témata konverzace', included: true },
+        { text: 'Přístup k osobnímu deníku', included: true },
         { text: 'Neomezená historie konverzací', included: true },
         { text: 'Přizpůsobení osobnosti asistenta', included: true },
         { text: 'RAG systém nové generace', included: true, tag: 'NOVINKA' },
@@ -77,7 +79,7 @@ const HomePage = () => {
       description: 'Pro nejnáročnější uživatele a rodinné sdílení',
       borderColor: 'border-purple-600',
       features: [
-        { text: 'Vše z Premium plánu', included: true, bold: true },
+        { text: 'Vše z Premium plánu', included: true, bold: true }, // Implicitně zahrnuje Deník
         { text: 'Prioritní podpora', included: true, icon: FaStar },
         { text: 'Rodinné sdílení (až 3 členové)', included: true, icon: FaUsers },
         { text: 'Integrace s kalendářem', included: true, icon: FaCalendarAlt },
