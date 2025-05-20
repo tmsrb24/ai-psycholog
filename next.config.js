@@ -20,16 +20,10 @@ const nextConfig = {
   async redirects() {
     return [];
   },
-  // Sentry specific configuration
-  sentry: {
-    // For all available options, see:
-    // https://github.com/getsentry/sentry-webpack-plugin#options
-
-    // Suppresses source map uploading logs during build
-    silent: true,
-    org: process.env.SENTRY_ORG,
-    project: process.env.SENTRY_PROJECT,
-  },
+  // Sentry org and project for source map uploading are usually set via
+  // SENTRY_ORG, SENTRY_PROJECT, and SENTRY_AUTH_TOKEN environment variables.
+  // The `sentry` key is not a standard Next.js config option.
+  // Options for the Sentry webpack plugin are passed in the second argument to withSentryConfig.
 }
 
 // Import Sentry webpack plugin
