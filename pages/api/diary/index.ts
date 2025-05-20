@@ -5,15 +5,28 @@ import authOptions from "../auth/[...nextauth]";
 import { getSupabaseAdmin } from '../../../lib/supabaseClient'; // Změna importu
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions) as Session | null; // Explicitní aserce
-  console.log("API /api/diary - session object:", JSON.stringify(session, null, 2)); // DEBUG LOG
+  const session = await getServerSession(req, res, authOptions) as Session | null; 
+  console.log("API /api/diary - session object received by getServerSession:", JSON.stringify(session, null, 2)); 
 
-  if (!session || !session.user || typeof session.user.id !== 'string') { // Přísnější kontrola
-    console.error("API /api/diary - Unauthorized access or missing user ID in session. Session user:", JSON.stringify(session?.user, null, 2));
+  // Pokus o získání ID buď z session.user.id nebo z testovací session.userIdFromToken
+  const sessionUserId = session?.user?.id;
+  const tokenUserId = (session as any)?.userIdFromToken;
+  let effectiveUserId: string | undefined = undefined;
+
+  if (sessionUserId && typeof sessionUserId === 'string' && sessionUserId !== "") {
+    effectiveUserId = sessionUserId;
+    console.log("API /api/diary - Using ID from session.user.id:", effectiveUserId);
+  } else if (tokenUserId && typeof tokenUserId === 'string' && tokenUserId !== "") {
+    effectiveUserId = tokenUserId;
+    console.log("API /api/diary - Using ID from session.userIdFromToken:", effectiveUserId);
+  }
+
+  if (!session || !effectiveUserId) { 
+    console.error("API /api/diary - Unauthorized. session.user:", JSON.stringify(session?.user, null, 2), "session.userIdFromToken:", tokenUserId, "Effective User ID:", effectiveUserId);
     return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí ID uživatele v session.' });
   }
 
-  const userId: string = session.user.id; 
+  const userId: string = effectiveUserId; 
 
   if (req.method === 'GET') {
     try {

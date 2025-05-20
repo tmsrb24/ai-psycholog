@@ -104,7 +104,10 @@ export const authOptions: NextAuthOptions = {
           console.warn("[NextAuth] Session: session.user.id is empty after assignment from token.id. Original token.id was:", token?.id);
       }
       
-      console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(session.user, null, 2));
+      // Přidáme id i na vyšší úroveň session pro testování, zda getServerSession vrací jakékoli modifikace
+      (session as any).userIdFromToken = token.id ? String(token.id) : ""; 
+
+      console.log("[NextAuth] Session callback END. Final session object (incl. userIdFromToken):", JSON.stringify(session, null, 2));
       return session; // Vrátíme modifikovaný session objekt
     },
   }, // Konec callbacks
