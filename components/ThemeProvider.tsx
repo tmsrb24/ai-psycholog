@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'mint' | 'lavender'; // Rozšíření o nová témata
 
 interface ThemeContextType {
   theme: Theme;
-  toggleTheme: () => void;
+  setTheme: (theme: Theme) => void; // Změna z toggleTheme na setTheme
 }
 
+const defaultTheme: Theme = 'light'; // Výchozí téma
+
 const ThemeContext = createContext<ThemeContextType>({
-  theme: 'light',
-  toggleTheme: () => {},
+  theme: defaultTheme,
+  setTheme: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
@@ -19,40 +21,40 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>(defaultTheme);
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
-    // Check if theme is stored in localStorage
     const savedTheme = localStorage.getItem('theme') as Theme | null;
     
-    if (savedTheme) {
-      setTheme(savedTheme);
+    if (savedTheme && ['light', 'dark', 'mint', 'lavender'].includes(savedTheme)) {
+      setThemeState(savedTheme);
     } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      // If no saved theme, use system preference
-      setTheme('dark');
+      setThemeState('dark');
+    } else {
+      setThemeState(defaultTheme); // Fallback na výchozí téma
     }
   }, []);
 
   // Update document class when theme changes
   useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    const root = document.documentElement;
+    // Odstranit všechny možné třídy témat
+    root.classList.remove('light', 'dark', 'theme-mint', 'theme-lavender');
+    // Přidat aktuální třídu tématu (pokud není 'light', protože 'light' je výchozí bez třídy)
+    if (theme !== 'light') {
+      root.classList.add(theme);
     }
     
-    // Save theme preference to localStorage
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // Toggle between light and dark themes
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  const setNewTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme: setNewTheme }}>
       {children}
     </ThemeContext.Provider>
   );
