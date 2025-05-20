@@ -50,14 +50,22 @@ export const authOptions: NextAuthOptions = {
       });
       
       if (account && user) {
-        let newId = user.id; // user.id by mělo být nastaveno NextAuth z profile.sub
-        if (account.provider === "google" && (profile as any)?.sub) {
-          newId = (profile as any).sub; // Preferujeme 'sub' od Google jako spolehlivější ID
-          console.log(`[NextAuth] JWT: Google provider, using profile.sub (${newId}) as token.id`);
-        } else if (!newId) {
-          console.warn(`[NextAuth] JWT: user.id is missing for provider ${account.provider}. Token.id will be undefined.`);
+        let idFromProvider: string | undefined = undefined;
+        if (user.id) { // user.id by mělo být nastaveno NextAuth (často z profile.sub)
+            idFromProvider = String(user.id);
         }
-        token.id = newId;
+        
+        // Pro Google explicitně použijeme 'sub' z profilu, pokud je k dispozici,
+        // a převedeme ho na string. 'sub' je garantované unikátní ID od Google.
+        if (account.provider === "google" && (profile as any)?.sub) {
+          idFromProvider = String((profile as any).sub);
+          console.log(`[NextAuth] JWT: Google provider, using profile.sub (${idFromProvider}) as token.id`);
+        }
+        
+        if (!idFromProvider) {
+          console.warn(`[NextAuth] JWT: Could not determine a valid ID for provider ${account.provider}. Token.id will be undefined.`);
+        }
+        token.id = idFromProvider;
         
         token.email = user.email ?? undefined;
         token.name = user.name ?? undefined;
@@ -76,7 +84,8 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       console.log("[NextAuth] Session callback START. Token.id:", token?.id, "Session.user.id_before:", session?.user?.id);
       if (session.user) {
-        session.user.id = (token.id as string) || ""; // Pokud token.id není string, bude prázdný string
+        // Zajistíme, že id je vždy string. Pokud token.id je undefined/null, session.user.id bude prázdný string.
+        session.user.id = token.id ? String(token.id) : ""; 
         if (!session.user.id) {
             console.warn("[NextAuth] Session: session.user.id is empty after assignment from token.id. Original token.id was:", token?.id);
         }
