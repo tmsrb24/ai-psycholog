@@ -1,11 +1,14 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { getSupabaseAdmin } from "../../../lib/supabaseClient"; // Pro kontrolu existence uživatele
+import { sendWelcomeEmail } from "../../../lib/emailService"; // Pro odeslání emailu
 
 console.log("Environment variables check:");
 console.log("- NEXTAUTH_URL:", process.env.NEXTAUTH_URL);
 console.log("- NEXTAUTH_SECRET exists:", !!process.env.NEXTAUTH_SECRET);
 console.log("- GOOGLE_CLIENT_ID exists:", !!process.env.GOOGLE_CLIENT_ID);
 console.log("- GOOGLE_CLIENT_SECRET exists:", !!process.env.GOOGLE_CLIENT_SECRET);
+console.log("- SENDGRID_API_KEY exists:", !!process.env.SENDGRID_API_KEY); // Kontrola pro SendGrid
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -32,12 +35,14 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       console.log("[NextAuth] signIn callback:", { userId: user?.id, userEmail: user?.email, accountProvider: account?.provider, profileSub: (profile as any)?.sub });
+      // Zde bychom mohli kontrolovat, zda je uživatel oprávněn se přihlásit, např. zda je jeho email na whitelistu.
+      // Prozatím povolíme všechny.
       return true;
     },
     async jwt({ token, user, account, profile }) {
       console.log("[NextAuth] JWT callback START:", { tokenId_before: token?.id, tokenSub_before: token?.sub, userId: user?.id, profileSub: (profile as any)?.sub, accountProvider: account?.provider });
       
-      if (account && user) { // Pouze při prvním přihlášení
+      if (account && user) { // Pouze při prvním přihlášení (nebo linkování účtu)
         let idToUse: string | undefined = undefined;
         if (account.provider === "google" && (profile as any)?.sub) {
           idToUse = String((profile as any).sub);
@@ -48,17 +53,43 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (idToUse) {
-          token.sub = idToUse; // Standardní JWT pole pro ID uživatele
-          token.id = idToUse;  // Naše vlastní pole pro konzistenci v session callbacku
+          token.sub = idToUse; 
+          token.id = idToUse;
+
+          // Kontrola, zda uživatel již existuje v user_profiles pro odeslání uvítacího emailu
+          // Toto se děje pouze při prvním vytvoření tokenu pro uživatele (nové přihlášení)
+          try {
+            const supabaseAdmin = getSupabaseAdmin();
+            const { data: existingProfile, error: profileError } = await supabaseAdmin
+              .from('user_profiles')
+              .select('id')
+              .eq('id', idToUse)
+              .maybeSingle(); // maybeSingle vrátí null pokud nenajde, ne chybu
+
+            if (profileError && profileError.code !== 'PGRST116') { // PGRST116 = 0 řádků, což je OK
+              console.error("[NextAuth] JWT: Error checking user_profiles:", profileError);
+            }
+            
+            if (!existingProfile && user.email) { // Pokud profil neexistuje a máme email
+              console.log(`[NextAuth] JWT: New user detected (${user.email}). Attempting to send welcome email.`);
+              // Odeslání emailu by nemělo blokovat přihlášení, proto nečekáme na await nebo ošetříme chyby
+              sendWelcomeEmail(user.email, user.name).catch(emailError => {
+                console.error("[NextAuth] JWT: Failed to send welcome email:", emailError);
+              });
+            }
+          } catch (dbError) {
+            console.error("[NextAuth] JWT: Database error during new user check:", dbError);
+          }
+
         } else {
           console.error(`[NextAuth] JWT CRITICAL: Could not determine a valid ID. User ID: ${user.id}, Profile Sub: ${(profile as any)?.sub}`);
-          token.id = ""; // Musí být string dle next-auth.d.ts
+          token.id = ""; 
           token.sub = ""; 
         }
         
         token.email = user.email ?? undefined;
         token.name = user.name ?? undefined;
-        token.image = user.image ?? undefined; // NextAuth mapuje 'picture' z Google profilu na 'image'
+        token.image = user.image ?? undefined; 
         
         if (account.access_token) token.accessToken = account.access_token;
         token.provider = account.provider;
@@ -73,20 +104,16 @@ export const authOptions: NextAuthOptions = {
         session.user = {} as { id: string; name?: string | null; email?: string | null; image?: string | null };
       }
       
-      // Primárně použijeme token.sub, pokud existuje, jinak token.id (naše vlastní pole)
       const finalId = token.sub ? String(token.sub) : (token.id ? String(token.id) : "");
       session.user.id = finalId;
-      
       session.user.name = (token.name as string | null | undefined) ?? null;
       session.user.email = (token.email as string | null | undefined) ?? null;
-      session.user.image = (token.image as string | null | undefined) ?? null; // token.image je vlastně token.picture
+      session.user.image = (token.image as string | null | undefined) ?? null;
 
       if (!session.user.id) {
           console.warn("[NextAuth] Session: session.user.id is empty. Original token.sub was:", token?.sub, "Original token.id was:", token?.id);
       }
       
-      // (session as any).userIdFromToken = finalId; // Odstraněno testovací pole
-
       console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(session.user, null, 2));
       return session;
     },
