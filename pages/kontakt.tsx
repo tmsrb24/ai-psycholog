@@ -24,20 +24,30 @@ const KontaktPage = () => {
     e.preventDefault();
     setIsSubmitted(false);
     setSubmitError(null);
+    let isLoading = true; // Přidat stav pro loading indikátor, pokud je potřeba
 
-    // TODO: Implement actual form submission logic (e.g., API call)
-    console.log('Form data submitted:', formData);
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await response.json();
 
-    const success = true; 
-
-    if (success) {
-      setIsSubmitted(true);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    } else {
-      setSubmitError('Odeslání formuláře se nezdařilo. Zkuste to prosím později.');
+      if (response.ok) {
+        setIsSubmitted(true);
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setSubmitError(result.message || 'Odeslání formuláře se nezdařilo. Zkuste to prosím později.');
+      }
+    } catch (error) {
+      console.error('Chyba při odesílání formuláře:', error);
+      setSubmitError('Došlo k chybě. Zkuste to prosím později.');
+    } finally {
+      isLoading = false; // Vypnout loading indikátor
     }
   };
 
