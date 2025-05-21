@@ -68,9 +68,10 @@ const ChatPage = () => {
   
   const chatContainerRef = useRef<HTMLDivElement>(null);
   
-  const { data: session, status: authStatus } = useSession(); // Přidáno pro získání session
+  const { data: session, status: authStatus } = useSession(); // Ponechána pouze jedna deklarace
 
   useEffect(() => {
+    // Inicializace SpeechSynthesis
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       const synth = window.speechSynthesis;
       setSpeechSynthesis(synth);
@@ -82,35 +83,55 @@ const ChatPage = () => {
       else loadVoices();
     }
 
-    const fetchUserProfile = async () => {
+    const loadInitialData = async () => {
       if (authStatus === "authenticated" && session?.user) {
+        // Načtení profilu uživatele
         try {
-          const response = await fetch('/api/user/profile');
-          if (response.ok) {
-            const profileData = await response.json();
+          const profileResponse = await fetch('/api/user/profile');
+          if (profileResponse.ok) {
+            const profileData = await profileResponse.json();
             setUserProfile(profileData);
-            // Nastavení preferencí z profilu do stavů chatu
             if (profileData.preferences) {
               setResponseLength(profileData.preferences.responseLength || 'medium');
-              if (profileData.preferences.assistantGender) {
-                setAssistantGender(profileData.preferences.assistantGender);
-              }
-              if (profileData.preferences.assistantName) {
-                setAssistantName(profileData.preferences.assistantName);
-              }
+              if (profileData.preferences.assistantGender) setAssistantGender(profileData.preferences.assistantGender);
+              if (profileData.preferences.assistantName) setAssistantName(profileData.preferences.assistantName);
             }
           } else {
-            console.error('Nepodařilo se načíst profil uživatele:', response.statusText);
+            console.error('Nepodařilo se načíst profil uživatele:', profileResponse.statusText);
           }
         } catch (error) {
           console.error('Chyba při načítání profilu uživatele:', error);
         }
+
+        // Načtení poslední chatovací seance
+        try {
+          const chatHistoryResponse = await fetch('/api/chat'); // GET request
+          if (chatHistoryResponse.ok) {
+            const historyData = await chatHistoryResponse.json();
+            if (historyData.sessionId && historyData.messages && historyData.messages.length > 0) {
+              setCurrentChatSessionId(historyData.sessionId);
+              // Převod timestampů zpět na Date objekty, pokud je potřeba (API by mělo vracet stringy)
+              const formattedMessages = historyData.messages.map((msg: Message) => ({
+                ...msg,
+                timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
+              }));
+              setMessages(formattedMessages);
+            } else {
+              // Žádná historie, nebo prázdná, začínáme s výchozí systémovou zprávou
+              setMessages([{ role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' }]);
+            }
+          } else {
+            console.error('Nepodařilo se načíst historii chatu:', chatHistoryResponse.statusText);
+          }
+        } catch (error) {
+          console.error('Chyba při načítání historie chatu:', error);
+        }
       }
     };
 
-    fetchUserProfile();
+    loadInitialData();
     // TODO: Načíst sessionCount, streakDays, lastSessionDate z DB (až bude API)
-  }, [authStatus, session]); // Závislost na authStatus a session
+  }, [authStatus, session]);
   
   useEffect(() => {
     if (chatContainerRef.current) {
