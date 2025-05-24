@@ -59,8 +59,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.error('Supabase POST error:', error);
       res.status(500).json({ error: error.message || 'Chyba při ukládání deníkového zápisu.' });
     }
-  } else {
-    res.setHeader('Allow', ['GET', 'POST']);
+  } else if (req.method === 'PUT') {
+    try {
+      const { id, content, mood_id, tags } = req.body; // entry_date se nemění při update, user_id se bere z tokenu
+
+      if (!id || !content) {
+        return res.status(400).json({ error: 'Chybí ID zápisu nebo obsah.' });
+      }
+      const supabaseAdmin = getSupabaseAdmin();
+      const { data, error } = await supabaseAdmin
+        .from('diary_entries')
+        .update({ 
+          content, 
+          mood_id, 
+          tags,
+          updated_at: new Date().toISOString() // Aktualizujeme čas poslední změny
+        })
+        .eq('id', id)
+        .eq('user_id', userId) // Ujistíme se, že uživatel může upravovat jen své zápisy
+        .select()
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') { // PostgREST error for "No rows found"
+          return res.status(404).json({ error: 'Zápis nebyl nalezen nebo nemáte oprávnění jej upravit.' });
+        }
+        throw error;
+      }
+      if (!data) { // Pokud update nic nevrátil (nemělo by se stát, pokud error není)
+        return res.status(404).json({ error: 'Zápis nebyl nalezen po aktualizaci.' });
+      }
+      res.status(200).json(data);
+    } catch (error: any) {
+      console.error('Supabase PUT error:', error);
+      res.status(500).json({ error: error.message || 'Chyba při aktualizaci deníkového zápisu.' });
+    }
+  }
+  // TODO: Přidat DELETE metodu
+  else {
+    res.setHeader('Allow', ['GET', 'POST', 'PUT']); // Přidána PUT metoda
     res.status(405).end(`Metoda ${req.method} není povolena.`);
   }
 }
