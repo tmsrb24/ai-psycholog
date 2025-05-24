@@ -216,7 +216,16 @@ const DiaryPage: React.FC = () => {
 
           <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700" ref={entriesContainerRef}>
             <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-8 text-center">Moje zápisy</h3>
-            {isLoadingEntries && <p className="text-center text-gray-500 dark:text-gray-400 py-8"><FaSpinner className="animate-spin inline mr-2 text-xl" /> Načítání zápisů...</p>}
+            {isLoadingEntries && (
+              <div className="flex flex-col items-center justify-center py-10">
+                <div className="flex space-x-2 mb-3">
+                  <div className="w-3 h-3 bg-emerald-500 dark:bg-emerald-400 rounded-full animate-pulse-slow" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-3 h-3 bg-emerald-500 dark:bg-emerald-400 rounded-full animate-pulse-slow" style={{ animationDelay: '300ms' }}></div>
+                  <div className="w-3 h-3 bg-emerald-500 dark:bg-emerald-400 rounded-full animate-pulse-slow" style={{ animationDelay: '600ms' }}></div>
+                </div>
+                <p className="text-md text-gray-500 dark:text-gray-400">Načítání zápisů...</p>
+              </div>
+            )}
             {!isLoadingEntries && error && <p className="text-center text-red-500 bg-red-100 dark:bg-red-900/30 p-3 rounded-md my-4">{error}</p>}
             {!isLoadingEntries && !error && entries.length === 0 && (
               <div className="text-center text-gray-500 dark:text-gray-400 py-10">
