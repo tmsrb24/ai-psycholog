@@ -7,7 +7,7 @@ import {
 } from 'react-icons/fa';
 
 const GDPRPage = () => {
-  const [activeTab, setActiveTab] = useState<'gdpr' | 'security'>('gdpr');
+  const [activeTab, setActiveTab] = useState<'gdpr' | 'security'>('security'); // Výchozí tab je nyní 'security'
 
   const securityPoints = [
     { text: "Šifrované spojení HTTPS (SSL certifikát od Let's Encrypt)", icon: <FaLock className="text-green-500" /> },
@@ -72,26 +72,28 @@ const GDPRPage = () => {
 
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-            <button
-              onClick={() => setActiveTab('gdpr')}
-              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
-                ${activeTab === 'gdpr'
-                  ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-300'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-600'
-                }`}
-            >
-              <FaBook className="inline-block mr-2 mb-0.5" /> GDPR
-            </button>
+          {/* Přidáno justify-center pro vycentrování záložek */}
+          <nav className="-mb-px flex space-x-8 justify-center" aria-label="Tabs">
+            {/* Pořadí záložek prohozeno, Zabezpečení první */}
             <button
               onClick={() => setActiveTab('security')}
-              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
+              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-base  {/* Zvětšen text na text-base */}
                 ${activeTab === 'security'
                   ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-300'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-600'
                 }`}
             >
               <FaShieldAlt className="inline-block mr-2 mb-0.5" /> Zabezpečení
+            </button>
+            <button
+              onClick={() => setActiveTab('gdpr')}
+              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-base  {/* Zvětšen text na text-base */}
+                ${activeTab === 'gdpr'
+                  ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-300'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-600'
+                }`}
+            >
+              <FaBook className="inline-block mr-2 mb-0.5" /> GDPR
             </button>
           </nav>
         </div>
