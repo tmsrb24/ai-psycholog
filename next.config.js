@@ -7,47 +7,47 @@ const nextConfig = {
     // Sentry DSN will be automatically injected by Vercel or can be set here
     // NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   },
-  // async headers() { // DOČASNĚ ZAKOMENTOVÁNO PRO DEBUG 404
-  //   return [
-  //     {
-  //       source: '/api/auth/:path*',
-  //       headers: [
-  //         { key: 'Cache-Control', value: 'no-store, max-age=0' },
-  //       ],
-  //     },
-  //     // Přidání nových bezpečnostních hlaviček
-  //     {
-  //       source: '/(.*)', // Aplikovat na všechny cesty
-  //       headers: [
-  //         {
-  //           key: 'Strict-Transport-Security',
-  //           value: 'max-age=63072000; includeSubDomains; preload',
-  //         },
-  //         {
-  //           key: 'Content-Security-Policy',
-  //           // Upravená CSP pro povolení Google avatarů a fungování Next.js
-  //           value: "default-src 'self'; img-src 'self' data: lh3.googleusercontent.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; frame-ancestors 'none';",
-  //         },
-  //         {
-  //           key: 'X-Frame-Options',
-  //           value: 'DENY', // frame-ancestors 'none' v CSP dělá totéž
-  //         },
-  //         {
-  //           key: 'X-Content-Type-Options',
-  //           value: 'nosniff',
-  //         },
-  //         {
-  //           key: 'Referrer-Policy',
-  //           value: 'strict-origin-when-cross-origin',
-  //         },
-  //         {
-  //           key: 'Permissions-Policy',
-  //           value: "camera=(), microphone=(), geolocation=(), payment=()", // Přidáno payment=() jako dobrá praxe
-  //         },
-  //       ],
-  //     },
-  //   ];
-  // },
+  async headers() { // Obnovení sekce headers
+    return [
+      {
+        source: '/api/auth/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, max-age=0' },
+        ],
+      },
+      // Přidání nových bezpečnostních hlaviček
+      {
+        source: '/(.*)', // Aplikovat na všechny cesty
+        headers: [
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'Content-Security-Policy',
+            // Upravená CSP pro povolení Google avatarů a fungování Next.js
+            value: "default-src 'self'; img-src 'self' data: lh3.googleusercontent.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; frame-ancestors 'none';",
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY', // frame-ancestors 'none' v CSP dělá totéž
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff',
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'strict-origin-when-cross-origin',
+          },
+          {
+            key: 'Permissions-Policy',
+            value: "camera=(), microphone=(), geolocation=(), payment=()", // Přidáno payment=() jako dobrá praxe
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [];
   },
