@@ -148,7 +148,50 @@ const ChatPage = () => {
       <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         {/* Levý panel */}
         <div className="w-full md:w-72 md:mr-6 mb-4 md:mb-0 flex-shrink-0">
-          {/* ... obsah levého panelu ... */}
+          <div className="space-y-4">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { label: 'Profil', icon: FaUser, action: () => setShowProfile(!showProfile), active: showProfile },
+                  { label: 'Analýza', icon: FaChartLine, action: () => setShowAnalytics(!showAnalytics), active: showAnalytics, disabled: messages.length <= 1 },
+                  { label: 'Úspěchy', icon: FaTrophy, action: () => setShowGamification(!showGamification), active: showGamification },
+                  { label: 'Nastavení', icon: FaCog, action: () => setShowSettingsModal(true), active: showSettingsModal }
+                ].map(item => (
+                  <button 
+                    key={item.label}
+                    onClick={item.action}
+                    disabled={item.disabled}
+                    className={`p-3 rounded-lg text-sm font-medium flex flex-col items-center justify-center space-y-1 transition-all duration-150 ease-in-out
+                                ${item.active ? 'bg-blue-500 text-white shadow-md scale-105' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200'}
+                                ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    title={item.label}
+                  >
+                    <item.icon size={20} className={item.active ? 'text-white' : 'text-blue-500 dark:text-blue-400'} />
+                    <span>{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            {showProfile && (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                <UserProfile onProfileChange={handleProfileChange} />
+              </div>
+            )}
+            {showAnalytics && messages.length > 1 && (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                <SentimentAnalyzer messages={messages} />
+              </div>
+            )}
+            {showGamification && (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                <Gamification 
+                  sessionCount={sessionCount} 
+                  streakDays={streakDays}
+                  lastSessionDate={lastSessionDate || undefined}
+                />
+              </div>
+            )}
+          </div>
         </div>
         
         {/* Pravý panel (chat) */}
