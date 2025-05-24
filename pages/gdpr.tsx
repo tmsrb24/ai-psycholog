@@ -3,11 +3,47 @@ import Layout from '../components/Layout';
 import { 
   FaLock, FaUserCheck, FaDatabase, FaEnvelopeOpenText, FaUserLock, 
   FaUserSlash, FaClipboardCheck, FaBalanceScale, FaShieldAlt,
-  FaBook, FaShieldVirus
+  FaBook, FaChevronDown, FaChevronUp
 } from 'react-icons/fa';
 
+interface AccordionItemProps {
+  title: string;
+  children: React.ReactNode;
+  icon?: React.ReactElement;
+}
+
+const AccordionItem: React.FC<AccordionItemProps> = ({ title, children, icon }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border-b border-gray-200 dark:border-gray-700">
+      <h2>
+        <button
+          type="button"
+          className="flex items-center justify-between w-full py-4 px-1 font-medium text-left text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+        >
+          <span className="flex items-center">
+            {icon && <span className="mr-3 text-blue-500 dark:text-blue-400">{React.cloneElement(icon, { size: 20 })}</span>}
+            {title}
+          </span>
+          {isOpen ? <FaChevronUp className="w-4 h-4" /> : <FaChevronDown className="w-4 h-4" />}
+        </button>
+      </h2>
+      {isOpen && (
+        <div className="py-4 px-1">
+          <div className="text-gray-600 dark:text-gray-300 space-y-2">
+            {children}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 const GDPRPage = () => {
-  const [activeTab, setActiveTab] = useState<'gdpr' | 'security'>('security'); // Výchozí tab je nyní 'security'
+  const [activeTab, setActiveTab] = useState<'gdpr' | 'security'>('security');
 
   const securityPoints = [
     { text: "Šifrované spojení HTTPS (SSL certifikát od Let's Encrypt)", icon: <FaLock className="text-green-500" /> },
@@ -20,22 +56,36 @@ const GDPRPage = () => {
     { text: "Plná shoda s GDPR (EU 2016/679)", icon: <FaBalanceScale className="text-teal-500" /> },
   ];
 
+  const gdprSections = [
+    { title: "1. Kdo jsme", content: <p>Provozovatelem webu Psychollog.cz je [DOPLNIT JMÉNO/FIRMU A KONTAKTNÍ ÚDAJE, IČO POKUD EXISTUJE].</p> },
+    { title: "2. Jaké údaje zpracováváme a proč", content: <><p>Vaše důvěra je pro nás zásadní. Tato služba je navržena tak, aby maximálně respektovala vaše soukromí.</p><ul className="list-disc list-inside mt-2 space-y-1"><li><strong>Identifikační údaje (při přihlášení přes Google):</strong> Jméno, emailová adresa, profilový obrázek. Tyto údaje slouží k identifikaci vašeho účtu a personalizaci služby.</li><li><strong>Obsah konverzací (Chat):</strong> Pokud povolíte ukládání historie, obsah vašich konverzací s AI se ukládá do vaší zabezpečené databáze v Supabase, abyste se k nim mohli vracet.</li><li><strong>Zápisy v Deníku:</strong> Obsah vašich deníkových zápisů se ukládá do vaší zabezpečené databáze v Supabase.</li><li><strong>Uživatelská nastavení (Profil):</strong> Vaše preference pro fungování aplikace.</li><li><strong>Technické údaje:</strong> IP adresa, čas přístupu, typ zařízení – pro zajištění bezpečnosti, kompatibility a provozu webu, a pro anonymní statistiky k vylepšování služby.</li></ul></> },
+    { title: "3. Právní základ zpracování", content: <><p>Zpracování probíhá na základě:</p><ul className="list-disc list-inside mt-1"><li>Plnění smlouvy (poskytování služeb aplikace po vaší registraci).</li><li>Oprávněného zájmu správce (provoz a bezpečnost služby, analýza pro vylepšení).</li><li>Vašeho souhlasu (např. pro ukládání historie chatu, pokud je to volitelné).</li></ul></> },
+    { title: "4. Kdo má k údajům přístup", content: <p>K vašim osobním údajům (jméno, email, obsah konverzací a deníku) máte přístup pouze vy. My jako provozovatelé k nim standardně nepřistupujeme, pokud to není nezbytně nutné pro technickou podporu na vaši žádost nebo řešení problémů. Data jsou uložena na zabezpečené infrastruktuře Supabase (využívající AWS/Google Cloud) a Vercel. Pro odesílání emailů využíváme SendGrid.</p> },
+    { title: "5. Jak dlouho údaje uchováváme", content: <p>Vaše profilové údaje, obsah konverzací (pokud je ukládání povoleno) a deníkové zápisy uchováváme po dobu existence vašeho účtu, nebo dokud je nesmažete. Technická data se uchovávají po nezbytně nutnou dobu.</p> },
+    { title: "6. Jaká máte práva", content: <><p>Máte právo na přístup, opravu, výmaz, omezení zpracování, přenositelnost údajů a vznést námitku. Můžete také podat stížnost u Úřadu pro ochranu osobních údajů (www.uoou.cz). Pro uplatnění práv nás kontaktujte na <a href="mailto:privacy@psychollog.cz" className="text-blue-600 dark:text-blue-400 underline">privacy@psychollog.cz</a>.</p></> },
+    { title: "7. Závěrem", content: <p>Chápeme, že mluvit s někým o svých pocitech vyžaduje důvěru. Děláme maximum pro to, aby byl Psychollog.cz bezpečný a diskrétní prostor.</p> },
+  ];
+
   const renderGDPRContent = () => (
     <div className="space-y-6">
       <h2 className="text-3xl font-semibold mb-6 text-center text-gray-900 dark:text-white">Zásady ochrany osobních údajů (GDPR)</h2>
-      <section>
-        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">1. Kdo jsme</h3>
-        <p className="text-gray-600 dark:text-gray-300">
-          Provozovatelem webu Psychollog.cz je [DOPLNIT JMÉNO/FIRMU A KONTAKTNÍ ÚDAJE, IČO POKUD EXISTUJE].
-        </p>
-      </section>
-      {/* ... (ostatní GDPR sekce zkopírované z předchozí verze) ... */}
-      <section><h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">2. Jaké údaje zpracováváme a proč</h3><p className="text-gray-600 dark:text-gray-300">Vaše důvěra je pro nás zásadní. Tato služba je navržena tak, aby maximálně respektovala vaše soukromí.</p><ul className="list-disc list-inside mt-2 text-gray-600 dark:text-gray-300 space-y-1"><li><strong>Identifikační údaje (při přihlášení přes Google):</strong> Jméno, emailová adresa, profilový obrázek. Tyto údaje slouží k identifikaci vašeho účtu a personalizaci služby.</li><li><strong>Obsah konverzací (Chat):</strong> Pokud povolíte ukládání historie, obsah vašich konverzací s AI se ukládá do vaší zabezpečené databáze v Supabase, abyste se k nim mohli vracet.</li><li><strong>Zápisy v Deníku:</strong> Obsah vašich deníkových zápisů se ukládá do vaší zabezpečené databáze v Supabase.</li><li><strong>Uživatelská nastavení (Profil):</strong> Vaše preference pro fungování aplikace.</li><li><strong>Technické údaje:</strong> IP adresa, čas přístupu, typ zařízení – pro zajištění bezpečnosti, kompatibility a provozu webu, a pro anonymní statistiky k vylepšování služby.</li></ul></section>
-      <section><h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">3. Právní základ zpracování</h3><p className="text-gray-600 dark:text-gray-300">Zpracování probíhá na základě:<ul className="list-disc list-inside mt-1"><li>Plnění smlouvy (poskytování služeb aplikace po vaší registraci).</li><li>Oprávněného zájmu správce (provoz a bezpečnost služby, analýza pro vylepšení).</li><li>Vašeho souhlasu (např. pro ukládání historie chatu, pokud je to volitelné).</li></ul></p></section>
-      <section><h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">4. Kdo má k údajům přístup</h3><p className="text-gray-600 dark:text-gray-300">K vašim osobním údajům (jméno, email, obsah konverzací a deníku) máte přístup pouze vy. My jako provozovatelé k nim standardně nepřistupujeme, pokud to není nezbytně nutné pro technickou podporu na vaši žádost nebo řešení problémů. Data jsou uložena na zabezpečené infrastruktuře Supabase (využívající AWS/Google Cloud) a Vercel. Pro odesílání emailů využíváme SendGrid.</p></section>
-      <section><h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">5. Jak dlouho údaje uchováváme</h3><p className="text-gray-600 dark:text-gray-300">Vaše profilové údaje, obsah konverzací (pokud je ukládání povoleno) a deníkové zápisy uchováváme po dobu existence vašeho účtu, nebo dokud je nesmažete. Technická data se uchovávají po nezbytně nutnou dobu.</p></section>
-      <section><h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">6. Jaká máte práva</h3><p className="text-gray-600 dark:text-gray-300">Máte právo na přístup, opravu, výmaz, omezení zpracování, přenositelnost údajů a vznést námitku. Můžete také podat stížnost u Úřadu pro ochranu osobních údajů (www.uoou.cz). Pro uplatnění práv nás kontaktujte na <a href="mailto:privacy@psychollog.cz" className="text-blue-600 dark:text-blue-400 underline">privacy@psychollog.cz</a>.</p></section>
-      <section><h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">7. Závěrem</h3><p className="text-gray-600 dark:text-gray-300">Chápeme, že mluvit s někým o svých pocitech vyžaduje důvěru. Děláme maximum pro to, aby byl Psychollog.cz bezpečný a diskrétní prostor.</p></section>
+      {/* Desktop: plný text */}
+      <div className="hidden md:block space-y-6">
+        {gdprSections.map(section => (
+          <section key={section.title}>
+            <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{section.title}</h3>
+            <div className="text-gray-600 dark:text-gray-300">{section.content}</div>
+          </section>
+        ))}
+      </div>
+      {/* Mobile: accordion */}
+      <div className="md:hidden">
+        {gdprSections.map(section => (
+          <AccordionItem key={section.title} title={section.title}>
+            {section.content}
+          </AccordionItem>
+        ))}
+      </div>
     </div>
   );
 
@@ -72,12 +122,10 @@ const GDPRPage = () => {
 
       <div className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-          {/* Přidáno justify-center pro vycentrování záložek */}
           <nav className="-mb-px flex space-x-8 justify-center" aria-label="Tabs">
-            {/* Pořadí záložek prohozeno, Zabezpečení první */}
             <button
               onClick={() => setActiveTab('security')}
-              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-base  {/* Zvětšen text na text-base */}
+              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-base
                 ${activeTab === 'security'
                   ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-300'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-600'
@@ -87,7 +135,7 @@ const GDPRPage = () => {
             </button>
             <button
               onClick={() => setActiveTab('gdpr')}
-              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-base  {/* Zvětšen text na text-base */}
+              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-base
                 ${activeTab === 'gdpr'
                   ? 'border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-300'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:border-gray-600'
