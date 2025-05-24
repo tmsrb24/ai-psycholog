@@ -2,13 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
-import { FaBars, FaTimes, FaMoon, FaSun, FaUser, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
-import { useTheme } from './ThemeProvider'; // Odebrán import Theme typu
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle } from 'react-icons/fa'; // Odebrány FaMoon, FaSun
+import { useTheme } from './ThemeProvider';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme(); // Zpět na toggleTheme
+  const { theme } = useTheme(); // toggleTheme již není potřeba
   const router = useRouter();
   const { data: session, status } = useSession();
   const loading = status === "loading";
@@ -210,26 +210,12 @@ const Navbar: React.FC = () => {
               </div>
             )}
             
-            {/* Theme toggle button - vráceno původní */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
-              aria-label="Toggle dark mode"
-            >
-              {theme === 'dark' ? <FaSun size={18} /> : <FaMoon size={18} />}
-            </button>
+            {/* Theme toggle button - ODSTRANĚNO */}
           </div>
 
           {/* Mobile menu button */}
           <div className="flex items-center md:hidden">
-            {/* Theme toggle button - vráceno původní */}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mr-2"
-              aria-label="Toggle dark mode"
-            >
-              {theme === 'dark' ? <FaSun size={18} /> : <FaMoon size={18} />}
-            </button>
+            {/* Theme toggle button - ODSTRANĚNO */}
             
             {/* Authentication UI for mobile */}
             {!loading && session && (

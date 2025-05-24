@@ -23,7 +23,7 @@ import ChatSettingsModal from '../components/ChatSettingsModal';
 import { Message } from '../types';
 
 const ChatPage = () => {
-  const { theme, toggleTheme } = useTheme();
+  // const { theme, toggleTheme } = useTheme(); // Odstraněno, toggleTheme již neexistuje a theme se zde nepoužívá
   
   const [messages, setMessages] = useState<Message[]>([
     { role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' },
