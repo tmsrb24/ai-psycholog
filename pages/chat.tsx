@@ -1,7 +1,8 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import { useState, useEffect, useRef } from 'react';
-import { useSession } from 'next-auth/react'; // Přidán import
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router'; // Přidán import pro useRouter
 import axios from 'axios';
 import { 
   FaMicrophone, FaVolumeUp, FaVolumeMute, FaCog, FaHistory, 
@@ -68,9 +69,13 @@ const ChatPage = () => {
   
   const chatContainerRef = useRef<HTMLDivElement>(null);
   
-  const { data: session, status: authStatus } = useSession(); // Ponechána pouze jedna deklarace
+  const { data: session, status: authStatus } = useSession();
+  const router = useRouter(); // Přidáno pro přesměrování
 
   useEffect(() => {
+    if (authStatus === "unauthenticated") {
+      router.push('/auth/login?callbackUrl=/chat'); // Přesměrování nepřihlášených
+    }
     // Inicializace SpeechSynthesis
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       const synth = window.speechSynthesis;
