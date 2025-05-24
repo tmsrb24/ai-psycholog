@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaQuestionCircle, FaTimes } from 'react-icons/fa'; // Nebo jiná ikona, např. FaCommentDots
+import { FaTimes, FaCommentDots } from 'react-icons/fa'; // FaQuestionCircle nahrazena FaCommentDots pro zavřený stav
 
 interface WidgetChatButtonProps {
   onClick: () => void;
@@ -10,10 +10,19 @@ const WidgetChatButton: React.FC<WidgetChatButtonProps> = ({ onClick, isOpen }) 
   return (
     <button
       onClick={onClick}
-      className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-lg z-50 transition-transform duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-      aria-label={isOpen ? "Zavřít FAQ chat" : "Otevřít FAQ chat"}
+      className={`fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-5 rounded-full shadow-xl z-50 transition-all duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50
+                  ${!isOpen ? 'animate-pulse hover:scale-110' : 'hover:scale-105'}`}
+      aria-label={isOpen ? "Zavřít Nápovědu" : "Otevřít Nápovědu"}
     >
-      {isOpen ? <FaTimes size={24} /> : <FaQuestionCircle size={24} />}
+      {isOpen ? (
+        <div className="flex items-center">
+          <FaTimes size={20} className="mr-2" /> Zavřít
+        </div>
+      ) : (
+        <div className="flex items-center">
+          <FaCommentDots size={22} className="mr-2" /> Zeptejte se
+        </div>
+      )}
     </button>
   );
 };
