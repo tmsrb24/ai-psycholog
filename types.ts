@@ -2,6 +2,7 @@
 export type MessageRole = 'user' | 'assistant' | 'system';
 
 export interface Message {
+  id?: string; // Přidáno volitelné ID pro zprávy (např. z DB)
   role: MessageRole;
   content: string;
   timestamp?: Date;

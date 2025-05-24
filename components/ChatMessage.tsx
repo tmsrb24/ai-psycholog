@@ -1,5 +1,5 @@
-import React from 'react';
-import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
+import React, { useState } from 'react'; // Přidán useState
+import { FaVolumeUp, FaVolumeMute, FaCopy, FaCheck } from 'react-icons/fa'; // Přidány FaCopy, FaCheck
 import { motion } from 'framer-motion';
 import { Message } from '../types';
 
@@ -17,6 +17,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   onStopSpeaking
 }) => {
   const isUser = message.role === 'user';
+  const [copied, setCopied] = useState(false);
   
   // Format message content with Markdown
   const formatContent = (content: string) => {
@@ -36,12 +37,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     >
       <div className={`max-w-[80%] ${isUser ? 'user-message' : 'assistant-message'}`}>
         <div 
-          className="prose prose-sm dark:prose-invert"
+          className="prose prose-sm dark:prose-invert break-words" // Přidáno break-words pro lepší zalamování
           dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}
         />
         
-        {!isUser && onSpeakText && onStopSpeaking && (
-          <div className="flex justify-end mt-2">
+        <div className="flex justify-end items-center mt-2 space-x-3">
+          {!isUser && onSpeakText && onStopSpeaking && (
             <button
               onClick={() => isSpeaking ? onStopSpeaking() : onSpeakText(message.content)}
               className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
@@ -49,8 +50,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             >
               {isSpeaking ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
             </button>
-          </div>
-        )}
+          )}
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(message.content);
+              setCopied(true);
+              setTimeout(() => setCopied(false), 2000);
+            }}
+            className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+            title="Kopírovat zprávu"
+          >
+            {copied ? <FaCheck size={16} className="text-green-500" /> : <FaCopy size={16} />}
+          </button>
+        </div>
         
         {message.timestamp && (
           <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
