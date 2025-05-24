@@ -118,11 +118,11 @@ const HomePage = () => {
       <section className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left"> {/* Vycentrování textu na mobilu */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4"> {/* Menší text na mobilu */}
                 Psychologická podpora s pokročilou AI
               </h1>
-              <p className="text-xl mb-8">
+              <p className="text-lg sm:text-xl mb-8"> {/* Menší text na mobilu */}
                 Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -134,19 +134,21 @@ const HomePage = () => {
                 </Link>
               </div>
             </div>
-            <div className="md:w-1/2 flex justify-center md:justify-end md:pr-8 lg:pr-0"> 
-              <div className="relative w-80 h-80 md:w-[26rem] md:h-[26rem]">
+            <div className="md:w-1/2 flex justify-center md:justify-end md:pr-8 lg:pr-0">
+              {/* Zmenšení obrázku a kruhů na mobilu */}
+              <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[26rem] md:h-[26rem]">
                 <div className="absolute inset-0 bg-blue-400 dark:bg-blue-700 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0s' }}></div>
-                <div className="absolute inset-5 md:inset-6 bg-blue-300 dark:bg-blue-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-                <div className="absolute inset-10 md:inset-12 bg-blue-200 dark:bg-blue-500 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.6s' }}></div>
-                <div className="absolute inset-0 flex items-center justify-center z-10 p-3 md:p-4">
+                <div className="absolute inset-3 sm:inset-5 md:inset-6 bg-blue-300 dark:bg-blue-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                <div className="absolute inset-6 sm:inset-10 md:inset-12 bg-blue-200 dark:bg-blue-500 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+                <div className="absolute inset-0 flex items-center justify-center z-10 p-2 sm:p-3 md:p-4">
                   <Image 
                     src="/images/hero-avatar.png" 
                     alt="AI Psycholog Avatar" 
-                    width={320} 
-                    height={320} 
+                    width={280} // Menší výchozí šířka
+                    height={280} // Menší výchozí výška
                     className="object-contain"
                     priority 
+                    sizes="(max-width: 640px) 256px, (max-width: 768px) 320px, 416px" // Pro next/image optimalizaci
                   />
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
@@ -172,11 +174,11 @@ const HomePage = () => {
       </section>
 
       {/* Features Section (Proč AI Psycholog?) */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800">
+      <section className="py-12 sm:py-16 bg-gray-50 dark:bg-gray-800"> {/* Menší padding na mobilu */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Proč AI Psycholog?</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+          <div className="text-center mb-10 sm:mb-12"> {/* Menší margin na mobilu */}
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">Proč AI Psycholog?</h2> {/* Menší text na mobilu */}
+            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto"> {/* Menší text na mobilu */}
               Malé rozhovory, které mohou změnit hodně.<br />
 V prostoru, kde vás nikdo nesoudí a kde můžete mluvit tak, jak to právě cítíte.<br />
 Psychollog je tu pro vás kdykoli – klidně jen na pár vět, nebo i na hlubší zamyšlení.<br />
