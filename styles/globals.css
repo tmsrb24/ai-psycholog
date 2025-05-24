@@ -6,7 +6,7 @@
 /* Například, pokud byl nějaký globální font nebo základní styl pro body */
 @layer base {
   body {
-    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200;
+    @apply bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-200 transition-colors duration-200; /* Změna na slate */
   }
 }
 
@@ -17,23 +17,23 @@
   
   /* Příklady, jak mohly být tlačítka definována - upravit podle skutečného původního stavu */
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white;
+    @apply bg-blue-600 hover:bg-blue-700 text-white; /* Modrá zůstává pro primární akce */
   }
   
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100 border border-gray-300 dark:border-gray-600;
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-100 border border-gray-300 dark:border-slate-600; /* Změna na slate */
   }
   
   .input {
-    @apply px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100;
+    @apply px-3 py-2 border border-gray-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-slate-800 text-gray-900 dark:text-slate-100; /* Změna na slate */
   }
 
   .user-message {
-    @apply bg-blue-100 text-blue-900 p-3 rounded-lg dark:bg-blue-900 dark:text-blue-100;
+    @apply bg-blue-100 text-blue-900 p-3 rounded-lg dark:bg-blue-700 dark:text-blue-50; /* Mírné zesvětlení modré pro zprávy uživatele v dark mode */
   }
   
   .assistant-message {
-    @apply bg-gray-100 text-gray-900 p-3 rounded-lg dark:bg-gray-800 dark:text-gray-100;
+    @apply bg-gray-100 text-gray-900 p-3 rounded-lg dark:bg-slate-800 dark:text-slate-200; /* Změna na slate */
   }
 }
 
