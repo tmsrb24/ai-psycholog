@@ -98,30 +98,80 @@ const ChatPage = () => {
             const historyData = await chatHistoryResponse.json();
             if (historyData.sessionId && historyData.messages && historyData.messages.length > 0) {
               setCurrentChatSessionId(historyData.sessionId);
-              const formattedMessages = historyData.messages.map((msg: Message) => ({
+              let baseMessages = historyData.messages.map((msg: Message) => ({
                 ...msg,
                 timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
               }));
 
-              let messagesToSet = formattedMessages;
+              let messagesToSet = baseMessages;
               const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
               const now = new Date();
+              let addedProactiveMessage = false;
 
-              if (formattedMessages.length > 1) { // Máme alespoň jednu uživatelskou/AI zprávu kromě systémové
-                const lastMessage = formattedMessages[formattedMessages.length - 1];
+              // 1. Proaktivní zpráva po pauze (již implementováno, mírně upraveno pro kombinaci s dalšími)
+              if (baseMessages.length > 1) { 
+                const lastMessage = baseMessages[baseMessages.length - 1];
                 if (lastMessage.timestamp && (now.getTime() - new Date(lastMessage.timestamp).getTime()) > twentyFourHoursInMs) {
-                  // Poslední zpráva je starší než 24 hodin
-                  const proactiveMessage: Message = {
+                  const proactivePauseMessage: Message = {
                     role: 'assistant',
                     content: 'Vítejte zpět! Zdá se, že jsme spolu chvíli nemluvili. Chtěl/a byste navázat na naši poslední konverzaci, nebo se dnes zaměříme na něco nového?',
                     timestamp: new Date()
                   };
-                  messagesToSet = [...formattedMessages, proactiveMessage];
+                  messagesToSet = [...baseMessages, proactivePauseMessage];
+                  addedProactiveMessage = true;
                 }
               }
+              
+              // 2. Načtení a zpracování user_insights pro další proaktivní zprávy
+              try {
+                const insightsResponse = await fetch('/api/user-insights');
+                if (insightsResponse.ok) {
+                  const insightsData = await insightsResponse.json();
+                  if (insightsData && insightsData.proactive_flags) {
+                    if (insightsData.proactive_flags.suggest_mood_discussion && !addedProactiveMessage) { // Zobrazit jen pokud už nebyla jiná proaktivní zpráva
+                      const moodMessage: Message = {
+                        role: 'assistant',
+                        content: 'Všiml/a jsem si, že jste v poslední době v deníku zaznamenal/a náročnější pocity. Chtěl/a byste si o tom promluvit?',
+                        timestamp: new Date()
+                      };
+                      messagesToSet = [...messagesToSet, moodMessage];
+                      addedProactiveMessage = true;
+                    }
+                    if (insightsData.proactive_flags.offer_stress_exercise && !addedProactiveMessage) {
+                       const stressMessage: Message = {
+                        role: 'assistant',
+                        content: 'Zdá se, že téma stresu se objevuje ve vašich konverzacích. Měl/a byste zájem o krátké cvičení na uvolnění stresu?',
+                        timestamp: new Date()
+                      };
+                      messagesToSet = [...messagesToSet, stressMessage];
+                      addedProactiveMessage = true;
+                    }
+                    // Zde by mohly být další podmínky pro jiné flagy
+                  }
+                }
+              } catch (insightsError) {
+                console.error("Chyba při načítání user insights:", insightsError);
+              }
               setMessages(messagesToSet);
-            } else {
-              setMessages([{ role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' }]);
+            } else { // Žádná historie chatu
+              let initialMessages: Message[] = [{ role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' }];
+              try {
+                const insightsResponse = await fetch('/api/user-insights');
+                if (insightsResponse.ok) {
+                  const insightsData = await insightsResponse.json();
+                  if (insightsData && insightsData.proactive_flags && insightsData.proactive_flags.suggest_mood_discussion) {
+                     const moodMessage: Message = {
+                        role: 'assistant',
+                        content: 'Vítejte! Všiml/a jsem si, že jste v poslední době v deníku zaznamenal/a náročnější pocity. Chtěl/a byste si o tom promluvit?',
+                        timestamp: new Date()
+                      };
+                      initialMessages = [...initialMessages, moodMessage];
+                  }
+                }
+              } catch (insightsError) {
+                console.error("Chyba při načítání user insights (no chat history):", insightsError);
+              }
+              setMessages(initialMessages);
             }
           } else {
             console.error('Nepodařilo se načíst historii chatu:', chatHistoryResponse.statusText);
