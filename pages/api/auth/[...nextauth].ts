@@ -42,89 +42,69 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account, profile }) {
       console.log("[NextAuth] JWT callback START:", { tokenId_before: token?.id, tokenSub_before: token?.sub, raw_user_id: user?.id, userEmail: user?.email, profileSub: (profile as any)?.sub, accountProvider: account?.provider });
       
-      const supabaseAdmin = getSupabaseAdmin();
+      // Pokud je user objekt přítomen (typicky při signIn nebo při prvním vytvoření JWT)
+      if (user) {
+        // Předpokládáme, že user.id z NextAuth by MĚLO být Supabase auth.users.id (UUID)
+        // Pokud tomu tak není, je problém v integraci NextAuth s Auth providerem (Supabase)
+        if (user.id && typeof user.id === 'string' && user.id.length === 36) { // Jednoduchá kontrola, zda to vypadá jako UUID
+          token.sub = user.id;
+          token.id = user.id; // Pro konzistenci
+          console.log(`[NextAuth] JWT: Using user.id as Supabase UUID: ${user.id}`);
 
-      // Při prvním přihlášení nebo propojení účtu (když jsou user a account objekty dostupné)
-      if (user && account && user.email) {
-        try {
-          // Získání skutečného Supabase User ID (UUID) na základě emailu
-          // Použijeme iteraci přes listUsers, protože přímý filtr podle emailu nemusí být podporován nebo je složitější
-          // Toto není ideální pro velký počet uživatelů, ale pro začátek postačí.
-          // V produkci by bylo lepší použít specifickou funkci pro vyhledání podle emailu, pokud existuje,
-          // nebo zajistit, že user.id z NextAuth je již správné Supabase UUID.
-          let supabaseUserIdFromAuth: string | undefined = undefined; // Přejmenováno pro jasnost
-          const { data: { users: allSupaUsers }, error: listUsersError } = await supabaseAdmin.auth.admin.listUsers({ // Přejmenováno na allSupaUsers
-            page: 1,
-            perPage: 1000, 
-          });
+          // Kontrola pro odeslání uvítacího emailu, pokud je to první přihlášení
+          if (account && user.email) { // 'account' je přítomen jen při prvním sign-in/link
+            try {
+              const supabaseAdmin = getSupabaseAdmin();
+              const { data: existingProfile, error: profileError } = await supabaseAdmin
+                .from('user_profiles')
+                .select('id')
+                .eq('id', user.id) // user.id je zde již UUID
+                .maybeSingle();
 
-          if (listUsersError) {
-            console.error("[NextAuth] JWT: Error listing users from Supabase Auth:", listUsersError);
-            throw listUsersError; // Správná proměnná pro chybu
-          }
-
-          const foundSupaUser = allSupaUsers.find(u => u.email === user.email); // Hledáme v allSupaUsers
-          if (foundSupaUser) {
-            supabaseUserIdFromAuth = foundSupaUser.id; // Přiřadíme ID nalezeného uživatele
-          }
-          
-          if (supabaseUserIdFromAuth) { // Používáme novou proměnnou
-            token.sub = supabaseUserIdFromAuth;
-            token.id = supabaseUserIdFromAuth; 
-            console.log(`[NextAuth] JWT: Successfully mapped email ${user.email} to Supabase UUID: ${supabaseUserIdFromAuth}`);
-
-            // Kontrola pro odeslání uvítacího emailu
-            const { data: existingProfile, error: profileError } = await supabaseAdmin
-              .from('user_profiles')
-              .select('id')
-              .eq('id', supabaseUserIdFromAuth) // Používáme správné ID
-              .maybeSingle();
-
-            if (profileError && profileError.code !== 'PGRST116') {
-              console.error("[NextAuth] JWT: Error checking user_profiles for welcome email:", profileError);
+              if (profileError && profileError.code !== 'PGRST116') {
+                console.error("[NextAuth] JWT: Error checking user_profiles for welcome email:", profileError);
+              }
+              
+              if (!existingProfile) {
+                console.log(`[NextAuth] JWT: New user profile to be created for ${user.email}. Attempting to send welcome email.`);
+                sendWelcomeEmail(user.email, user.name).catch(emailError => {
+                  console.error("[NextAuth] JWT: Failed to send welcome email:", emailError);
+                });
+              }
+            } catch (dbError) {
+              console.error("[NextAuth] JWT: Database error during new user check for welcome email:", dbError);
             }
-            
-            if (!existingProfile && user.email) {
-              console.log(`[NextAuth] JWT: New user profile to be created for ${user.email}. Attempting to send welcome email.`);
-              sendWelcomeEmail(user.email, user.name).catch(emailError => {
-                console.error("[NextAuth] JWT: Failed to send welcome email:", emailError);
-              });
-            }
-          } else { 
-            console.error(`[NextAuth] JWT CRITICAL: Could not find Supabase user UUID for email ${user.email}.`);
-            token.sub = ""; token.id = ""; 
           }
-        } catch (error) { 
-          console.error("[NextAuth] JWT: General error during Supabase user processing or email check:", error);
-          token.sub = ""; token.id = ""; 
+        } else {
+          // Pokud user.id není validní UUID, je zde problém.
+          // Může se stát, pokud se používá provider, který nevrací UUID jako user.id,
+          // nebo pokud není správně nastaven adapter.
+          console.error(`[NextAuth] JWT CRITICAL: user.id ('${user.id}') does not appear to be a valid Supabase UUID. Falling back to profile.sub if Google.`);
+          if (account?.provider === "google" && (profile as any)?.sub) {
+            // Toto je nouzové řešení a pravděpodobně způsobí chyby v API, pokud profile.sub není UUID.
+            // Ale je to to, co tam bylo předtím a způsobovalo chybu.
+            // Cílem je, aby user.id BYLO UUID.
+            token.sub = String((profile as any).sub); 
+            token.id = String((profile as any).sub);
+             console.warn(`[NextAuth] JWT: Fallback - using Google profile.sub ('${token.sub}') as token.sub. THIS MAY CAUSE ISSUES IF NOT A UUID.`);
+          } else {
+            token.sub = ""; token.id = ""; // Signalizuje problém
+            console.error(`[NextAuth] JWT CRITICAL: Could not determine a valid UUID for token.sub.`);
+          }
         }
         
-        // Ostatní informace do tokenu, i když se nepodařilo získat supabaseUserId,
-        // aby základní přihlášení mohlo fungovat (ale API volání budou selhávat)
+        // Ostatní informace do tokenu
         token.email = user.email ?? undefined;
         token.name = user.name ?? undefined;
         token.image = user.image ?? undefined;
-        if (account.access_token) token.accessToken = account.access_token;
-        token.provider = account.provider;
-
-        console.log("[NextAuth] JWT callback - user & account present. Token populated:", JSON.stringify(token, null, 2));
-      
-      } else if (user) {
-        // Toto by mohlo být voláno při obnovení JWT, pokud user objekt je stále k dispozici,
-        // ale account ne (např. není to první přihlášení v rámci tohoto JWT cyklu).
-        // Zajistíme, že .sub je stále správně nastaven, pokud již existuje.
-        if (!token.sub && user.id) {
-           // Zde by user.id již mělo být UUID, pokud bylo správně nastaveno při prvním signIn
-           // Ale pro jistotu bychom mohli znovu zkusit mapování, pokud by token.sub chyběl.
-           // Prozatím předpokládáme, že pokud token.sub není, user.id je spolehlivé.
-          console.warn(`[NextAuth] JWT: token.sub was missing, attempting to use user.id: ${user.id}`);
-          token.sub = user.id;
-          token.id = user.id;
-        }
+        if (account?.access_token) token.accessToken = account.access_token;
+        if (account?.provider) token.provider = account.provider;
       }
       
       if (!token.sub) {
-        console.error("[NextAuth] JWT: CRITICAL - token.sub is still missing or empty after all processing. This will cause issues. Token:", JSON.stringify(token, null, 2));
+        console.error("[NextAuth] JWT: CRITICAL - token.sub is empty or missing at the end of JWT callback. Token:", JSON.stringify(token, null, 2));
+      } else {
+        console.log("[NextAuth] JWT callback END. Token populated:", JSON.stringify(token, null, 2));
       }
       
       return token;
@@ -132,12 +112,11 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       console.log("[NextAuth] Session callback START. Token:", JSON.stringify(token, null, 2));
       
-      if (token.sub && String(token.sub).length > 0) { // Ověříme, že token.sub není prázdný
-        session.user.id = String(token.sub); // Toto by mělo být UUID
+      if (token.sub && String(token.sub).length === 36) { // Přísnější kontrola na UUID formát
+        session.user.id = String(token.sub);
       } else {
-        console.error("[NextAuth] Session: token.sub is missing or empty! Cannot reliably set session.user.id.");
-        // Fallback na token.id nebo ponechat defaultní session.user.id, pokud existuje
-        session.user.id = token.id ? String(token.id) : (session.user?.id || ""); 
+        console.error(`[NextAuth] Session: token.sub ('${token.sub}') is not a valid UUID! Cannot reliably set session.user.id.`);
+        session.user.id = ""; // Nastavit na prázdný string, aby bylo jasné, že ID je neplatné
       }
       session.user.name = token.name as string | null;
       session.user.email = token.email as string | null;
