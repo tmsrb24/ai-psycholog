@@ -7,7 +7,6 @@ const nextConfig = {
     // Sentry DSN will be automatically injected by Vercel or can be set here
     // NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   },
-  /* // DOČASNĚ ZAKOMENTOVÁNO PRO DEBUGGING 404
   async headers() { 
     return [
       {
@@ -16,9 +15,8 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'no-store, max-age=0' },
         ],
       },
-      // Přidání nových bezpečnostních hlaviček
       {
-        source: '/(.*)', // Aplikovat na všechny cesty
+        source: '/(.*)', 
         headers: [
           {
             key: 'Strict-Transport-Security',
@@ -26,12 +24,16 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            // Upravená CSP pro povolení Google avatarů a fungování Next.js
-            value: "default-src 'self'; img-src 'self' data: lh3.googleusercontent.com; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; frame-ancestors 'none';",
+            value: "default-src 'self'; img-src 'self' data: lh3.googleusercontent.com avatars.githubusercontent.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; frame-ancestors 'none'; connect-src 'self' https://vitals.vercel-insights.com https://generativelanguage.googleapis.com https://*.supabase.co;",
+            // Povoleno: Google Avatars, GitHub Avatars (pokud by se používaly)
+            // Vercel Analytics/Speed Insights (va.vercel-scripts.com, vitals.vercel-insights.com)
+            // Google Fonts (fonts.googleapis.com, fonts.gstatic.com)
+            // Gemini API (generativelanguage.googleapis.com)
+            // Supabase (supabase.co)
           },
           {
             key: 'X-Frame-Options',
-            value: 'DENY', // frame-ancestors 'none' v CSP dělá totéž
+            value: 'DENY',
           },
           {
             key: 'X-Content-Type-Options',
@@ -43,13 +45,12 @@ const nextConfig = {
           },
           {
             key: 'Permissions-Policy',
-            value: "camera=(), microphone=(), geolocation=(), payment=()", // Přidáno payment=() jako dobrá praxe
+            value: "camera=(), microphone=(), geolocation=(), payment=()",
           },
         ],
       },
     ];
   },
-  */ // KONEC DOČASNĚ ZAKOMENTOVANÉ SEKCE
   async redirects() {
     return [];
   },
