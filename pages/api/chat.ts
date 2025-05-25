@@ -60,9 +60,78 @@ export default async function handler(
           timestamp: new Date(m.timestamp),
           isCrisis: (m.metadata as any)?.isCrisis ?? false,
         }));
-        return res.status(200).json({ sessionId: lastSession.id, messages: [systemMessage, ...chatMessages] });
+
+        let proactiveMessage: Message | null = null;
+        // Logika pro proaktivní zprávu na základě nálad z deníku
+        try {
+          const { data: recentDiaryEntries, error: diaryError } = await supabaseAdmin
+            .from('diary_entries')
+            .select('mood_id, entry_date')
+            .eq('user_id', userId)
+            .order('entry_date', { ascending: false })
+            .limit(3); // Načteme poslední 3 zápisy
+
+          if (diaryError) {
+            console.warn('API /api/chat GET - Chyba při načítání deníkových zápisů pro proaktivitu:', diaryError.message);
+          } else if (recentDiaryEntries && recentDiaryEntries.length === 3) {
+            const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            // Zkontrolujeme, zda jsou všechny 3 zápisy z posledních 7 dní
+            const allRecentEnough = recentDiaryEntries.every(entry => new Date(entry.entry_date) > sevenDaysAgo);
+            
+            if (allRecentEnough) {
+              const negativeMoods = ['sad', 'angry']; // Definice negativních nálad
+              const recentMoodsAreNegative = recentDiaryEntries.every(entry => entry.mood_id && negativeMoods.includes(entry.mood_id));
+
+              if (recentMoodsAreNegative) {
+                proactiveMessage = {
+                  role: 'assistant',
+                  content: 'Všiml/a jsem si, že jste v posledních deníkových zápiscích zaznamenal/a spíše negativní nálady. Chtěl/a byste si o tom, jak se cítíte, promluvit?',
+                  timestamp: new Date()
+                };
+              }
+            }
+          }
+        } catch (diaryAnalysisError: any) {
+          console.warn('API /api/chat GET - Chyba při analýze deníku pro proaktivitu:', diaryAnalysisError.message);
+        }
+        
+        const finalMessages = proactiveMessage ? [systemMessage, ...chatMessages, proactiveMessage] : [systemMessage, ...chatMessages];
+        return res.status(200).json({ sessionId: lastSession.id, messages: finalMessages });
+
       } else {
-        return res.status(200).json({ sessionId: null, messages: [] });
+        // Žádná předchozí seance, ale můžeme zkontrolovat deník i zde
+        let proactiveMessage: Message | null = null;
+        try {
+          const { data: recentDiaryEntries, error: diaryError } = await supabaseAdmin
+            .from('diary_entries')
+            .select('mood_id, entry_date')
+            .eq('user_id', userId)
+            .order('entry_date', { ascending: false })
+            .limit(3);
+
+          if (diaryError) {
+            console.warn('API /api/chat GET (no session) - Chyba při načítání deníkových zápisů:', diaryError.message);
+          } else if (recentDiaryEntries && recentDiaryEntries.length === 3) {
+            const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            const allRecentEnough = recentDiaryEntries.every(entry => new Date(entry.entry_date) > sevenDaysAgo);
+            if (allRecentEnough) {
+              const negativeMoods = ['sad', 'angry'];
+              const recentMoodsAreNegative = recentDiaryEntries.every(entry => entry.mood_id && negativeMoods.includes(entry.mood_id));
+              if (recentMoodsAreNegative) {
+                proactiveMessage = {
+                  role: 'assistant',
+                  content: 'Všiml/a jsem si, že jste v posledních deníkových zápiscích zaznamenal/a spíše negativní nálady. Chtěl/a byste si o tom, jak se cítíte, promluvit?',
+                  timestamp: new Date()
+                };
+              }
+            }
+          }
+        } catch (diaryAnalysisError: any) {
+          console.warn('API /api/chat GET (no session) - Chyba při analýze deníku:', diaryAnalysisError.message);
+        }
+        const systemMessage: Message = { role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' };
+        const initialMessages = proactiveMessage ? [systemMessage, proactiveMessage] : [systemMessage];
+        return res.status(200).json({ sessionId: null, messages: initialMessages });
       }
     } catch (error: any) {
       console.error('API /api/chat GET error:', error);
