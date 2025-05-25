@@ -6,7 +6,11 @@
 /* Například, pokud byl nějaký globální font nebo základní styl pro body */
 @layer base {
   body {
-    @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200;
+    @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 transition-colors duration-200 leading-relaxed; 
+    /* Pozadí: gray-800 (světlejší tmavá), Text: gray-200 (jemnější), Přidáno leading-relaxed */
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply dark:text-gray-100; /* Nadpisy světlejší */
   }
 }
 
@@ -15,25 +19,28 @@
     @apply px-4 py-2 rounded-md font-medium transition-colors;
   }
   
-  /* Příklady, jak mohly být tlačítka definována - upravit podle skutečného původního stavu */
   .btn-primary {
-    @apply bg-blue-600 hover:bg-blue-700 text-white;
+    @apply bg-blue-500 hover:bg-blue-600 text-white; /* Mírně světlejší modrá pro primární akce */
   }
   
   .btn-secondary {
-    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100 border border-gray-300 dark:border-gray-600;
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 border border-gray-300 dark:border-gray-600;
+    /* Text na sekundárním tlačítku v dark mode také gray-200 */
   }
   
   .input {
-    @apply px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100;
+    @apply px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100; 
+    /* Pozadí inputu tmavší šedá (gray-700) pro kontrast s gray-800 body */
   }
 
   .user-message {
-    @apply bg-blue-100 text-blue-900 p-3 rounded-lg dark:bg-blue-900 dark:text-blue-100;
+    @apply bg-blue-100 text-blue-800 p-3 rounded-lg dark:bg-blue-700 dark:text-blue-50; 
+    /* Mírná úprava barev pro lepší čitelnost */
   }
   
   .assistant-message {
-    @apply bg-gray-100 text-gray-900 p-3 rounded-lg dark:bg-gray-800 dark:text-gray-100;
+    @apply bg-gray-100 text-gray-800 p-3 rounded-lg dark:bg-gray-700 dark:text-gray-100;
+    /* Pozadí zprávy asistenta tmavší šedá (gray-700) */
   }
 }
 
