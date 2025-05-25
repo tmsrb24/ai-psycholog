@@ -112,18 +112,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         last_analyzed_diary_at: new Date().toISOString(),
       };
 
-      // V tomto kroku insighty neukládáme, jen vracíme výsledek simulované analýzy
-      // Pro uložení:
-      /*
-      const { data, error: upsertError } = await supabaseAdmin
+      // Uložení/aktualizace insightů do databáze
+      const { data: upsertedData, error: upsertError } = await supabaseAdmin
         .from('user_insights')
-        .upsert(simulatedInsight, { onConflict: 'user_id' })
+        .upsert(simulatedInsight, { onConflict: 'user_id' }) // 'user_id' musí být PRIMARY KEY nebo mít UNIQUE constraint
         .select()
         .single();
-      if (upsertError) throw upsertError;
-      return res.status(200).json(data);
-      */
-      return res.status(200).json(simulatedInsight);
+
+      if (upsertError) {
+        console.error('Supabase upsert error in user-insights:', upsertError);
+        throw upsertError;
+      }
+      
+      return res.status(200).json(upsertedData);
 
     } catch (error: any) {
       console.error('API /api/user-insights POST error:', error);
