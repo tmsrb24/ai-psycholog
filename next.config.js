@@ -7,7 +7,8 @@ const nextConfig = {
     // Sentry DSN will be automatically injected by Vercel or can be set here
     // NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   },
-  async headers() { // Obnovení sekce headers
+  /* // DOČASNĚ ZAKOMENTOVÁNO PRO DEBUGGING 404
+  async headers() { 
     return [
       {
         source: '/api/auth/:path*',
@@ -48,6 +49,7 @@ const nextConfig = {
       },
     ];
   },
+  */ // KONEC DOČASNĚ ZAKOMENTOVANÉ SEKCE
   async redirects() {
     return [];
   },
