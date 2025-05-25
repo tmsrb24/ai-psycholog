@@ -115,7 +115,7 @@ const ChatPage = () => {
       }
     };
     loadInitialData();
-  }, [authStatus, session, router]); // Přidán router do dependencies
+  }, [authStatus, session, router]); 
   
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -123,15 +123,87 @@ const ChatPage = () => {
     }
   }, [messages]);
 
-  const speakText = (text: string) => { /* ... implementace ... */ };
-  const stopSpeaking = () => { /* ... implementace ... */ };
-  const sendMessage = async (inputText: string) => { /* ... implementace ... */ };
+  const speakText = (text: string) => { 
+    if (speechSynthesis) {
+      speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'cs-CZ';
+      const czechVoice = availableVoices.find(voice => voice.lang === 'cs-CZ');
+      if (czechVoice) utterance.voice = czechVoice;
+      else console.warn('Český hlas pro TTS nebyl nalezen.');
+      speechSynthesis.speak(utterance);
+      setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+    }
+  };
+  const stopSpeaking = () => { 
+    if (speechSynthesis) {
+      speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+  };
+  const sendMessage = async (inputText: string) => { 
+    console.log("[ChatPage] sendMessage called. inputText:", inputText, "Auth status:", authStatus); // Přidán console.log
+    if (!inputText || !inputText.trim()) {
+      console.log("[ChatPage] inputText is empty or whitespace, returning.");
+      return;
+    }
+    if (authStatus !== "authenticated") {
+      console.log("[ChatPage] User not authenticated, not sending message.");
+      // Možná zobrazit upozornění uživateli
+      return;
+    }
+
+    const userMessage: Message = { role: 'user', content: inputText, timestamp: new Date() };
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
+    console.log("[ChatPage] setLoading(true)"); // Přidán console.log
+    setLoading(true);
+    try {
+      const requestData = {
+        messages: newMessages, 
+        topic: selectedTopic,
+        personality: selectedPersonality,
+        saveHistory, 
+        responseLength,
+        userProfile, 
+        sessionId: currentChatSessionId 
+      };
+      console.log("[ChatPage] Sending request to /api/chat with data:", requestData); // Přidán console.log
+      const res = await axios.post('/api/chat', requestData);
+      console.log("[ChatPage] Received response from /api/chat:", res.data); // Přidán console.log
+      
+      if (res.data.sessionId && !currentChatSessionId) {
+        setCurrentChatSessionId(res.data.sessionId); 
+      }
+      if (res.data.estimatedReadingTime) {
+        setLoadingEstimatedTime(prev => Math.round((prev * 0.7) + (res.data.estimatedReadingTime || 5) * 0.3));
+      }
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: res.data.content || 'Omlouvám se, nastala chyba.',
+        timestamp: new Date(),
+        isCrisis: res.data.isCrisis
+      };
+      setMessages(prev => [...prev, assistantMessage]); 
+    } catch (error) {
+      console.error('[ChatPage] Chyba při volání API /api/chat:', error); // Přidán console.error
+      const errorMessage: Message = {
+        role: 'assistant',
+        content: 'Omlouvám se, nastala chyba při komunikaci se serverem. Zkuste to prosím znovu za chvíli.',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      console.log("[ChatPage] setLoading(false)"); // Přidán console.log
+      setLoading(false);
+    }
+  };
   const handleProfileChange = async (updatedProfile: UserProfileData) => { /* ... implementace ... */ };
   const TOPICS = { /* ... definice ... */ };
   const PERSONALITIES = { /* ... definice ... */ };
   const handleResetSettings = () => { /* ... implementace ... */ };
 
-  // Funkce pro formátování data pro oddělovač
   const formatDateSeparator = (date: Date | undefined): string | null => {
     if (!date) return null;
     const today = new Date().toDateString();
@@ -146,7 +218,6 @@ const ChatPage = () => {
   return (
     <Layout title="Chat | AI Psycholog" description="Chatujte s AI psychologem a získejte podporu kdykoliv potřebujete.">
       <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
-        {/* Levý panel */}
         <div className="w-full md:w-72 md:mr-6 mb-4 md:mb-0 flex-shrink-0">
           <div className="space-y-4">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
@@ -194,7 +265,6 @@ const ChatPage = () => {
           </div>
         </div>
         
-        {/* Pravý panel (chat) */}
         <div className="flex-grow flex flex-col">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]" ref={chatContainerRef}>
             {messages.filter(msg => msg.role !== 'system').map((message, index, arr) => {
@@ -210,7 +280,6 @@ const ChatPage = () => {
                 }
               }
               
-              // Použijeme message.id pokud existuje, jinak index. Pro React.Fragment přidáme sufix.
               const messageKey = message.id || index.toString();
 
               return (
