@@ -102,7 +102,24 @@ const ChatPage = () => {
                 ...msg,
                 timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
               }));
-              setMessages(formattedMessages);
+
+              let messagesToSet = formattedMessages;
+              const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
+              const now = new Date();
+
+              if (formattedMessages.length > 1) { // Máme alespoň jednu uživatelskou/AI zprávu kromě systémové
+                const lastMessage = formattedMessages[formattedMessages.length - 1];
+                if (lastMessage.timestamp && (now.getTime() - new Date(lastMessage.timestamp).getTime()) > twentyFourHoursInMs) {
+                  // Poslední zpráva je starší než 24 hodin
+                  const proactiveMessage: Message = {
+                    role: 'assistant',
+                    content: 'Vítejte zpět! Zdá se, že jsme spolu chvíli nemluvili. Chtěl/a byste navázat na naši poslední konverzaci, nebo se dnes zaměříme na něco nového?',
+                    timestamp: new Date()
+                  };
+                  messagesToSet = [...formattedMessages, proactiveMessage];
+                }
+              }
+              setMessages(messagesToSet);
             } else {
               setMessages([{ role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' }]);
             }
@@ -143,21 +160,16 @@ const ChatPage = () => {
     }
   };
   const sendMessage = async (inputText: string) => { 
-    console.log("[ChatPage] sendMessage called. inputText:", inputText, "Auth status:", authStatus); // Přidán console.log
     if (!inputText || !inputText.trim()) {
-      console.log("[ChatPage] inputText is empty or whitespace, returning.");
       return;
     }
     if (authStatus !== "authenticated") {
-      console.log("[ChatPage] User not authenticated, not sending message.");
-      // Možná zobrazit upozornění uživateli
       return;
     }
 
     const userMessage: Message = { role: 'user', content: inputText, timestamp: new Date() };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
-    console.log("[ChatPage] setLoading(true)"); // Přidán console.log
     setLoading(true);
     try {
       const requestData = {
@@ -169,9 +181,7 @@ const ChatPage = () => {
         userProfile, 
         sessionId: currentChatSessionId 
       };
-      console.log("[ChatPage] Sending request to /api/chat with data:", requestData); // Přidán console.log
       const res = await axios.post('/api/chat', requestData);
-      console.log("[ChatPage] Received response from /api/chat:", res.data); // Přidán console.log
       
       if (res.data.sessionId && !currentChatSessionId) {
         setCurrentChatSessionId(res.data.sessionId); 
@@ -187,7 +197,7 @@ const ChatPage = () => {
       };
       setMessages(prev => [...prev, assistantMessage]); 
     } catch (error) {
-      console.error('[ChatPage] Chyba při volání API /api/chat:', error); // Přidán console.error
+      console.error('Chyba při volání API /api/chat:', error);
       const errorMessage: Message = {
         role: 'assistant',
         content: 'Omlouvám se, nastala chyba při komunikaci se serverem. Zkuste to prosím znovu za chvíli.',
@@ -195,7 +205,6 @@ const ChatPage = () => {
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
-      console.log("[ChatPage] setLoading(false)"); // Přidán console.log
       setLoading(false);
     }
   };
