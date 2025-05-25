@@ -1,22 +1,8 @@
 {
-  "rewrites": [
+  "crons": [
     {
-      "source": "/api/auth/:path*",
-      "destination": "/api/auth/:path*"
+      "path": "/api/cron/process-user-insights",
+      "schedule": "0 3 * * *"
     }
-  ],
-  "headers": [
-    {
-      "source": "/api/auth/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        }
-      ]
-    }
-  ],
-  "env": {
-    "NEXTAUTH_URL": "https://psychollog.cz"
-  }
+  ]
 }
