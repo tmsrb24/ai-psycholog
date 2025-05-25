@@ -40,39 +40,35 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     async jwt({ token, user, account, profile }) {
-      console.log("[NextAuth] JWT callback START:", { tokenId_before: token?.id, tokenSub_before: token?.sub, userId: user?.id, profileSub: (profile as any)?.sub, accountProvider: account?.provider });
+      console.log("[NextAuth] JWT callback START:", { tokenId_before: token?.id, tokenSub_before: token?.sub, userId: user?.id, userEmail: user?.email, profileSub: (profile as any)?.sub, accountProvider: account?.provider });
       
-      if (account && user) { // Pouze při prvním přihlášení (nebo linkování účtu)
-        let idToUse: string | undefined = undefined;
-        if (account.provider === "google" && (profile as any)?.sub) {
-          idToUse = String((profile as any).sub);
-          console.log(`[NextAuth] JWT: Google provider, using profile.sub (${idToUse}) as ID.`);
-        } else if (user.id) {
-          idToUse = String(user.id);
-          console.log(`[NextAuth] JWT: Using user.id (${idToUse}) as ID.`);
-        }
+      // Při přihlášení (když jsou user a account objekty dostupné)
+      if (user && account) {
+        // user.id by měl být UUID z tabulky auth.users (pokud je adapter správně nastaven)
+        // Toto ID použijeme jako hlavní identifikátor v tokenu.
+        if (user.id) {
+          token.sub = user.id; // Primární identifikátor uživatele (UUID)
+          token.id = user.id;   // Pro konzistenci, i když .sub je standardní pro JWT subject
 
-        if (idToUse) {
-          token.sub = idToUse; 
-          token.id = idToUse;
+          console.log(`[NextAuth] JWT: Populating token with user.id (UUID): ${user.id}`);
 
-          // Kontrola, zda uživatel již existuje v user_profiles pro odeslání uvítacího emailu
+          // Kontrola pro odeslání uvítacího emailu (pouze pokud je to nové přihlášení a profil ještě neexistuje)
+          // Předpokládáme, že user_profiles.id je stejné jako auth.users.id (user.id zde)
           // Toto se děje pouze při prvním vytvoření tokenu pro uživatele (nové přihlášení)
           try {
             const supabaseAdmin = getSupabaseAdmin();
             const { data: existingProfile, error: profileError } = await supabaseAdmin
               .from('user_profiles')
               .select('id')
-              .eq('id', idToUse)
-              .maybeSingle(); // maybeSingle vrátí null pokud nenajde, ne chybu
+              .eq('id', user.id) // Používáme user.id (UUID)
+              .maybeSingle();
 
-            if (profileError && profileError.code !== 'PGRST116') { // PGRST116 = 0 řádků, což je OK
+            if (profileError && profileError.code !== 'PGRST116') {
               console.error("[NextAuth] JWT: Error checking user_profiles:", profileError);
             }
             
-            if (!existingProfile && user.email) { // Pokud profil neexistuje a máme email
+            if (!existingProfile && user.email) {
               console.log(`[NextAuth] JWT: New user detected (${user.email}). Attempting to send welcome email.`);
-              // Odeslání emailu by nemělo blokovat přihlášení, proto nečekáme na await nebo ošetříme chyby
               sendWelcomeEmail(user.email, user.name).catch(emailError => {
                 console.error("[NextAuth] JWT: Failed to send welcome email:", emailError);
               });
@@ -80,39 +76,47 @@ export const authOptions: NextAuthOptions = {
           } catch (dbError) {
             console.error("[NextAuth] JWT: Database error during new user check:", dbError);
           }
-
         } else {
-          console.error(`[NextAuth] JWT CRITICAL: Could not determine a valid ID. User ID: ${user.id}, Profile Sub: ${(profile as any)?.sub}`);
-          token.id = ""; 
+          // Toto by se nemělo stát, pokud NextAuth a jeho adapter fungují správně
+          console.error(`[NextAuth] JWT CRITICAL: user.id is missing. Cannot set token.sub. User object:`, user);
+          // Nastavíme sub na prázdný řetězec, aby to bylo zřejmé v session callbacku
           token.sub = ""; 
+          token.id = "";
         }
         
-        token.email = user.email ?? undefined;
-        token.name = user.name ?? undefined;
-        token.image = user.image ?? undefined; 
-        
+        // Ostatní informace do tokenu
+        token.email = user.email ?? undefined; // Zajistíme, že null se převede na undefined
+        token.name = user.name ?? undefined;   // Zajistíme, že null se převede na undefined
+        token.image = user.image ?? undefined; // Zajistíme, že null se převede na undefined
         if (account.access_token) token.accessToken = account.access_token;
         token.provider = account.provider;
-        console.log("[NextAuth] JWT callback - initial sign in. Token populated:", JSON.stringify(token, null, 2));
+
+        console.log("[NextAuth] JWT callback - user & account present. Token populated:", JSON.stringify(token, null, 2));
       }
+      // Pokud user nebo account nejsou přítomny (např. při obnovení session), token by měl již obsahovat .sub
+      // Pokud by .sub chyběl i zde, je to problém
+      if (!token.sub) {
+        console.warn("[NextAuth] JWT: token.sub is still missing after processing. Token:", JSON.stringify(token, null, 2));
+      }
+      
       return token;
     },
     async session({ session, token }) {
-      console.log("[NextAuth] Session callback START. Token:", JSON.stringify(token, null, 2), "Initial session.user:", JSON.stringify(session?.user, null, 2));
+      console.log("[NextAuth] Session callback START. Token:", JSON.stringify(token, null, 2));
       
-      if (!session.user) {
-        session.user = {} as { id: string; name?: string | null; email?: string | null; image?: string | null };
+      // Přenesení .sub (UUID) z tokenu do session.user.id
+      // Ostatní pole (name, email, image) by měla být také v tokenu
+      if (token.sub) {
+        session.user.id = String(token.sub);
+      } else {
+        console.error("[NextAuth] Session: token.sub is missing! Cannot set session.user.id.");
+        // session.user.id zůstane tak, jak ho NextAuth defaultně nastavil, nebo bude undefined
       }
-      
-      const finalId = token.sub ? String(token.sub) : (token.id ? String(token.id) : "");
-      session.user.id = finalId;
-      session.user.name = (token.name as string | null | undefined) ?? null;
-      session.user.email = (token.email as string | null | undefined) ?? null;
-      session.user.image = (token.image as string | null | undefined) ?? null;
-
-      if (!session.user.id) {
-          console.warn("[NextAuth] Session: session.user.id is empty. Original token.sub was:", token?.sub, "Original token.id was:", token?.id);
-      }
+      session.user.name = token.name as string | null;
+      session.user.email = token.email as string | null;
+      session.user.image = token.image as string | null;
+      // Můžeme přidat i providera do session, pokud je to potřeba na klientovi
+      // (session as any).provider = token.provider; 
       
       console.log("[NextAuth] Session callback END. Final session.user:", JSON.stringify(session.user, null, 2));
       return session;
