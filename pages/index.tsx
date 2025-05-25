@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/Layout';
-import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd } from 'react-icons/fa'; // Přidána FaUserMd
+import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield } from 'react-icons/fa'; // Přidány nové ikony
 import type { IconType } from 'react-icons';
 
 interface Feature {
@@ -311,8 +311,61 @@ Zastavte se. Popovídejte si. Ulevte si.
         </div>
       </section>
 
+      {/* Proactive AI Assistant Section - NOVÁ SEKCE */}
+      <section className="py-16 bg-white dark:bg-gray-900">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Náš AI Asistent Myslí Dopředu – Proaktivní Péče o Vaši Duši</h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Představte si podporu, která nejen reaguje, ale aktivně vám pomáhá na vaší cestě k duševní pohodě. Náš Proaktivní AI Asistent je navržen tak, aby se učil rozumět vašim potřebám. S vaším svolením citlivě analyzuje trendy ve vašich konverzacích a deníkových zápiscích.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+            <div className="flex flex-col items-center">
+              <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-full mb-4">
+                <FaLightbulb className="text-blue-600 dark:text-blue-300" size={32} />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Personalizované Návrhy</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                Relevantní témata k zamyšlení, deníkové výzvy nebo cvičení šitá na míru.
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-full mb-4">
+                <FaHandHoldingHeart className="text-blue-600 dark:text-blue-300" size={32} />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Jemná Podpora</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                Pokud procházíte náročnějším obdobím, asistent vám citlivě nabídne rozhovor nebo připomene osvědčené techniky.
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-full mb-4">
+                <FaSeedling className="text-blue-600 dark:text-blue-300" size={32} />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Podpora Růstu</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                Aktivně podporujeme vaši cestu k lepší pohodě relevantními nástroji a podněty k sebereflexi.
+              </p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-full mb-4">
+                <FaUserShield className="text-blue-600 dark:text-blue-300" size={32} />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Vaše Soukromí</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                Vždy máte plnou kontrolu nad sdílením informací a využíváním proaktivních návrhů.
+              </p>
+            </div>
+          </div>
+           <p className="text-center text-md text-gray-500 dark:text-gray-400 mt-10">
+            Tato unikátní funkce vám pomáhá nezůstat na své starosti sami a aktivně pracovat na svém well-beingu.
+          </p>
+        </div>
+      </section>
+
       {/* Pricing Preview Section */}
-      <section className="py-16 bg-white dark:bg-gray-900"> {/* Změna pozadí pro střídání */}
+      <section className="py-16 bg-gray-50 dark:bg-gray-800"> {/* Změna pozadí pro střídání */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Dostupné cenové plány</h2>
