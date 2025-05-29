@@ -42,17 +42,17 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-60 dark:bg-opacity-80 flex items-center justify-center z-50 p-4 backdrop-blur-sm"> {/* Přidán backdrop-blur */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col border border-gray-200 dark:border-slate-700"> {/* Větší zaoblení, upravena barva, přidán border */}
+    <div className="fixed inset-0 bg-black bg-opacity-60 dark:bg-opacity-80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col border border-gray-200 dark:border-slate-700">
         {/* Modal Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-slate-700"> {/* Upraven border */}
+        <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-slate-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
             <FaCog className="mr-3 text-blue-500" />
             Nastavení Chatu
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-1 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700" /* Vylepšen vzhled zavíracího tlačítka */
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-1 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700"
             title="Zavřít nastavení"
           >
             <FaTimes size={24} />
@@ -60,11 +60,11 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
         </div>
 
         {/* Modal Body - Scrollable */}
-        <div className="p-8 space-y-8 overflow-y-auto"> {/* Větší padding a space */}
+        <div className="p-8 space-y-8 overflow-y-auto">
           {/* Témata */}
           <div>
             <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Hlavní téma konverzace</h3>
-            <div className="flex flex-wrap gap-3"> {/* Větší gap */}
+            <div className="flex flex-wrap gap-3">
               {Object.entries(TOPICS).map(([key, topic]) => (
                 <button
                   key={key}
@@ -85,7 +85,7 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
           {/* Osobnost asistenta */}
           <div>
             <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Preferovaná osobnost asistenta</h3>
-            <div className="flex flex-wrap gap-3"> {/* Větší gap */}
+            <div className="flex flex-wrap gap-3">
               {Object.entries(PERSONALITIES).map(([key, personality]) => (
                 <button
                   key={key}
@@ -105,7 +105,7 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
           {/* Délka odpovědí */}
           <div>
             <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Preferovaná délka odpovědí</h3>
-            <div className="flex rounded-xl shadow-md border border-gray-300 dark:border-slate-600 overflow-hidden"> {/* Větší zaoblení, upraven border */}
+            <div className="flex rounded-xl shadow-md border border-gray-300 dark:border-slate-600 overflow-hidden">
               {(['short', 'medium', 'long'] as const).map((length, idx, arr) => (
                 <button
                   key={length}
@@ -125,7 +125,7 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
           {/* Pohlaví asistenta */}
           <div>
             <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Preferované pohlaví asistenta</h3>
-            <div className="flex rounded-xl shadow-md border border-gray-300 dark:border-slate-600 overflow-hidden"> {/* Sjednocený styl */}
+            <div className="flex rounded-xl shadow-md border border-gray-300 dark:border-slate-600 overflow-hidden">
               {(['male', 'female'] as const).map((gender, idx, arr) => (
                 <button
                   key={gender}

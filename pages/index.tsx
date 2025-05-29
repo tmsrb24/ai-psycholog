@@ -481,3 +481,81 @@ Zastavte se. Popovídejte si. Ulevte si.
 };
 
 export default HomePage;
+
+</final_file_content>
+
+IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
+
+<environment_details>
+# VSCode Visible Files
+ai-psycholog/pages/index.tsx
+
+# VSCode Open Tabs
+ai-psycholog/pages/admin/users.tsx
+ai-psycholog/components/UserProfile.tsx
+ai-psycholog/lib/supabaseClient.ts
+ai-psycholog/pages/api/widget-chat.ts
+ai-psycholog/components/WidgetChatWindow.tsx
+ai-psycholog/components/Layout.tsx
+ai-psycholog/components/WidgetChatButton.tsx
+ai-psycholog/components/ThemeProvider.tsx
+ai-psycholog/components/ChatMessage.tsx
+ai-psycholog/types.ts
+ai-psycholog/pages/api/diary/index.ts
+ai-psycholog/pages/api/chat.ts
+ai-psycholog/pages/api/user-insights.ts
+ai-psycholog/pages/api/cron/process-user-insights.ts
+ai-psycholog/vercel.json
+ai-psycholog/pages/api/auth/[...nextauth].ts
+ai-psycholog/next-auth.d.ts
+ai-psycholog/next-i18next.config.js
+ai-psycholog/public/locales/cs/common.json
+ai-psycholog/public/locales/en/common.json
+ai-psycholog/public/locales/uk/common.json
+ai-psycholog/public/locales/cs/homepage.json
+ai-psycholog/public/locales/en/homepage.json
+ai-psycholog/public/locales/uk/homepage.json
+ai-psycholog/pages/diary.tsx
+ai-psycholog/public/locales/cs/diary.json
+ai-psycholog/public/locales/en/diary.json
+ai-psycholog/public/locales/uk/diary.json
+ai-psycholog/public/locales/cs/pricing.json
+ai-psycholog/public/locales/en/pricing.json
+ai-psycholog/public/locales/uk/pricing.json
+ai-psycholog/pages/gdpr.tsx
+ai-psycholog/public/locales/cs/gdpr.json
+ai-psycholog/public/locales/en/gdpr.json
+ai-psycholog/public/locales/uk/gdpr.json
+ai-psycholog/pages/kontakt.tsx
+ai-psycholog/public/locales/cs/contact.json
+ai-psycholog/public/locales/en/contact.json
+ai-psycholog/public/locales/uk/contact.json
+ai-psycholog/public/locales/cs/chat.json
+ai-psycholog/public/locales/en/chat.json
+ai-psycholog/public/locales/uk/chat.json
+ai-psycholog/pages/pricing.tsx
+ai-psycholog/next.config.js
+ai-psycholog/pages/_app.tsx
+ai-psycholog/pages/chat.tsx
+ai-psycholog/components/Footer.tsx
+ai-psycholog/components/Navbar.tsx
+ai-psycholog/tailwind.config.js
+ai-psycholog/components/ChatSettingsModal.tsx
+ai-psycholog/styles/globals.css
+ai-psycholog/pages/index.tsx
+ai-psycholog/pages/api/user/profile.ts
+ai-psycholog/pages/api/admin/users.ts
+ai-psycholog/lib/emailService.ts
+ai-psycholog/pages/api/contact.ts
+ai-psycholog/postcss.config.js
+ai-psycholog/components/CrisisNotice.tsx
+
+# Current Time
+5/29/2025, 8:32:09 PM (Europe/Prague, UTC+2:00)
+
+# Context Window Usage
+452,199 / 1,048.576K tokens used (43%)
+
+# Current Mode
+ACT MODE
+</environment_details>

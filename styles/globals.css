@@ -12,10 +12,9 @@
   }
   html {
     font-family: 'Inter', sans-serif;
-    font-size: 15px; /* Mírné zmenšení základní velikosti fontu */
-    /* Alternativně, pokud chceme zachovat 16px jako základ a jen upravit vnímání: */
-    /* -webkit-font-smoothing: antialiased; */
-    /* -moz-osx-font-smoothing: grayscale; */
+    /* Vrácena výchozí velikost fontu (prohlížeč obvykle 16px) */
+    /* -webkit-font-smoothing: antialiased; */ /* Lze ponechat pro lepší renderování na některých OS */
+    /* -moz-osx-font-smoothing: grayscale; */ /* Lze ponechat pro lepší renderování na některých OS */
   }
 }
 
