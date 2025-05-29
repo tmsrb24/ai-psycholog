@@ -285,8 +285,8 @@ Zastavte se. Popovídejte si. Ulevte si.
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Krok 1 */}
-            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-100 dark:border-blue-500 dark:bg-blue-800/50"> {/* Trvalý rámeček, mírně upraveny třídy pro jistotu */}
+            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček pro kartu */}
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-100 dark:border-blue-500 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">1</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Vytvořte si účet</h3>
@@ -295,8 +295,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Krok 2 */}
-            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-100 dark:border-blue-500 dark:bg-blue-800/50"> {/* Trvalý rámeček, mírně upraveny třídy pro jistotu */}
+            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček pro kartu */}
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-100 dark:border-blue-500 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">2</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Začněte konverzaci</h3>
@@ -305,8 +305,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Krok 3 */}
-            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-100 dark:border-blue-500 dark:bg-blue-800/50"> {/* Trvalý rámeček, mírně upraveny třídy pro jistotu */}
+            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček pro kartu */}
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-100 dark:border-blue-500 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">3</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Získejte podporu</h3>
