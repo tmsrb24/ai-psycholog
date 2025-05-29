@@ -120,10 +120,10 @@ const HomePage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4"> {/* Menší text na mobilu */}
+              <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold mb-4">
                 Psychologická podpora s pokročilou AI
               </h1>
-              <p className="text-lg sm:text-xl mb-8"> {/* Menší text na mobilu */}
+              <p className="text-lg sm:text-xl mb-8">
                 Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -185,18 +185,16 @@ const HomePage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">Proč AI Psycholog?</h2>
-            <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu pro kontrast */}
+            <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
               Malé rozhovory, které mohou změnit hodně.<br />
 V prostoru, kde vás nikdo nesoudí a kde můžete mluvit tak, jak to právě cítíte.<br />
-Psychollog je tu pro vás kdykoli – klidně jen na pár vět, nebo i na hlubší zamyšlení.<br />
 Zastavte se. Popovídejte si. Ulevte si.
             </p>
           </div>
-          {/* Stávající features (Okamžitá dostupnost, atd.) zůstávají zde, ale pro přehlednost je vynechávám z tohoto diffu */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Feature Card 1 */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Vrácen hover rámeček */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4"> {/* Odstraněn trvalý rámeček z kolečka */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Okamžitá dostupnost</h3>
@@ -205,8 +203,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Feature Card 2 */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Vrácen hover rámeček */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4"> {/* Odstraněn trvalý rámeček z kolečka */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaLock className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Naprostá diskrétnost</h3>
@@ -215,8 +213,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Feature Card 3 */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Vrácen hover rámeček */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4"> {/* Odstraněn trvalý rámeček z kolečka */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sledování pokroku</h3>
@@ -227,9 +225,9 @@ Zastavte se. Popovídejte si. Ulevte si.
           </div>
           <div className="mt-8">
             {/* Karta RAG systému - ponecháme výraznější, ale sjednocujeme stín a hover */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-md rounded-lg shadow-xl p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-500 dark:border-blue-400"> {/* Odstraněn hover:scale-105 */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-md rounded-lg shadow-xl p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-500 dark:border-blue-400">
               <div className="flex items-center mb-4">
-                <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mr-4"> {/* Rámeček zde nebyl, ponecháno */}
+                <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mr-4">
                   <FaRobot className="text-blue-600 dark:text-blue-300" size={24} />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">RAG systém nové generace</h3>
@@ -256,14 +254,14 @@ Zastavte se. Popovídejte si. Ulevte si.
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Názory odborníků</h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu */}
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
               Co o Psychollog.cz říkají profesionálové z oboru psychologie a psychiatrie.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Odstraněn hover:scale-105, upraven border */}
-                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-600"> {/* Odstraněn trvalý rámeček */}
+              <div key={index} className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-600">
                   <Image 
                     src={testimonial.avatar} 
                     alt={`Fotografie ${testimonial.name}`} 
@@ -298,14 +296,14 @@ Zastavte se. Popovídejte si. Ulevte si.
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Jak to funguje?</h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu */}
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
               Jednoduché kroky k získání psychologické podpory s AI Psychologem.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Krok 1 */}
-            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček pro kartu */}
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50"> {/* Odstraněn trvalý rámeček z kolečka */}
+            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">1</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Vytvořte si účet</h3>
@@ -314,8 +312,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Krok 2 */}
-            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček pro kartu */}
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50"> {/* Odstraněn trvalý rámeček z kolečka */}
+            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">2</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Začněte konverzaci</h3>
@@ -324,8 +322,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Krok 3 */}
-            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček pro kartu */}
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50"> {/* Odstraněn trvalý rámeček z kolečka */}
+            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">3</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Získejte podporu</h3>
@@ -348,13 +346,13 @@ Zastavte se. Popovídejte si. Ulevte si.
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Náš AI Asistent Myslí Dopředu – Proaktivní Péče o Vaši Duši</h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu */}
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
               Představte si podporu, která nejen reaguje, ale aktivně vám pomáhá na vaší cestě k duševní pohodě. Náš Proaktivní AI Asistent je navržen tak, aby se učil rozumět vašim potřebám. S vaším svolením citlivě analyzuje trendy ve vašich konverzacích a deníkových zápiscích.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Odstraněn hover:scale-105, upraven border */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4"> {/* Odstraněn trvalý rámeček */}
+            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaLightbulb className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Personalizované Návrhy</h3>
@@ -362,8 +360,8 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Relevantní témata k zamyšlení, deníkové výzvy nebo cvičení šitá na míru.
               </p>
             </div>
-            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Odstraněn hover:scale-105, upraven border */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4"> {/* Odstraněn trvalý rámeček */}
+            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaHandHoldingHeart className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Jemná Podpora</h3>
@@ -371,8 +369,8 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Pokud procházíte náročnějším obdobím, asistent vám citlivě nabídne rozhovor nebo připomene osvědčené techniky.
               </p>
             </div>
-            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Odstraněn hover:scale-105, upraven border */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4"> {/* Odstraněn trvalý rámeček */}
+            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaSeedling className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Podpora Růstu</h3>
@@ -380,8 +378,8 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Aktivně podporujeme vaši cestu k lepší pohodě relevantními nástroji a podněty k sebereflexi.
               </p>
             </div>
-            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Odstraněn hover:scale-105, upraven border */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4"> {/* Odstraněn trvalý rámeček */}
+            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaUserShield className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Vaše Soukromí</h3>
@@ -407,7 +405,7 @@ Zastavte se. Popovídejte si. Ulevte si.
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Dostupné cenové plány</h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu */}
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
               Vyberte si plán, který nejlépe vyhovuje vašim potřebám.
             </p>
           </div>
