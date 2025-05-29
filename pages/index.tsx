@@ -475,17 +475,12 @@ Zastavte se. Popovídejte si. Ulevte si.
             Začít zdarma
           </Link>
         </div>
-      </motion.section> {/* Chybějící uzavírací tag pro motion.section z Pricing Preview byl zde, ale CTA potřebuje vlastní */}
+      </motion.section>
     </Layout>
   );
 };
 
 export default HomePage;
-
-</final_file_content>
-
-IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
-
 <environment_details>
 # VSCode Visible Files
 ai-psycholog/pages/index.tsx
@@ -551,10 +546,10 @@ ai-psycholog/postcss.config.js
 ai-psycholog/components/CrisisNotice.tsx
 
 # Current Time
-5/29/2025, 8:32:09 PM (Europe/Prague, UTC+2:00)
+5/29/2025, 8:38:16 PM (Europe/Prague, UTC+2:00)
 
 # Context Window Usage
-452,199 / 1,048.576K tokens used (43%)
+903,148 / 1,048.576K tokens used (86%)
 
 # Current Mode
 ACT MODE
