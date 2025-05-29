@@ -188,8 +188,8 @@ Zastavte se. Popovídejte si. Ulevte si.
           {/* Stávající features (Okamžitá dostupnost, atd.) zůstávají zde, ale pro přehlednost je vynechávám z tohoto diffu */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Feature Card 1 */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Odstraněn hover:scale-105, upraven border */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4"> {/* Odstraněn trvalý rámeček */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Okamžitá dostupnost</h3>
@@ -198,8 +198,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Feature Card 2 */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Odstraněn hover:scale-105, upraven border */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4"> {/* Odstraněn trvalý rámeček */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaLock className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Naprostá diskrétnost</h3>
@@ -208,8 +208,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Feature Card 3 */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Odstraněn hover:scale-105, upraven border */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4"> {/* Odstraněn trvalý rámeček */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sledování pokroku</h3>
