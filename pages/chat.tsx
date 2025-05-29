@@ -259,9 +259,34 @@ const ChatPage = () => {
     }
   };
   const handleProfileChange = async (updatedProfile: UserProfileData) => { /* ... implementace ... */ };
-  const TOPICS = { /* ... definice ... */ };
-  const PERSONALITIES = { /* ... definice ... */ };
-  const handleResetSettings = () => { /* ... implementace ... */ };
+  
+  const TOPICS = {
+    anxiety: { title: 'Úzkost', icon: <FaSadTear /> },
+    relationships: { title: 'Vztahy', icon: <FaUserFriends /> },
+    depression: { title: 'Deprese', icon: <FaSadTear /> }, // Možná jiná ikona?
+    stress: { title: 'Stres', icon: <FaRunning /> }, // Ikona pro běh jako zvládání stresu?
+    selfEsteem: { title: 'Sebevědomí', icon: <FaHeart /> }, // Nebo FaStar?
+  };
+  
+  const PERSONALITIES = {
+    supportive: { title: 'Podpůrná' },
+    practical: { title: 'Praktická' },
+    analytical: { title: 'Analytická' },
+    mentor: { title: 'Mentor' },
+    coach: { title: 'Kouč' },
+    mediator: { title: 'Mediátor' },
+  };
+
+  const handleResetSettings = () => {
+    setSelectedTopic(null);
+    setSelectedPersonality(null);
+    setResponseLength('medium');
+    setAssistantGender('male');
+    setAssistantName('');
+    setSaveHistory(true);
+    // Zde by se také měly resetovat hodnoty v UserProfile a uložit na backend, pokud je to žádoucí
+    console.log("Nastavení chatu resetována na výchozí hodnoty.");
+  };
 
   const formatDateSeparator = (date: Date | undefined): string | null => {
     if (!date) return null;
