@@ -121,7 +121,7 @@ const HomePage = () => {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left">
               {/* Přesné zalomení na dva řádky a upravené responzivní velikosti */}
-              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-5xl font-bold mb-4">
+              <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold mb-4">
                 Psychologická podpora<br />s pokročilou AI
               </h1>
               <p className="text-lg sm:text-xl mb-8">
