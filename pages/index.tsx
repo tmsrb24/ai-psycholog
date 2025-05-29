@@ -188,8 +188,8 @@ Zastavte se. Popovídejte si. Ulevte si.
           {/* Stávající features (Okamžitá dostupnost, atd.) zůstávají zde, ale pro přehlednost je vynechávám z tohoto diffu */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Feature Card 1 */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Vrácen hover rámeček */}
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4"> {/* Odstraněn trvalý rámeček z kolečka */}
                 <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Okamžitá dostupnost</h3>
@@ -198,8 +198,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Feature Card 2 */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Vrácen hover rámeček */}
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4"> {/* Odstraněn trvalý rámeček z kolečka */}
                 <FaLock className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Naprostá diskrétnost</h3>
@@ -208,8 +208,8 @@ Zastavte se. Popovídejte si. Ulevte si.
               </p>
             </div>
             {/* Feature Card 3 */}
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"> {/* Vrácen hover rámeček */}
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4"> {/* Odstraněn trvalý rámeček z kolečka */}
                 <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sledování pokroku</h3>
@@ -286,7 +286,7 @@ Zastavte se. Popovídejte si. Ulevte si.
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Krok 1 */}
             <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček pro kartu */}
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-100 dark:border-blue-500 dark:bg-blue-800/50">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50"> {/* Odstraněn trvalý rámeček z kolečka */}
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">1</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Vytvořte si účet</h3>
@@ -296,7 +296,7 @@ Zastavte se. Popovídejte si. Ulevte si.
             </div>
             {/* Krok 2 */}
             <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček pro kartu */}
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-100 dark:border-blue-500 dark:bg-blue-800/50">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50"> {/* Odstraněn trvalý rámeček z kolečka */}
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">2</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Začněte konverzaci</h3>
@@ -306,7 +306,7 @@ Zastavte se. Popovídejte si. Ulevte si.
             </div>
             {/* Krok 3 */}
             <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček pro kartu */}
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full border-2 border-blue-300 bg-blue-100 dark:border-blue-500 dark:bg-blue-800/50">
+              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50"> {/* Odstraněn trvalý rámeček z kolečka */}
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">3</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Získejte podporu</h3>
