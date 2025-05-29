@@ -187,7 +187,7 @@ Zastavte se. Popovídejte si. Ulevte si.
           </div>
           {/* Stávající features (Okamžitá dostupnost, atd.) zůstávají zde, ale pro přehlednost je vynechávám z tohoto diffu */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105">
+            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Změna shadow-md na shadow-lg, přidán transition-all */}
               <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
@@ -196,7 +196,7 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Žádné čekání na termín. AI Psycholog je k dispozici 24/7, kdykoliv potřebujete podporu.
               </p>
             </div>
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105">
+            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Změna shadow-md na shadow-lg, přidán transition-all */}
               <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaLock className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
@@ -205,7 +205,7 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Vaše konverzace jsou soukromé a bezpečné. Žádné sdílení dat s třetími stranami.
               </p>
             </div>
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105">
+            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Změna shadow-md na shadow-lg, přidán transition-all */}
               <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
@@ -216,7 +216,7 @@ Zastavte se. Popovídejte si. Ulevte si.
             </div>
           </div>
           <div className="mt-8">
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 transition-transform hover:scale-105 border-2 border-blue-500">
+            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 border-2 border-blue-500"> {/* Změna shadow-md na shadow-lg, přidán transition-all */}
               <div className="flex items-center mb-4">
                 <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mr-4">
                   <FaRobot className="text-blue-600 dark:text-blue-300" size={24} />
@@ -245,7 +245,7 @@ Zastavte se. Popovídejte si. Ulevte si.
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center">
+              <div key={index} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Přidán hover efekt */}
                 <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-700">
                   <Image 
                     src={testimonial.avatar} 
@@ -377,7 +377,7 @@ Zastavte se. Popovídejte si. Ulevte si.
             {plans.map((plan) => (
               <div 
                 key={plan.name} 
-                className={`bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 border-t-4 ${plan.borderColor} flex flex-col ${plan.isRecommended ? 'lg:scale-105 ring-2 ring-offset-2 ring-blue-500 dark:ring-blue-400' : ''} relative`}
+                className={`bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 border-t-4 ${plan.borderColor} flex flex-col ${plan.isRecommended ? 'lg:scale-105 ring-2 ring-offset-2 ring-blue-500 dark:ring-blue-400' : 'hover:shadow-xl hover:lg:scale-[1.02] transition-all duration-300 ease-in-out'} relative`}
               >
                 {plan.isRecommended && (
                   <div className="absolute top-0 right-0 bg-blue-600 dark:bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-lg">

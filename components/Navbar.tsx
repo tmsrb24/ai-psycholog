@@ -57,7 +57,7 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-md">
+    <nav className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50"> {/* Přidáno sticky, z-50 a upravena barva pozadí */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -72,10 +72,10 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex md:items-center md:space-x-4">
             <Link
               href="/"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
+              className={`px-3 py-2 rounded-md text-sm ${
                 isActive('/')
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold' // Upraven aktivní styl
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -83,10 +83,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/chat"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
+              className={`px-3 py-2 rounded-md text-sm ${
                 isActive('/chat')
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -94,10 +94,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/diary"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
+              className={`px-3 py-2 rounded-md text-sm ${
                 isActive('/diary')
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -105,10 +105,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/gdpr"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
+              className={`px-3 py-2 rounded-md text-sm ${
                 isActive('/gdpr')
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -116,10 +116,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/pricing"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
+              className={`px-3 py-2 rounded-md text-sm ${
                 isActive('/pricing')
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -127,10 +127,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/kontakt"
-              className={`px-3 py-2 rounded-md text-sm font-medium ${
+              className={`px-3 py-2 rounded-md text-sm ${
                 isActive('/kontakt')
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200'
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -166,14 +166,14 @@ const Navbar: React.FC = () => {
                 </button>
                 
                 {isProfileMenuOpen && (
-                  <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-10">
-                    <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
-                      <p className="font-medium">{session.user?.name}</p>
+                  <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 z-20"> {/* Zvýšen z-index, upravena barva pozadí a šířka */}
+                    <div className="px-4 py-3 text-sm text-gray-700 dark:text-gray-200 border-b border-gray-200 dark:border-gray-600"> {/* Upraveny barvy */}
+                      <p className="font-semibold">{session.user?.name}</p> {/* Ztučněno jméno */}
                       <p className="text-gray-500 dark:text-gray-400 truncate">{session.user?.email}</p>
                     </div>
                     <Link
                       href="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600" // Upraven hover
                       onClick={() => setIsProfileMenuOpen(false)}
                     >
                       <div className="flex items-center">
@@ -183,7 +183,7 @@ const Navbar: React.FC = () => {
                     </Link>
                     <button
                       onClick={handleSignOut}
-                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600" // Upraven hover
                     >
                       <div className="flex items-center">
                         <FaSignOutAlt className="mr-2" />
@@ -250,13 +250,13 @@ const Navbar: React.FC = () => {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-900 shadow-lg">
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-800 shadow-lg"> {/* Upravena barva pozadí */}
             <Link 
               href="/" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
+              className={`block px-3 py-2 rounded-md text-base ${
                 isActive('/') 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold' 
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -264,10 +264,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link 
               href="/chat" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
+              className={`block px-3 py-2 rounded-md text-base ${
                 isActive('/chat') 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold' 
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -275,10 +275,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link 
               href="/diary" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
+              className={`block px-3 py-2 rounded-md text-base ${
                 isActive('/diary') 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold' 
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -286,10 +286,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link 
               href="/gdpr" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
+              className={`block px-3 py-2 rounded-md text-base ${
                 isActive('/gdpr') 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold' 
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -297,10 +297,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link 
               href="/pricing" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
+              className={`block px-3 py-2 rounded-md text-base ${
                 isActive('/pricing') 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold' 
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -308,10 +308,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link 
               href="/kontakt" 
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
+              className={`block px-3 py-2 rounded-md text-base ${
                 isActive('/kontakt') 
-                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200' 
-                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold' 
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
               }`}
               onClick={closeMenu}
             >
