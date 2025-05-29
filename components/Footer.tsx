@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-white dark:bg-gray-900 shadow-inner mt-auto">
+    <footer className="bg-transparent shadow-inner mt-auto backdrop-blur-sm bg-white/70 dark:bg-gradient-dark-end/70 border-t border-white/20 dark:border-black/20"> {/* Průhledné pozadí s blur, upravené barvy a border */}
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
@@ -15,38 +15,38 @@ const Footer: React.FC = () => {
                 <span className="font-bold text-xl">Psychollog.cz</span>
               </div>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 text-sm">
+            <p className="text-gray-700 dark:text-gray-300 text-sm"> {/* Upraveny barvy textu pro lepší kontrast */}
               Moderní psychologická podpora s využitím umělé inteligence. Dostupná kdykoliv a kdekoliv.
             </p>
           </div>
           
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100 uppercase tracking-wider mb-4"> {/* Upraveny barvy textu */}
               Odkazy
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <Link href="/" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300"> {/* Upraveny barvy textu */}
                   Domů
                 </Link>
               </li>
               <li>
-                <Link href="/chat" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <Link href="/chat" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
                   Chat
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <Link href="/pricing" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
                   Ceník
                 </Link>
               </li>
               <li>
-                <Link href="/gdpr" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <Link href="/gdpr" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
                   GDPR
                 </Link>
               </li>
               <li>
-                <Link href="/kontakt" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <Link href="/kontakt" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
                   Kontakt
                 </Link>
               </li>
@@ -54,25 +54,25 @@ const Footer: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100 uppercase tracking-wider mb-4"> {/* Upraveny barvy textu */}
               Kontakt
             </h3>
             <ul className="space-y-2">
               <li className="flex items-center">
-                <FaEnvelope className="text-gray-500 dark:text-gray-400 mr-2" />
-                <a href="mailto:info@psychollog.cz" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <FaEnvelope className="text-gray-600 dark:text-gray-400 mr-2" /> {/* Ikony mohou zůstat tmavší */}
+                <a href="mailto:info@psychollog.cz" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
                   info@psychollog.cz
                 </a>
               </li>
               <li className="flex items-center">
-                <FaGithub className="text-gray-500 dark:text-gray-400 mr-2" />
-                <a href="https://github.com/tmsrb24/ai-psycholog" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <FaGithub className="text-gray-600 dark:text-gray-400 mr-2" />
+                <a href="https://github.com/tmsrb24/ai-psycholog" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
                   GitHub
                 </a>
               </li>
               <li className="flex items-center">
-                <FaTwitter className="text-gray-500 dark:text-gray-400 mr-2" />
-                <a href="#" className="text-gray-600 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
+                <FaTwitter className="text-gray-600 dark:text-gray-400 mr-2" />
+                <a href="#" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
                   Twitter
                 </a>
               </li>
@@ -81,24 +81,24 @@ const Footer: React.FC = () => {
         </div>
         
         {/* Disclaimer, Crisis Notice, and Copyright Section */}
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 text-center space-y-6">
+        <div className="mt-12 pt-8 border-t border-gray-300 dark:border-gray-600 text-center space-y-6"> {/* Upraveny barvy borderu */}
           {/* Disclaimer and Crisis Notice Section */}
           <div className="space-y-4">
             <div>
-              <h4 className="font-semibold text-gray-800 dark:text-gray-200 mb-1">Důležité upozornění:</h4>
-              <p className="text-sm text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-1">Důležité upozornění:</h4> {/* Upraveny barvy textu */}
+              <p className="text-sm text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upraveny barvy textu */}
                 AI Psycholog není náhradou za profesionální psychologickou péči. Je to doplňkový nástroj pro podporu psychické pohody. V případě vážných problémů vždy doporučujeme vyhledat odbornou pomoc.
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+              <p className="text-sm text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upraveny barvy textu */}
                 <span className="font-semibold">🛟 Pokud jste v krizové situaci, zavolejte na <strong>116 123</strong> (Linka první psychické pomoci) nebo <strong>116 111</strong> (Linka bezpečí). Pomoc je anonymní a nonstop.</span>
               </p>
             </div>
           </div>
 
           {/* Copyright */}
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-gray-600 dark:text-gray-400"> {/* Upraveny barvy textu */}
             &copy; {currentYear} AI Psycholog. Všechna práva vyhrazena.
           </p>
         </div>
