@@ -2,8 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/Layout';
-import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield } from 'react-icons/fa'; // Přidány nové ikony
+import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
+import { motion } from 'framer-motion'; // Import Framer Motion
 
 interface Feature {
   text: string;
@@ -114,8 +115,8 @@ const HomePage = () => {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="bg-hero-gradient-light dark:bg-hero-gradient-dark text-white py-20"> {/* Použití nových gradientů */}
+      {/* Hero Section - tuto sekci nebudeme animovat při skrolování, je vidět hned */}
+      <section className="bg-hero-gradient-light dark:bg-hero-gradient-dark text-white py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left">
@@ -174,7 +175,13 @@ const HomePage = () => {
       </section>
 
       {/* Features Section (Proč AI Psycholog?) */}
-      <section className="py-12 sm:py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
+      <motion.section 
+        className="py-12 sm:py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-12">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">Proč AI Psycholog?</h2>
@@ -236,10 +243,16 @@ Zastavte se. Popovídejte si. Ulevte si.
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Testimonials Section - NOVÁ SEKCE */}
-      <section className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
+      <motion.section 
+        className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Názory odborníků</h2>
@@ -272,10 +285,16 @@ Zastavte se. Popovídejte si. Ulevte si.
             </p>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* How It Works Section */}
-      <section className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
+      <motion.section 
+        className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Jak to funguje?</h2>
@@ -316,10 +335,16 @@ Zastavte se. Popovídejte si. Ulevte si.
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Proactive AI Assistant Section - NOVÁ SEKCE */}
-      <section className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
+      <motion.section 
+        className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Náš AI Asistent Myslí Dopředu – Proaktivní Péče o Vaši Duši</h2>
@@ -369,10 +394,16 @@ Zastavte se. Popovídejte si. Ulevte si.
             Tato unikátní funkce vám pomáhá nezůstat na své starosti sami a aktivně pracovat na svém well-beingu.
           </p>
         </div>
-      </section>
+      </motion.section>
 
       {/* Pricing Preview Section */}
-      <section className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
+      <motion.section 
+        className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Dostupné cenové plány</h2>
@@ -425,10 +456,16 @@ Zastavte se. Popovídejte si. Ulevte si.
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-cta-gradient-light dark:bg-cta-gradient-dark text-white"> {/* Použití nových gradientů */}
+      <motion.section 
+        className="py-16 bg-cta-gradient-light dark:bg-cta-gradient-dark text-white"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Začněte svou cestu k lepší psychické pohodě ještě dnes</h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
@@ -438,7 +475,7 @@ Zastavte se. Popovídejte si. Ulevte si.
             Začít zdarma
           </Link>
         </div>
-      </section>
+      </motion.section> {/* Chybějící uzavírací tag pro motion.section z Pricing Preview byl zde, ale CTA potřebuje vlastní */}
     </Layout>
   );
 };
