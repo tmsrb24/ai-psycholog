@@ -115,10 +115,10 @@ const HomePage = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-20">
+      <section className="bg-hero-gradient-light dark:bg-hero-gradient-dark text-white py-20"> {/* Použití nových gradientů */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left"> {/* Vycentrování textu na mobilu */}
+            <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4"> {/* Menší text na mobilu */}
                 Psychologická podpora s pokročilou AI
               </h1>
@@ -422,7 +422,7 @@ Zastavte se. Popovídejte si. Ulevte si.
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white">
+      <section className="py-16 bg-cta-gradient-light dark:bg-cta-gradient-dark text-white"> {/* Použití nových gradientů */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">Začněte svou cestu k lepší psychické pohodě ještě dnes</h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
