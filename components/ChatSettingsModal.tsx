@@ -42,17 +42,17 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 bg-black bg-opacity-60 dark:bg-opacity-80 flex items-center justify-center z-50 p-4 backdrop-blur-sm"> {/* Přidán backdrop-blur */}
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col border border-gray-200 dark:border-slate-700"> {/* Větší zaoblení, upravena barva, přidán border */}
         {/* Modal Header */}
-        <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-slate-700"> {/* Upraven border */}
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center">
             <FaCog className="mr-3 text-blue-500" />
             Nastavení Chatu
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors p-1 rounded-full hover:bg-gray-100 dark:hover:bg-slate-700" /* Vylepšen vzhled zavíracího tlačítka */
             title="Zavřít nastavení"
           >
             <FaTimes size={24} />
@@ -60,19 +60,19 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
         </div>
 
         {/* Modal Body - Scrollable */}
-        <div className="p-6 space-y-6 overflow-y-auto">
+        <div className="p-8 space-y-8 overflow-y-auto"> {/* Větší padding a space */}
           {/* Témata */}
           <div>
             <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Hlavní téma konverzace</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3"> {/* Větší gap */}
               {Object.entries(TOPICS).map(([key, topic]) => (
                 <button
                   key={key}
                   onClick={() => setSelectedTopic(selectedTopic === key ? null : key as 'anxiety' | 'relationships' | 'depression' | 'stress' | 'selfEsteem')}
-                  className={`px-3 py-2 rounded-lg text-sm flex items-center transition-colors shadow-sm hover:shadow-md ${
+                  className={`px-4 py-2 rounded-xl text-sm flex items-center transition-all duration-150 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
                     selectedTopic === key 
-                      ? 'bg-blue-500 text-white ring-2 ring-blue-300' 
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
+                      ? 'bg-blue-500 hover:bg-blue-600 text-white ring-2 ring-blue-300 dark:ring-blue-600' 
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-gray-200 border border-gray-200 dark:border-slate-600'
                   }`}
                 >
                   {topic.icon && React.cloneElement(topic.icon, { className: "mr-2 text-current" })}
@@ -85,15 +85,15 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
           {/* Osobnost asistenta */}
           <div>
             <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Preferovaná osobnost asistenta</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3"> {/* Větší gap */}
               {Object.entries(PERSONALITIES).map(([key, personality]) => (
                 <button
                   key={key}
                   onClick={() => setSelectedPersonality(selectedPersonality === key ? null : key as 'supportive' | 'practical' | 'analytical' | 'mentor' | 'coach' | 'mediator')}
-                  className={`px-3 py-2 rounded-lg text-sm transition-colors shadow-sm hover:shadow-md ${
+                  className={`px-4 py-2 rounded-xl text-sm transition-all duration-150 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
                     selectedPersonality === key 
-                      ? 'bg-blue-500 text-white ring-2 ring-blue-300' 
-                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
+                      ? 'bg-blue-500 hover:bg-blue-600 text-white ring-2 ring-blue-300 dark:ring-blue-600' 
+                      : 'bg-gray-100 hover:bg-gray-200 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-gray-200 border border-gray-200 dark:border-slate-600'
                   }`}
                 >
                   {personality.title}
@@ -105,16 +105,16 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
           {/* Délka odpovědí */}
           <div>
             <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Preferovaná délka odpovědí</h3>
-            <div className="flex rounded-lg shadow-sm border border-gray-300 dark:border-gray-600 overflow-hidden">
+            <div className="flex rounded-xl shadow-md border border-gray-300 dark:border-slate-600 overflow-hidden"> {/* Větší zaoblení, upraven border */}
               {(['short', 'medium', 'long'] as const).map((length, idx, arr) => (
                 <button
                   key={length}
                   onClick={() => setResponseLength(length)}
-                  className={`flex-1 px-3 py-2 text-sm transition-colors focus:z-10 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                  className={`flex-1 px-3 py-2.5 text-sm transition-colors focus:z-10 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                     responseLength === length 
-                      ? 'bg-blue-500 text-white' 
-                      : 'bg-white hover:bg-gray-50 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
-                  } ${idx > 0 ? 'border-l border-gray-300 dark:border-gray-600' : ''}`}
+                      ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                      : 'bg-white hover:bg-gray-50 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-gray-200'
+                  } ${idx > 0 ? 'border-l border-gray-300 dark:border-slate-600' : ''}`}
                 >
                   {length === 'short' ? 'Krátké' : length === 'medium' ? 'Střední' : 'Dlouhé'}
                 </button>
@@ -125,16 +125,16 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
           {/* Pohlaví asistenta */}
           <div>
             <h3 className="text-md font-medium text-gray-700 dark:text-gray-300 mb-3">Preferované pohlaví asistenta</h3>
-            <div className="flex rounded-lg shadow-sm border border-gray-300 dark:border-gray-600 overflow-hidden">
+            <div className="flex rounded-xl shadow-md border border-gray-300 dark:border-slate-600 overflow-hidden"> {/* Sjednocený styl */}
               {(['male', 'female'] as const).map((gender, idx, arr) => (
                 <button
                   key={gender}
                   onClick={() => setAssistantGender(gender)}
-                  className={`flex-1 px-3 py-2 text-sm transition-colors focus:z-10 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                  className={`flex-1 px-3 py-2.5 text-sm transition-colors focus:z-10 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
                     assistantGender === gender 
-                      ? 'bg-blue-500 text-white' 
-                      : 'bg-white hover:bg-gray-50 text-gray-700 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200'
-                  } ${idx > 0 ? 'border-l border-gray-300 dark:border-gray-600' : ''}`}
+                      ? 'bg-blue-500 hover:bg-blue-600 text-white' 
+                      : 'bg-white hover:bg-gray-50 text-gray-700 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-gray-200'
+                  } ${idx > 0 ? 'border-l border-gray-300 dark:border-slate-600' : ''}`}
                 >
                   {gender === 'male' ? 'Muž' : 'Žena'}
                 </button>

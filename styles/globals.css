@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,7 +8,10 @@
 /* Například, pokud byl nějaký globální font nebo základní styl pro body */
 @layer base {
   body {
-    @apply bg-main-gradient-light dark:bg-main-gradient-dark text-gray-900 dark:text-gray-200 transition-colors duration-200 min-h-screen;
+    @apply bg-main-gradient-light dark:bg-main-gradient-dark text-gray-900 dark:text-gray-200 transition-colors duration-200 min-h-screen font-sans;
+  }
+  html {
+    font-family: 'Inter', sans-serif;
   }
 }
 
