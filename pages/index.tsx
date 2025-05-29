@@ -187,8 +187,9 @@ Zastavte se. Popovídejte si. Ulevte si.
           </div>
           {/* Stávající features (Okamžitá dostupnost, atd.) zůstávají zde, ale pro přehlednost je vynechávám z tohoto diffu */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Změna shadow-md na shadow-lg, přidán transition-all */}
-              <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+            {/* Feature Card 1 */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Okamžitá dostupnost</h3>
@@ -196,8 +197,9 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Žádné čekání na termín. AI Psycholog je k dispozici 24/7, kdykoliv potřebujete podporu.
               </p>
             </div>
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Změna shadow-md na shadow-lg, přidán transition-all */}
-              <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+            {/* Feature Card 2 */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <FaLock className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Naprostá diskrétnost</h3>
@@ -205,8 +207,9 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Vaše konverzace jsou soukromé a bezpečné. Žádné sdílení dat s třetími stranami.
               </p>
             </div>
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Změna shadow-md na shadow-lg, přidán transition-all */}
-              <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+            {/* Feature Card 3 */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Sledování pokroku</h3>
@@ -246,8 +249,8 @@ Zastavte se. Popovídejte si. Ulevte si.
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Upraveno pozadí karet */}
-                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-600"> {/* Upraveno pozadí avataru */}
+              <div key={index} className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500"> {/* Přidán hover rámeček */}
+                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-600 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                   <Image 
                     src={testimonial.avatar} 
                     alt={`Fotografie ${testimonial.name}`} 
@@ -281,8 +284,8 @@ Zastavte se. Popovídejte si. Ulevte si.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-blue-100 dark:bg-blue-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">1</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Vytvořte si účet</h3>
@@ -290,8 +293,8 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Registrace zabere jen pár vteřin. Můžete začít ihned s bezplatnou verzí.
               </p>
             </div>
-            <div className="text-center">
-              <div className="bg-blue-100 dark:bg-blue-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">2</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Začněte konverzaci</h3>
@@ -299,8 +302,8 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Sdílejte své myšlenky a pocity. AI Psycholog vám poskytne empatickou a podporující odpověď.
               </p>
             </div>
-            <div className="text-center">
-              <div className="bg-blue-100 dark:bg-blue-900 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">3</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Získejte podporu</h3>
@@ -322,8 +325,8 @@ Zastavte se. Popovídejte si. Ulevte si.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-full mb-4">
+            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <FaLightbulb className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Personalizované Návrhy</h3>
@@ -331,8 +334,8 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Relevantní témata k zamyšlení, deníkové výzvy nebo cvičení šitá na míru.
               </p>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-full mb-4">
+            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <FaHandHoldingHeart className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Jemná Podpora</h3>
@@ -340,8 +343,8 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Pokud procházíte náročnějším obdobím, asistent vám citlivě nabídne rozhovor nebo připomene osvědčené techniky.
               </p>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-full mb-4">
+            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <FaSeedling className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Podpora Růstu</h3>
@@ -349,8 +352,8 @@ Zastavte se. Popovídejte si. Ulevte si.
                 Aktivně podporujeme vaši cestu k lepší pohodě relevantními nástroji a podněty k sebereflexi.
               </p>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-full mb-4">
+            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 hover:border-2 hover:border-blue-400 dark:hover:border-blue-500">
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4 border-2 border-blue-300 dark:border-blue-500"> {/* Trvalý rámeček */}
                 <FaUserShield className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Vaše Soukromí</h3>
