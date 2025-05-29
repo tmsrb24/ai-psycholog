@@ -120,9 +120,9 @@ const HomePage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left">
-              {/* Další úprava velikosti fontu pro nadpis */}
-              <h1 className="text-3xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4">
-                Psychologická podpora s pokročilou AI
+              {/* Upraveno pro zalomení do dvou řádků a responzivní velikost */}
+              <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4">
+                Psychologická podpora <br className="sm:hidden" />s pokročilou AI
               </h1>
               <p className="text-lg sm:text-xl mb-8">
                 Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.
