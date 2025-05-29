@@ -174,11 +174,11 @@ const HomePage = () => {
       </section>
 
       {/* Features Section (Proč AI Psycholog?) */}
-      <section className="py-12 sm:py-16 bg-gray-50 dark:bg-gray-800"> {/* Menší padding na mobilu */}
+      <section className="py-12 sm:py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10 sm:mb-12"> {/* Menší margin na mobilu */}
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">Proč AI Psycholog?</h2> {/* Menší text na mobilu */}
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto"> {/* Menší text na mobilu */}
+          <div className="text-center mb-10 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">Proč AI Psycholog?</h2>
+            <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu pro kontrast */}
               Malé rozhovory, které mohou změnit hodně.<br />
 V prostoru, kde vás nikdo nesoudí a kde můžete mluvit tak, jak to právě cítíte.<br />
 Psychollog je tu pro vás kdykoli – klidně jen na pár vět, nebo i na hlubší zamyšlení.<br />
@@ -216,9 +216,10 @@ Zastavte se. Popovídejte si. Ulevte si.
             </div>
           </div>
           <div className="mt-8">
-            <div className="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105 border-2 border-blue-500"> {/* Změna shadow-md na shadow-lg, přidán transition-all */}
+            {/* Karta RAG systému - ponecháme výraznější, ale sjednocujeme stín a hover */}
+            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-md rounded-lg shadow-xl p-6 transition-all duration-300 ease-in-out hover:shadow-2xl hover:scale-105 border-2 border-blue-500 dark:border-blue-400">
               <div className="flex items-center mb-4">
-                <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full w-14 h-14 flex items-center justify-center mr-4">
+                <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mr-4"> {/* Upraveno pozadí ikony */}
                   <FaRobot className="text-blue-600 dark:text-blue-300" size={24} />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">RAG systém nové generace</h3>
@@ -235,18 +236,18 @@ Zastavte se. Popovídejte si. Ulevte si.
       </section>
 
       {/* Testimonials Section - NOVÁ SEKCE */}
-      <section className="py-16 bg-white dark:bg-gray-900">
+      <section className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Názory odborníků</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu */}
               Co o Psychollog.cz říkají profesionálové z oboru psychologie a psychiatrie.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Přidán hover efekt */}
-                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-700">
+              <div key={index} className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-xl hover:scale-105"> {/* Upraveno pozadí karet */}
+                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-600"> {/* Upraveno pozadí avataru */}
                   <Image 
                     src={testimonial.avatar} 
                     alt={`Fotografie ${testimonial.name}`} 
@@ -271,11 +272,11 @@ Zastavte se. Popovídejte si. Ulevte si.
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800"> {/* Změna pozadí pro střídání */}
+      <section className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Jak to funguje?</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu */}
               Jednoduché kroky k získání psychologické podpory s AI Psychologem.
             </p>
           </div>
@@ -312,11 +313,11 @@ Zastavte se. Popovídejte si. Ulevte si.
       </section>
 
       {/* Proactive AI Assistant Section - NOVÁ SEKCE */}
-      <section className="py-16 bg-white dark:bg-gray-900">
+      <section className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Náš AI Asistent Myslí Dopředu – Proaktivní Péče o Vaši Duši</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu */}
               Představte si podporu, která nejen reaguje, ale aktivně vám pomáhá na vaší cestě k duševní pohodě. Náš Proaktivní AI Asistent je navržen tak, aby se učil rozumět vašim potřebám. S vaším svolením citlivě analyzuje trendy ve vašich konverzacích a deníkových zápiscích.
             </p>
           </div>
@@ -365,11 +366,11 @@ Zastavte se. Popovídejte si. Ulevte si.
       </section>
 
       {/* Pricing Preview Section */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800"> {/* Změna pozadí pro střídání */}
+      <section className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Dostupné cenové plány</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upravena barva textu */}
               Vyberte si plán, který nejlépe vyhovuje vašim potřebám.
             </p>
           </div>

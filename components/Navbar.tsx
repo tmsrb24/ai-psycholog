@@ -57,7 +57,8 @@ const Navbar: React.FC = () => {
   }, []);
 
   return (
-    <nav className="bg-transparent shadow-md sticky top-0 z-50 backdrop-blur-sm bg-white/80 dark:bg-gradient-dark-start/80"> {/* Průhledné pozadí s blur efektem */}
+    // Změna pozadí Navbaru: méně průhledné, pevnější barvy pro lepší kontrast a vzhled
+    <nav className="bg-white/90 dark:bg-slate-900/90 shadow-lg sticky top-0 z-50 backdrop-blur-md"> 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
@@ -73,10 +74,10 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex md:items-center md:space-x-4">
             <Link
               href="/"
-              className={`px-3 py-2 rounded-md text-sm ${
+              className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/')
-                  ? 'text-white bg-white/20 dark:text-white dark:bg-white/20 font-semibold' // Aktivní odkaz na gradientu
-                  : 'text-gray-800 hover:bg-black/5 dark:text-gray-200 dark:hover:bg-white/10 font-medium' // Neaktivní odkaz na gradientu
+                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm' // Výraznější aktivní odkaz
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -84,10 +85,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/chat"
-              className={`px-3 py-2 rounded-md text-sm ${
+              className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/chat')
-                  ? 'text-white bg-white/20 dark:text-white dark:bg-white/20 font-semibold'
-                  : 'text-gray-800 hover:bg-black/5 dark:text-gray-200 dark:hover:bg-white/10 font-medium'
+                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -95,10 +96,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/diary"
-              className={`px-3 py-2 rounded-md text-sm ${
+              className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/diary')
-                  ? 'text-white bg-white/20 dark:text-white dark:bg-white/20 font-semibold'
-                  : 'text-gray-800 hover:bg-black/5 dark:text-gray-200 dark:hover:bg-white/10 font-medium'
+                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -106,10 +107,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/gdpr"
-              className={`px-3 py-2 rounded-md text-sm ${
+              className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/gdpr')
-                  ? 'text-white bg-white/20 dark:text-white dark:bg-white/20 font-semibold'
-                  : 'text-gray-800 hover:bg-black/5 dark:text-gray-200 dark:hover:bg-white/10 font-medium'
+                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -117,10 +118,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/pricing"
-              className={`px-3 py-2 rounded-md text-sm ${
+              className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/pricing')
-                  ? 'text-white bg-white/20 dark:text-white dark:bg-white/20 font-semibold'
-                  : 'text-gray-800 hover:bg-black/5 dark:text-gray-200 dark:hover:bg-white/10 font-medium'
+                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -128,10 +129,10 @@ const Navbar: React.FC = () => {
             </Link>
             <Link
               href="/kontakt"
-              className={`px-3 py-2 rounded-md text-sm ${
+              className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/kontakt')
-                  ? 'text-white bg-white/20 dark:text-white dark:bg-white/20 font-semibold'
-                  : 'text-gray-800 hover:bg-black/5 dark:text-gray-200 dark:hover:bg-white/10 font-medium'
+                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
             >
@@ -162,21 +163,20 @@ const Navbar: React.FC = () => {
                     </div>
                   )}
                   {/* Text jména uživatele vedle ikony - upravena barva pro gradient */}
-                  <span className="ml-2 text-gray-800 dark:text-gray-200 font-medium">
+                  <span className="ml-2 text-gray-700 dark:text-gray-100 font-medium"> {/* Upravena barva textu pro tmavý režim */}
                     {session.user?.name?.split(' ')[0] || 'Uživatel'}
                   </span>
                 </button>
                 
                 {isProfileMenuOpen && (
-                  // Dropdown menu bude mít pevné pozadí pro čitelnost
-                  <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 z-20">
-                    <div className="px-4 py-3 text-sm text-gray-700 dark:text-gray-200 border-b border-gray-200 dark:border-gray-600">
+                  <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-20"> {/* Upraveno pozadí dropdownu */}
+                    <div className="px-4 py-3 text-sm text-gray-700 dark:text-gray-100 border-b border-gray-200 dark:border-slate-700"> {/* Upraveny barvy */}
                       <p className="font-semibold">{session.user?.name}</p>
                       <p className="text-gray-500 dark:text-gray-400 truncate">{session.user?.email}</p>
                     </div>
                     <Link
                       href="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700" // Upraven hover
                       onClick={() => setIsProfileMenuOpen(false)}
                     >
                       <div className="flex items-center">
@@ -186,7 +186,7 @@ const Navbar: React.FC = () => {
                     </Link>
                     <button
                       onClick={handleSignOut}
-                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700" // Upraven hover
                     >
                       <div className="flex items-center">
                         <FaSignOutAlt className="mr-2" />
@@ -200,13 +200,13 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-2 ml-3">
                 <Link
                   href="/auth/login"
-                  className="px-3 py-2 rounded-md text-sm font-medium text-gray-800 hover:bg-black/5 dark:text-gray-200 dark:hover:bg-white/10" // Upraveno pro gradient
+                  className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700" // Upraveno pro nové pozadí navbaru
                 >
                   Přihlásit
                 </Link>
                 <Link
                   href="/auth/register"
-                  className="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700" // Tlačítko Registrovat může zůstat výrazné
+                  className="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600" // Přidány dark mode styly
                 >
                   Registrovat
                 </Link>
