@@ -1,0 +1,92 @@
+{
+  "pageTitle": "Ceník | AI Psycholog",
+  "pageDescription": "Cenové plány pro AI Psychologa - psychologickou podporu s umělou inteligencí.",
+  "header": {
+    "title": "Cenové plány",
+    "subtitle": "Vyberte si plán, který nejlépe vyhovuje vašim potřebám."
+  },
+  "plans": {
+    "basic": {
+      "name": "Základní",
+      "price": "Zdarma",
+      "priceSuffix": "",
+      "description": "Ideální pro vyzkoušení služby",
+      "features": [
+        "5 zpráv denně",
+        "Základní analýza nálady",
+        "Základní témata konverzace",
+        "Přístup k osobnímu deníku",
+        "Historie konverzací",
+        "Přizpůsobení osobnosti asistenta",
+        "RAG systém nové generace",
+        "Prioritní podpora",
+        "Rodinné sdílení",
+        "Integrace s kalendářem",
+        "Přístup k beta verzím"
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "349 Kč",
+      "description": "Pro pravidelnou psychologickou podporu",
+      "features": [
+        "Neomezené zprávy",
+        "Pokročilá analýza nálady",
+        "Všechna témata konverzace",
+        "Přístup k osobnímu deníku",
+        "Neomezená historie konverzací",
+        "Přizpůsobení osobnosti asistenta",
+        "RAG systém nové generace",
+        "Prioritní podpora",
+        "Rodinné sdílení",
+        "Integrace s kalendářem",
+        "Přístup k beta verzím"
+      ],
+      "buttonText": "Předplatit Premium"
+    },
+    "ultra": {
+      "name": "Ultra",
+      "price": "549 Kč",
+      "description": "Pro nejnáročnější uživatele a rodinné sdílení",
+      "features": [
+        "Vše z Premium plánu",
+        "Prioritní podpora",
+        "Rodinné sdílení (až 3 členové)",
+        "Integrace s kalendářem",
+        "Přístup k beta verzím"
+      ],
+      "buttonText": "Předplatit Ultra"
+    }
+  },
+  "buttons": {
+    "processing": "Zpracování..."
+  },
+  "safePaymentStripe": "Bezpečná platba přes Stripe",
+  "faqTitle": "Často kladené otázky",
+  "faq": [
+    {
+      "q": "Jak funguje předplatné?",
+      "a": "Předplatné je měsíční a automaticky se obnovuje. Můžete jej kdykoliv zrušit. Po zrušení máte přístup k prémiovým funkcím do konce aktuálního zúčtovacího období."
+    },
+    {
+      "q": "Mohu změnit plán?",
+      "a": "Ano, můžete kdykoliv přejít z bezplatného plánu na prémiový a naopak. Při přechodu na prémiový plán získáte okamžitý přístup ke všem funkcím."
+    },
+    {
+      "q": "Je AI Psycholog náhradou za skutečného psychologa?",
+      "a": "Ne, AI Psycholog není náhradou za profesionální psychologickou péči. Je to doplňkový nástroj pro podporu psychické pohody. V případě vážných problémů vždy doporučujeme vyhledat odbornou pomoc."
+    },
+    {
+      "q": "Jak je zajištěna bezpečnost mých dat?",
+      "a": "Vaše konverzace jsou šifrované. Pro detaily o ukládání dat se prosím podívejte na naše Zásady ochrany osobních údajů."
+    },
+    {
+      "q": "Co je RAG systém nové generace?",
+      "a": "Náš AI asistent využívá architekturu typu Retrieval-Augmented Generation (RAG) – propojuje jazykový model s vlastní odbornou psychologickou databází. Díky tomu poskytuje přesné, kontextově přizpůsobené odpovědi v reálném čase, které vycházejí z ověřených poznatků a vaší situace."
+    }
+  ],
+  "cta": {
+    "title": "Stále si nejste jisti?",
+    "subtitle": "Vyzkoušejte AI Psychologa zdarma a rozhodněte se později. Žádná platební karta není vyžadována."
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "pageTitle": "Pricing | AI Psychologist",
+  "pageDescription": "Pricing plans for AI Psychologist - psychological support with artificial intelligence.",
+  "header": {
+    "title": "Pricing Plans",
+    "subtitle": "Choose the plan that best suits your needs."
+  },
+  "plans": {
+    "basic": {
+      "name": "Basic",
+      "price": "Free",
+      "priceSuffix": "",
+      "description": "Ideal for trying out the service",
+      "features": [
+        "5 messages per day",
+        "Basic mood analysis",
+        "Basic conversation topics",
+        "Access to personal diary",
+        "Conversation history",
+        "Assistant personality customization",
+        "Next-gen RAG system",
+        "Priority support",
+        "Family sharing",
+        "Calendar integration",
+        "Access to beta versions"
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "€14.99",
+      "description": "For regular psychological support",
+      "features": [
+        "Unlimited messages",
+        "Advanced mood analysis",
+        "All conversation topics",
+        "Access to personal diary",
+        "Unlimited conversation history",
+        "Assistant personality customization",
+        "Next-gen RAG system",
+        "Priority support",
+        "Family sharing",
+        "Calendar integration",
+        "Access to beta versions"
+      ],
+      "buttonText": "Subscribe to Premium"
+    },
+    "ultra": {
+      "name": "Ultra",
+      "price": "€22.99",
+      "description": "For the most demanding users and family sharing",
+      "features": [
+        "Everything from Premium plan",
+        "Priority support",
+        "Family sharing (up to 3 members)",
+        "Calendar integration",
+        "Access to beta versions"
+      ],
+      "buttonText": "Subscribe to Ultra"
+    }
+  },
+  "buttons": {
+    "processing": "Processing..."
+  },
+  "safePaymentStripe": "Secure payment via Stripe",
+  "faqTitle": "Frequently Asked Questions",
+  "faq": [
+    {
+      "q": "How does the subscription work?",
+      "a": "The subscription is monthly and renews automatically. You can cancel it at any time. After cancellation, you will have access to premium features until the end of the current billing period."
+    },
+    {
+      "q": "Can I change my plan?",
+      "a": "Yes, you can switch from the free plan to a premium plan and vice versa at any time. When upgrading to a premium plan, you will get immediate access to all features."
+    },
+    {
+      "q": "Is AI Psychologist a substitute for a real psychologist?",
+      "a": "No, AI Psychologist is not a substitute for professional psychological care. It is a supplementary tool for supporting mental well-being. In case of serious problems, we always recommend seeking professional help."
+    },
+    {
+      "q": "How is my data security ensured?",
+      "a": "Your conversations are encrypted. For details on data storage, please see our Privacy Policy."
+    },
+    {
+      "q": "What is the Next-Gen RAG system?",
+      "a": "Our AI assistant uses a Retrieval-Augmented Generation (RAG) architecture – connecting a language model with its own expert psychological database. This allows it to provide accurate, contextually tailored responses in real time, based on verified knowledge and your situation."
+    }
+  ],
+  "cta": {
+    "title": "Still not sure?",
+    "subtitle": "Try AI Psychologist for free and decide later. No credit card required."
+  }
+}
