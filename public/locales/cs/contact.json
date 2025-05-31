@@ -1,0 +1,30 @@
+{
+  "pageTitle": "Kontakt | AI Psycholog",
+  "pageDescription": "Kontaktujte nás s vašimi dotazy nebo zpětnou vazbou.",
+  "header": {
+    "title": "Kontaktujte nás",
+    "subtitle": "Máte dotaz, návrh na zlepšení nebo potřebujete pomoci? Neváhejte nám napsat."
+  },
+  "form": {
+    "name": {
+      "label": "Jméno a příjmení",
+      "placeholder": "Vaše jméno"
+    },
+    "email": {
+      "label": "E-mailová adresa",
+      "placeholder": "vas.email@example.com"
+    },
+    "subject": {
+      "label": "Předmět",
+      "placeholder": "O co se jedná?"
+    },
+    "message": {
+      "label": "Vaše zpráva",
+      "placeholder": "Napište nám více..."
+    },
+    "submitButton": "Odeslat zprávu",
+    "success": "Děkujeme za vaši zprávu! Ozveme se vám co nejdříve.",
+    "errorDefault": "Odeslání formuláře se nezdařilo. Zkuste to prosím později.",
+    "errorCatch": "Došlo k chybě. Zkuste to prosím později."
+  }
+}
