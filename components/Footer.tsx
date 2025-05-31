@@ -17,11 +17,6 @@ const Footer: React.FC = () => {
   const locales = router.locales || [];
   const currentLocale = router.locale || router.defaultLocale || 'cs';
 
-  // Debugging log for locales content
-  console.log('Footer: locales content:', JSON.stringify(locales));
-  console.log('Footer: currentLocale:', currentLocale);
-
-
   return (
     <footer className="bg-transparent shadow-inner mt-auto backdrop-blur-sm bg-white/70 dark:bg-gradient-dark-end/70 border-t border-white/20 dark:border-black/20">
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
@@ -115,8 +110,8 @@ const Footer: React.FC = () => {
           </div>
           
           {/* Language Switcher */}
-          <div className="mt-6 flex justify-center items-center space-x-2">
-            <FaLanguage className="text-gray-600 dark:text-gray-400" size={20}/>
+          <div className="mt-6 flex justify-center items-center space-x-2"> {/* Ujistíme se, že je to flex kontejner */}
+            <FaLanguage className="text-gray-600 dark:text-gray-400 mr-2" size={20}/> {/* Přidán explicitní margin pro ikonu */}
             {locales.map((locale) => (
               <button
                 key={locale}
