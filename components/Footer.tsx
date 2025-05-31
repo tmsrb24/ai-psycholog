@@ -17,10 +17,10 @@ const Footer: React.FC = () => {
   const locales = router.locales || [];
   const currentLocale = router.locale || router.defaultLocale || 'cs';
 
-  // Debugging logs
-  console.log('Footer: router.locales:', router.locales);
-  console.log('Footer: derived locales:', locales);
+  // Debugging log for locales content
+  console.log('Footer: locales content:', JSON.stringify(locales));
   console.log('Footer: currentLocale:', currentLocale);
+
 
   return (
     <footer className="bg-transparent shadow-inner mt-auto backdrop-blur-sm bg-white/70 dark:bg-gradient-dark-end/70 border-t border-white/20 dark:border-black/20">
