@@ -3,8 +3,15 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey } from 'react-icons/fa';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'; // Změna na GetServerSideProps
+import { getSession } from 'next-auth/react'; // Pro ochranu stránky
 
-const ProfilePage = () => {
+type PageProps = {}; // Může být prázdné, pokud getSSP vrací jen i18n props
+
+const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { t } = useTranslation(['profile', 'common']);
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const router = useRouter();
@@ -40,22 +47,22 @@ const ProfilePage = () => {
       });
       const data = await response.json();
       if (response.ok) {
-        setMessage({ type: 'success', text: 'Profil byl úspěšně aktualizován. Změny se mohou projevit po novém přihlášení.' });
+        setMessage({ type: 'success', text: t('messages.profileUpdateSuccess', 'Profil byl úspěšně aktualizován. Změny se mohou projevit po novém přihlášení.') });
         // Optionally, update session data locally if next-auth supports it easily
         // or prompt user to re-login to see changes immediately in session.
       } else {
-        setMessage({ type: 'error', text: data.message || 'Nastala chyba při aktualizaci profilu' });
+        setMessage({ type: 'error', text: data.message || t('messages.profileUpdateError', 'Nastala chyba při aktualizaci profilu') });
       }
     } catch (error) {
-      setMessage({ type: 'error', text: 'Nastala chyba při komunikaci se serverem.' });
+      setMessage({ type: 'error', text: t('messages.serverError', 'Nastala chyba při komunikaci se serverem.') });
     } finally {
       setIsUpdatingProfile(false);
     }
   };
 
-  if (loading || !session) {
+  if (loading || !session) { // Session se kontroluje v getServerSideProps, ale pro jistotu i zde
     return (
-      <Layout title="Načítání... | AI Psycholog" description="Načítání profilu">
+      <Layout title={t('common:loading', 'Načítání...')} description={t('pageDescriptionLoading', 'Načítání profilu')}>
         <div className="flex justify-center items-center min-h-[calc(100vh-8rem)]">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
@@ -64,12 +71,12 @@ const ProfilePage = () => {
   }
 
   return (
-    <Layout title="Můj profil | AI Psycholog" description="Správa vašeho uživatelského profilu">
+    <Layout title={t('pageTitle', 'Můj profil | AI Psycholog')} description={t('pageDescription', 'Správa vašeho uživatelského profilu')}>
       <section className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Můj profil</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('header.title', 'Můj profil')}</h1>
           <p className="text-lg md:text-xl opacity-90">
-            Spravujte své osobní údaje, bezpečnost a nastavení účtu.
+            {t('header.subtitle', 'Spravujte své osobní údaje, bezpečnost a nastavení účtu.')}
           </p>
         </div>
       </section>
@@ -90,7 +97,7 @@ const ProfilePage = () => {
           <div className="p-6 md:p-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
               <FaUser className="mr-3 text-blue-500" />
-              Osobní údaje
+              {t('personalInfo.title', 'Osobní údaje')}
             </h2>
             
             <div className="flex flex-col md:flex-row items-center mb-8 pb-8 border-b border-gray-200 dark:border-gray-700">
@@ -99,7 +106,7 @@ const ProfilePage = () => {
                   {session.user?.image ? (
                     <img 
                       src={session.user.image} 
-                      alt={session.user.name || "Profilový obrázek"} 
+                      alt={session.user.name || t('personalInfo.avatarAlt', 'Profilový obrázek')} 
                       className="h-32 w-32 rounded-full object-cover shadow-md"
                     />
                   ) : (
@@ -109,7 +116,7 @@ const ProfilePage = () => {
                   )}
                   <button 
                     className="absolute bottom-1 right-1 bg-gray-700 dark:bg-gray-600 text-white p-2 rounded-full hover:bg-gray-800 dark:hover:bg-gray-500 transition-colors shadow"
-                    title="Změnit profilový obrázek (již brzy)"
+                    title={t('personalInfo.changeAvatarTooltip', 'Změnit profilový obrázek (již brzy)')}
                     disabled={true} 
                   >
                     <FaCamera size={14} />
@@ -119,14 +126,13 @@ const ProfilePage = () => {
               
               <div className="flex-1 text-center md:text-left">
                 <h3 className="text-xl font-bold text-gray-800 dark:text-white">
-                  {session.user?.name || 'Uživatel'}
+                  {session.user?.name || t('personalInfo.defaultUserName', 'Uživatel')}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400">
                   {session.user?.email}
                 </p>
-                {/* Člen od - může být zavádějící, pokud se datum neukládá */}
                 {/* <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                  Člen od: {session.user.createdAt ? new Date(session.user.createdAt).toLocaleDateString('cs-CZ') : 'Neznámé'}
+                  {t('personalInfo.memberSince', 'Člen od:')} {session.user.createdAt ? new Date(session.user.createdAt).toLocaleDateString(router.locale) : t('personalInfo.unknown', 'Neznámé')}
                 </p> */}
               </div>
             </div>
@@ -134,7 +140,7 @@ const ProfilePage = () => {
             <form onSubmit={handleProfileSubmit} className="space-y-6">
               <div>
                 <label htmlFor="profile-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Jméno a příjmení
+                  {t('personalInfo.form.name.label', 'Jméno a příjmení')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -147,7 +153,7 @@ const ProfilePage = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Vaše jméno"
+                    placeholder={t('personalInfo.form.name.placeholder', 'Vaše jméno')}
                     disabled={isUpdatingProfile}
                   />
                 </div>
@@ -155,7 +161,7 @@ const ProfilePage = () => {
               
               <div>
                 <label htmlFor="profile-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Email
+                  {t('personalInfo.form.email.label', 'Email')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -168,7 +174,7 @@ const ProfilePage = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="vas@email.cz"
+                    placeholder={t('personalInfo.form.email.placeholder', 'vas@email.cz')}
                     disabled={isUpdatingProfile}
                   />
                 </div>
@@ -183,12 +189,12 @@ const ProfilePage = () => {
                   {isUpdatingProfile ? (
                     <>
                       <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
-                      Ukládání...
+                      {t('personalInfo.form.saving', 'Ukládání...')}
                     </>
                   ) : (
                     <>
                       <FaSave className="mr-2" />
-                      Uložit změny
+                      {t('personalInfo.form.saveChanges', 'Uložit změny')}
                     </>
                   )}
                 </button>
@@ -202,21 +208,21 @@ const ProfilePage = () => {
           <div className="p-6 md:p-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
               <FaShieldAlt className="mr-3 text-blue-500" />
-              Bezpečnost a správa účtu
+              {t('security.title', 'Bezpečnost a správa účtu')}
             </h2>
             
             <div className="space-y-6">
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-md">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                   <div className="mb-3 sm:mb-0">
-                    <h4 className="text-md font-medium text-gray-800 dark:text-white flex items-center"><FaKey className="mr-2 text-gray-500 dark:text-gray-400"/>Změna hesla</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Aktualizujte své heslo pro zvýšení bezpečnosti.</p>
+                    <h4 className="text-md font-medium text-gray-800 dark:text-white flex items-center"><FaKey className="mr-2 text-gray-500 dark:text-gray-400"/>{t('security.changePassword.title', 'Změna hesla')}</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('security.changePassword.description', 'Aktualizujte své heslo pro zvýšení bezpečnosti.')}</p>
                   </div>
                   <button
                     className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 whitespace-nowrap"
                     onClick={() => router.push('/auth/change-password')}
                   >
-                    Změnit heslo
+                    {t('security.changePassword.button', 'Změnit heslo')}
                   </button>
                 </div>
               </div>
@@ -224,21 +230,21 @@ const ProfilePage = () => {
               <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-md">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                   <div className="mb-3 sm:mb-0">
-                    <h4 className="text-md font-medium text-gray-800 dark:text-white flex items-center"><FaTrashAlt className="mr-2 text-red-500 dark:text-red-400"/>Odstranění účtu</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Trvale odstraní váš účet a všechna související data.</p>
+                    <h4 className="text-md font-medium text-gray-800 dark:text-white flex items-center"><FaTrashAlt className="mr-2 text-red-500 dark:text-red-400"/>{t('security.deleteAccount.title', 'Odstranění účtu')}</h4>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('security.deleteAccount.description', 'Trvale odstraní váš účet a všechna související data.')}</p>
                   </div>
                   <button
                     className="px-4 py-2 border border-red-500 dark:border-red-600 rounded-md shadow-sm text-sm font-medium text-red-600 dark:text-red-300 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-800 whitespace-nowrap"
                     onClick={() => {
-                      if (window.confirm('Opravdu chcete trvale odstranit svůj účet? Tato akce je nevratná.')) {
+                      if (window.confirm(t('security.deleteAccount.confirm', 'Opravdu chcete trvale odstranit svůj účet? Tato akce je nevratná.'))) {
                         // TODO: Implement account deletion API call
-                        alert('Funkce pro odstranění účtu bude brzy implementována.');
+                        alert(t('security.deleteAccount.toBeImplemented', 'Funkce pro odstranění účtu bude brzy implementována.'));
                         // Example: await fetch('/api/user/delete-account', { method: 'POST' });
                         // router.push('/'); // Redirect after deletion
                       }
                     }}
                   >
-                    Odstranit účet
+                    {t('security.deleteAccount.button', 'Odstranit účet')}
                   </button>
                 </div>
               </div>
@@ -251,3 +257,22 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/auth/login?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? 'cs', ['profile', 'common'])),
+    },
+  };
+};

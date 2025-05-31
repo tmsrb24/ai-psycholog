@@ -1,0 +1,49 @@
+{
+  "pageTitle": "Můj profil | AI Psycholog",
+  "pageDescription": "Správa vašeho uživatelského profilu na AI Psycholog.",
+  "pageDescriptionLoading": "Načítání profilu",
+  "header": {
+    "title": "Můj profil",
+    "subtitle": "Spravujte své osobní údaje, bezpečnost a nastavení účtu."
+  },
+  "messages": {
+    "profileUpdateSuccess": "Profil byl úspěšně aktualizován. Změny se mohou projevit po novém přihlášení.",
+    "profileUpdateError": "Nastala chyba při aktualizaci profilu.",
+    "serverError": "Nastala chyba při komunikaci se serverem."
+  },
+  "personalInfo": {
+    "title": "Osobní údaje",
+    "avatarAlt": "Profilový obrázek",
+    "changeAvatarTooltip": "Změnit profilový obrázek (již brzy)",
+    "defaultUserName": "Uživatel",
+    "memberSince": "Člen od:",
+    "unknown": "Neznámé",
+    "form": {
+      "name": {
+        "label": "Jméno a příjmení",
+        "placeholder": "Vaše jméno"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "vas@email.cz"
+      },
+      "saving": "Ukládání...",
+      "saveChanges": "Uložit změny"
+    }
+  },
+  "security": {
+    "title": "Bezpečnost a správa účtu",
+    "changePassword": {
+      "title": "Změna hesla",
+      "description": "Aktualizujte své heslo pro zvýšení bezpečnosti.",
+      "button": "Změnit heslo"
+    },
+    "deleteAccount": {
+      "title": "Odstranění účtu",
+      "description": "Trvale odstraní váš účet a všechna související data.",
+      "button": "Odstranit účet",
+      "confirm": "Opravdu chcete trvale odstranit svůj účet? Tato akce je nevratná.",
+      "toBeImplemented": "Funkce pro odstranění účtu bude brzy implementována."
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "pageTitle": "My Profile | AI Psychologist",
+  "pageDescription": "Manage your user profile on AI Psychologist.",
+  "pageDescriptionLoading": "Loading profile",
+  "header": {
+    "title": "My Profile",
+    "subtitle": "Manage your personal information, security, and account settings."
+  },
+  "messages": {
+    "profileUpdateSuccess": "Profile updated successfully. Changes may take effect after a new login.",
+    "profileUpdateError": "Error updating profile.",
+    "serverError": "Error communicating with the server."
+  },
+  "personalInfo": {
+    "title": "Personal Information",
+    "avatarAlt": "Profile picture",
+    "changeAvatarTooltip": "Change profile picture (coming soon)",
+    "defaultUserName": "User",
+    "memberSince": "Member since:",
+    "unknown": "Unknown",
+    "form": {
+      "name": {
+        "label": "Full Name",
+        "placeholder": "Your name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "your@email.com"
+      },
+      "saving": "Saving...",
+      "saveChanges": "Save Changes"
+    }
+  },
+  "security": {
+    "title": "Security and Account Management",
+    "changePassword": {
+      "title": "Change Password",
+      "description": "Update your password to enhance security.",
+      "button": "Change Password"
+    },
+    "deleteAccount": {
+      "title": "Delete Account",
+      "description": "Permanently delete your account and all associated data.",
+      "button": "Delete Account",
+      "confirm": "Are you sure you want to permanently delete your account? This action is irreversible.",
+      "toBeImplemented": "The account deletion feature will be implemented soon."
+    }
+  }
+}
