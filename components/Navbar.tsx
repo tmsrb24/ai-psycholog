@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle, FaLanguage } from 'react-icons/fa'; // Přidána FaLanguage
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle, FaGlobe } from 'react-icons/fa'; // Změna FaLanguage na FaGlobe
 import { useTheme } from './ThemeProvider';
 import { useTranslation } from 'next-i18next';
 
@@ -234,7 +234,7 @@ const Navbar: React.FC = () => {
                 aria-expanded={isLangMenuOpen}
                 aria-haspopup="true"
               >
-                <FaLanguage size={18} className="mr-1" />
+                <FaGlobe size={18} className="mr-1" /> {/* Změna ikony */}
                 {router.locale?.toUpperCase()}
                 <svg className={`ml-1 h-4 w-4 transform transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -434,7 +434,7 @@ const Navbar: React.FC = () => {
                   <button
                     key={locale}
                     onClick={() => {
-                      changeLanguage(locale); // Použije upravenou funkci changeLanguage
+                      changeLanguage(locale); 
                       closeMenu();
                     }}
                     className={`w-full text-left block px-3 py-2 rounded-md text-base font-medium transition-colors
@@ -443,6 +443,7 @@ const Navbar: React.FC = () => {
                         : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
                       }`}
                   >
+                    <FaGlobe size={16} className="inline mr-2 mb-0.5" /> {/* Změna ikony a přidání do položky */}
                     {locale.toUpperCase()} - {t(`languages.${locale}`, locale)}
                   </button>
                 ))}
