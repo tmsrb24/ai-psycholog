@@ -1,0 +1,31 @@
+{
+  "buttons": {
+    "tryForFree": "Vyzkoušet zdarma",
+    "pricing": "Ceník",
+    "startForFree": "Začít zdarma",
+    "selectPlan": "Vybrat plán"
+  },
+  "priceSuffixMonthly": "/měsíc",
+  "tags": {
+    "new": "NOVINKA",
+    "recommended": "DOPORUČENO"
+  },
+  "appName": "AI Psycholog",
+  "navbar": {
+    "home": "Domů",
+    "chat": "Chat",
+    "diary": "Deník",
+    "gdpr": "GDPR",
+    "pricing": "Ceník",
+    "contact": "Kontakt",
+    "signIn": "Přihlásit",
+    "register": "Registrovat",
+    "userMenu": {
+      "open": "Otevřít uživatelské menu",
+      "profilePicture": "Profilový obrázek",
+      "user": "Uživatel",
+      "myProfile": "Můj profil",
+      "signOut": "Odhlásit se"
+    }
+  }
+}

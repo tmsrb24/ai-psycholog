@@ -1,0 +1,31 @@
+{
+  "buttons": {
+    "tryForFree": "Спробувати безкоштовно",
+    "pricing": "Ціни",
+    "startForFree": "Почати безкоштовно",
+    "selectPlan": "Обрати план"
+  },
+  "priceSuffixMonthly": "/місяць",
+  "tags": {
+    "new": "НОВИНКА",
+    "recommended": "РЕКОМЕНДОВАНО"
+  },
+  "appName": "AI Психолог",
+  "navbar": {
+    "home": "Головна",
+    "chat": "Чат",
+    "diary": "Щоденник",
+    "gdpr": "GDPR",
+    "pricing": "Ціни",
+    "contact": "Контакти",
+    "signIn": "Увійти",
+    "register": "Зареєструватися",
+    "userMenu": {
+      "open": "Відкрити меню користувача",
+      "profilePicture": "Фото профілю",
+      "user": "Користувач",
+      "myProfile": "Мій профіль",
+      "signOut": "Вийти"
+    }
+  }
+}

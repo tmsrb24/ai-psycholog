@@ -2,13 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle } from 'react-icons/fa'; // Odebrány FaMoon, FaSun
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
 import { useTheme } from './ThemeProvider';
+import { useTranslation } from 'next-i18next';
 
 const Navbar: React.FC = () => {
+  const { t } = useTranslation('common');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const { theme } = useTheme(); // toggleTheme již není potřeba
+  const { theme } = useTheme();
   const router = useRouter();
   const { data: session, status } = useSession();
   const loading = status === "loading";
@@ -81,7 +83,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Domů
+              {t('navbar.home', 'Domů')}
             </Link>
             <Link
               href="/chat"
@@ -92,7 +94,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Chat
+              {t('navbar.chat', 'Chat')}
             </Link>
             <Link
               href="/diary"
@@ -103,7 +105,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Deník
+              {t('navbar.diary', 'Deník')}
             </Link>
             <Link
               href="/gdpr"
@@ -114,7 +116,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              GDPR
+              {t('navbar.gdpr', 'GDPR')}
             </Link>
             <Link
               href="/pricing"
@@ -125,7 +127,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Ceník
+              {t('navbar.pricing', 'Ceník')}
             </Link>
             <Link
               href="/kontakt"
@@ -136,7 +138,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Kontakt
+              {t('navbar.contact', 'Kontakt')}
             </Link>
             
             {/* Authentication UI */}
@@ -150,47 +152,46 @@ const Navbar: React.FC = () => {
                   aria-expanded={isProfileMenuOpen}
                   aria-haspopup="true"
                 >
-                  <span className="sr-only">Otevřít uživatelské menu</span>
+                  <span className="sr-only">{t('navbar.userMenu.open', 'Otevřít uživatelské menu')}</span>
                   {session.user?.image ? (
                     <img
                       className="h-8 w-8 rounded-full"
                       src={session.user.image}
-                      alt={session.user.name || "Profilový obrázek"}
+                      alt={session.user.name || t('navbar.userMenu.profilePicture', 'Profilový obrázek')}
                     />
                   ) : (
                     <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
                       <FaUserCircle size={24} />
                     </div>
                   )}
-                  {/* Text jména uživatele vedle ikony - upravena barva pro gradient */}
-                  <span className="ml-2 text-gray-700 dark:text-gray-100 font-medium"> {/* Upravena barva textu pro tmavý režim */}
-                    {session.user?.name?.split(' ')[0] || 'Uživatel'}
+                  <span className="ml-2 text-gray-700 dark:text-gray-100 font-medium">
+                    {session.user?.name?.split(' ')[0] || t('navbar.userMenu.user', 'Uživatel')}
                   </span>
                 </button>
                 
                 {isProfileMenuOpen && (
-                  <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-20"> {/* Upraveno pozadí dropdownu */}
-                    <div className="px-4 py-3 text-sm text-gray-700 dark:text-gray-100 border-b border-gray-200 dark:border-slate-700"> {/* Upraveny barvy */}
+                  <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-20">
+                    <div className="px-4 py-3 text-sm text-gray-700 dark:text-gray-100 border-b border-gray-200 dark:border-slate-700">
                       <p className="font-semibold">{session.user?.name}</p>
                       <p className="text-gray-500 dark:text-gray-400 truncate">{session.user?.email}</p>
                     </div>
                     <Link
                       href="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700" // Upraven hover
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
                       onClick={() => setIsProfileMenuOpen(false)}
                     >
                       <div className="flex items-center">
                         <FaUser className="mr-2" />
-                        Můj profil
+                        {t('navbar.userMenu.myProfile', 'Můj profil')}
                       </div>
                     </Link>
                     <button
                       onClick={handleSignOut}
-                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700" // Upraven hover
+                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
                     >
                       <div className="flex items-center">
                         <FaSignOutAlt className="mr-2" />
-                        Odhlásit se
+                        {t('navbar.userMenu.signOut', 'Odhlásit se')}
                       </div>
                     </button>
                   </div>
@@ -200,15 +201,15 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-2 ml-3">
                 <Link
                   href="/auth/login"
-                  className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700" // Upraveno pro nové pozadí navbaru
+                  className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700"
                 >
-                  Přihlásit
+                  {t('navbar.signIn', 'Přihlásit')}
                 </Link>
                 <Link
                   href="/auth/register"
-                  className="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600" // Přidány dark mode styly
+                  className="px-3 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
                 >
-                  Registrovat
+                  {t('navbar.register', 'Registrovat')}
                 </Link>
               </div>
             )}
@@ -263,7 +264,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Domů
+              {t('navbar.home', 'Domů')}
             </Link>
             <Link 
               href="/chat" 
@@ -274,7 +275,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Chat
+              {t('navbar.chat', 'Chat')}
             </Link>
             <Link 
               href="/diary" 
@@ -285,7 +286,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Deník
+              {t('navbar.diary', 'Deník')}
             </Link>
             <Link 
               href="/gdpr" 
@@ -296,7 +297,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              GDPR
+              {t('navbar.gdpr', 'GDPR')}
             </Link>
             <Link 
               href="/pricing" 
@@ -307,7 +308,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Ceník
+              {t('navbar.pricing', 'Ceník')}
             </Link>
             <Link 
               href="/kontakt" 
@@ -318,7 +319,7 @@ const Navbar: React.FC = () => {
               }`}
               onClick={closeMenu}
             >
-              Kontakt
+              {t('navbar.contact', 'Kontakt')}
             </Link>
             
             {/* Authentication links for mobile */}
@@ -329,14 +330,14 @@ const Navbar: React.FC = () => {
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                   onClick={closeMenu}
                 >
-                  Přihlásit
+                  {t('navbar.signIn', 'Přihlásit')}
                 </Link>
                 <Link 
                   href="/auth/register" 
                   className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700"
                   onClick={closeMenu}
                 >
-                  Registrovat
+                  {t('navbar.register', 'Registrovat')}
                 </Link>
               </>
             )}
@@ -364,11 +365,11 @@ const Navbar: React.FC = () => {
                 <Link 
                   href="/profile" 
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                  onClick={closeMenu}
+                  onClick={() => setIsProfileMenuOpen(false)}
                 >
                   <div className="flex items-center">
                     <FaUser className="mr-2" />
-                    Můj profil
+                    {t('navbar.userMenu.myProfile', 'Můj profil')}
                   </div>
                 </Link>
                 <button 
@@ -377,7 +378,7 @@ const Navbar: React.FC = () => {
                 >
                   <div className="flex items-center">
                     <FaSignOutAlt className="mr-2" />
-                    Odhlásit se
+                    {t('navbar.userMenu.signOut', 'Odhlásit se')}
                   </div>
                 </button>
               </>

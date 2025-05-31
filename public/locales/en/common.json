@@ -10,5 +10,22 @@
     "new": "NEW",
     "recommended": "RECOMMENDED"
   },
-  "appName": "AI Psychologist"
+  "appName": "AI Psychologist",
+  "navbar": {
+    "home": "Home",
+    "chat": "Chat",
+    "diary": "Diary",
+    "gdpr": "GDPR",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "signIn": "Sign In",
+    "register": "Register",
+    "userMenu": {
+      "open": "Open user menu",
+      "profilePicture": "Profile picture",
+      "user": "User",
+      "myProfile": "My Profile",
+      "signOut": "Sign Out"
+    }
+  }
 }
