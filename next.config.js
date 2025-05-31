@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
+const { i18n } = require('./next-i18next.config.js');
+
 const nextConfig = {
   reactStrictMode: true,
+  i18n, // Přidání i18n konfigurace
   // swcMinify is now enabled by default in Next.js 15+
   env: {
     NEXTAUTH_URL: 'https://www.psychollog.cz',
