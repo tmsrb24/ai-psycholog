@@ -7,14 +7,16 @@ import { useTheme } from './ThemeProvider';
 import { useTranslation } from 'next-i18next';
 
 const Navbar: React.FC = () => {
-  const { t, i18n } = useTranslation('common'); // Přidáno i18n pro changeLanguage
+  const { t, i18n } = useTranslation('common');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false); // Stav pro jazykové menu
   const { theme } = useTheme();
   const router = useRouter();
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const profileMenuRef = useRef<HTMLDivElement>(null);
+  const langMenuRef = useRef<HTMLDivElement>(null); // Ref pro jazykové menu
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -49,14 +51,22 @@ const Navbar: React.FC = () => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
         setIsProfileMenuOpen(false);
       }
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
+        setIsLangMenuOpen(false);
+      }
     };
 
-    // Použijeme 'click' místo 'mousedown', aby se menu nezavřelo dříve, než se provede akce na tlačítku uvnitř
-    document.addEventListener('click', handleClickOutside, true); // Použijeme capturing fázi pro jistotu
+    document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, []);
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    router.push(router.pathname, router.asPath, { locale: lng });
+    setIsLangMenuOpen(false); // Zavřít menu po výběru
+  };
 
   return (
     // Změna pozadí Navbaru: méně průhledné, pevnější barvy pro lepší kontrast a vzhled
@@ -217,24 +227,36 @@ const Navbar: React.FC = () => {
             {/* Theme toggle button - ODSTRANĚNO */}
 
             {/* Language Switcher - Desktop */}
-            <div className="ml-4 flex items-center">
-              <FaLanguage className="text-gray-600 dark:text-gray-400 mr-1" size={18}/>
-              {(router.locales || []).map((locale) => (
-                <button
-                  key={locale}
-                  onClick={() => {
-                    i18n.changeLanguage(locale);
-                    router.push(router.pathname, router.asPath, { locale });
-                  }}
-                  className={`px-2 py-1 rounded-md text-xs font-medium transition-colors
-                    ${router.locale === locale 
-                      ? 'bg-blue-500 text-white' 
-                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700'
-                    }`}
-                >
-                  {locale.toUpperCase()}
-                </button>
-              ))}
+            <div className="relative ml-3" ref={langMenuRef}>
+              <button
+                onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                className="flex items-center p-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700"
+                aria-expanded={isLangMenuOpen}
+                aria-haspopup="true"
+              >
+                <FaLanguage size={18} className="mr-1" />
+                {router.locale?.toUpperCase()}
+                <svg className={`ml-1 h-4 w-4 transform transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+              {isLangMenuOpen && (
+                <div className="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg py-1 bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-20">
+                  {(router.locales || []).map((locale) => (
+                    <button
+                      key={locale}
+                      onClick={() => changeLanguage(locale)}
+                      className={`w-full text-left block px-4 py-2 text-sm 
+                        ${router.locale === locale 
+                          ? 'bg-blue-500 text-white dark:bg-blue-600' 
+                          : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-slate-700'
+                        }`}
+                    >
+                      {locale.toUpperCase()} - {t(`languages.${locale}`, locale)} 
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
@@ -404,25 +426,24 @@ const Navbar: React.FC = () => {
                 </button>
               </>
             )}
-             {/* Language Switcher - Mobile */}
+            {/* Language Switcher - Mobile */}
             <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-center space-x-2">
-                <FaLanguage className="text-gray-600 dark:text-gray-400" size={18}/>
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 px-1">{t('navbar.language', 'Jazyk')}:</div>
+              <div className="flex flex-col space-y-1">
                 {(router.locales || []).map((locale) => (
                   <button
                     key={locale}
                     onClick={() => {
-                      i18n.changeLanguage(locale);
-                      router.push(router.pathname, router.asPath, { locale });
+                      changeLanguage(locale); // Použije upravenou funkci changeLanguage
                       closeMenu();
                     }}
-                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors
+                    className={`w-full text-left block px-3 py-2 rounded-md text-base font-medium transition-colors
                       ${router.locale === locale 
-                        ? 'bg-blue-500 text-white' 
-                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700'
+                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white' 
+                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
                       }`}
                   >
-                    {locale.toUpperCase()}
+                    {locale.toUpperCase()} - {t(`languages.${locale}`, locale)}
                   </button>
                 ))}
               </div>

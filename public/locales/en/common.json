@@ -38,5 +38,10 @@
     "disclaimerText": "AI Psychologist is not a substitute for professional psychological care. It is a supplementary tool for supporting mental well-being. In case of serious problems, we always recommend seeking professional help.",
     "crisisLineHtml": "<span class=\"font-semibold\">🛟 If you are in a crisis situation, call <strong>116 123</strong> (First Psychic Aid Line) or <strong>116 111</strong> (Child Safety Line). Help is anonymous and available 24/7.</span>",
     "copyright": "© {currentYear} AI Psychologist. All rights reserved."
+  },
+  "languages": {
+    "cs": "Čeština",
+    "en": "English",
+    "uk": "Українська"
   }
 }
