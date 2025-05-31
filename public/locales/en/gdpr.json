@@ -1,0 +1,83 @@
+{
+  "pageTitle": "GDPR & Security | AI Psychologist",
+  "pageDescription": "Information on personal data processing, privacy protection, and security at AI Psychologist.",
+  "header": {
+    "title": "GDPR & Security",
+    "subtitle": "Your privacy and security are our priority. Here you can find out how we handle your data and how we protect it."
+  },
+  "tabs": {
+    "security": "Security",
+    "gdpr": "GDPR"
+  },
+  "security": {
+    "mainTitle": "🔐 Data Security and Protection Policy",
+    "intro": "Psychollog.cz takes the protection of your data seriously. We use the following technologies and procedures to ensure security:",
+    "points": [
+      "Encrypted HTTPS connection (SSL certificate from Let's Encrypt)",
+      "Verified user identities via OAuth (Google)",
+      "Data protection using RLS on Supabase",
+      "Encrypted emails via SendGrid",
+      "Secured API using JWT",
+      "Option to delete account and conversation history",
+      "Regular audit of security headers (HSTS, CSP, etc.)",
+      "Full compliance with GDPR (EU 2016/679)"
+    ],
+    "contactPrefix": "If you have any questions regarding security, please contact us at:"
+  },
+  "gdprContent": {
+    "mainTitle": "Privacy Policy (GDPR)",
+    "sections": [
+      {
+        "title": "1. Who we are",
+        "content": "The operator of the Psychollog.cz website is [ADD NAME/COMPANY AND CONTACT DETAILS, ID No. IF EXISTS]."
+      },
+      {
+        "title": "2. What data we process and why",
+        "paragraph1": "Your trust is fundamental to us. This service is designed to respect your privacy to the maximum extent.",
+        "listItem1": {
+          "title": "Identification data (when logging in via Google):",
+          "text": "Name, email address, profile picture. This data is used to identify your account and personalize the service."
+        },
+        "listItem2": {
+          "title": "Conversation content (Chat):",
+          "text": "If you enable history saving, the content of your conversations with the AI is stored in your secure database on Supabase so you can refer back to them."
+        },
+        "listItem3": {
+          "title": "Diary entries:",
+          "text": "The content of your diary entries is stored in your secure database on Supabase."
+        },
+        "listItem4": {
+          "title": "User settings (Profile):",
+          "text": "Your preferences for how the application functions."
+        },
+        "listItem5": {
+          "title": "Technical data:",
+          "text": "IP address, access time, device type – to ensure security, compatibility, and operation of the website, and for anonymous statistics to improve the service."
+        }
+      },
+      {
+        "title": "3. Legal basis for processing",
+        "paragraph1": "Processing is based on:",
+        "listItem1": "Performance of a contract (providing application services after your registration).",
+        "listItem2": "Legitimate interest of the controller (operation and security of the service, analysis for improvement).",
+        "listItem3": "Your consent (e.g., for storing chat history, if optional)."
+      },
+      {
+        "title": "4. Who has access to the data",
+        "content": "Only you have access to your personal data (name, email, content of conversations and diary). We, as operators, do not access them by default, unless it is strictly necessary for technical support at your request or troubleshooting. Data is stored on the secure infrastructure of Supabase (using AWS/Google Cloud) and Vercel. We use SendGrid for sending emails."
+      },
+      {
+        "title": "5. How long we keep the data",
+        "content": "We keep your profile data, conversation content (if saving is enabled), and diary entries for the duration of your account's existence, or until you delete them. Technical data is kept for the necessary period."
+      },
+      {
+        "title": "6. What are your rights",
+        "paragraph1": "You have the right to access, rectify, erase, restrict processing, data portability, and object. You can also file a complaint with the Office for Personal Data Protection (www.uoou.cz). To exercise your rights, contact us at"
+      },
+      {
+        "title": "7. In conclusion",
+        "content": "We understand that talking to someone about your feelings requires trust. We do our utmost to make Psychollog.cz a safe and discreet space."
+      }
+    ]
+  }
+}
