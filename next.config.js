@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
-const { i18n } = require('./next-i18next.config.js');
+const { i18n: i18nConfig } = require('./next-i18next.config.js'); // Přejmenováno, aby se nepletlo s i18n klíčem
 
 const nextConfig = {
   reactStrictMode: true,
-  i18n, // Přidání i18n konfigurace
+  i18n: {
+    ...i18nConfig, // Rozšíření konfigurace z next-i18next.config.js
+    localeDetection: false, // Vypnutí automatické detekce jazyka
+  },
   // swcMinify is now enabled by default in Next.js 15+
   env: {
     NEXTAUTH_URL: 'https://www.psychollog.cz',

@@ -109,8 +109,8 @@ const Footer: React.FC = () => {
             </div>
           </div>
           
-          {/* Language Switcher - PŘIDÁN DEBUG STYLING */}
-          <div className="mt-6 flex justify-center items-center space-x-2 bg-red-200 dark:bg-red-800 p-4 border-2 border-red-500">
+          {/* Language Switcher */}
+          <div className="mt-6 flex justify-center items-center space-x-2">
             <FaLanguage className="text-gray-600 dark:text-gray-400 mr-2" size={20}/>
             {locales.map((locale) => (
               <button

@@ -1,0 +1,14 @@
+{
+  "buttons": {
+    "tryForFree": "Try for Free",
+    "pricing": "Pricing",
+    "startForFree": "Start for Free",
+    "selectPlan": "Select Plan"
+  },
+  "priceSuffixMonthly": "/month",
+  "tags": {
+    "new": "NEW",
+    "recommended": "RECOMMENDED"
+  },
+  "appName": "AI Psychologist"
+}

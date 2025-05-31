@@ -1,0 +1,140 @@
+{
+  "hero": {
+    "titleLine1": "Psychological Support",
+    "titleLine2": "with Advanced AI",
+    "subtitle": "Available anytime, anywhere. Get instant support for your mental well-being."
+  },
+  "features": {
+    "title": "Why AI Psychologist?",
+    "subtitleLine1": "Small conversations that can change a lot.",
+    "subtitleLine2": "In a space where no one judges you and where you can speak as you feel.",
+    "subtitleLine3": "Stop. Talk. Get relief.",
+    "cards": [
+      {
+        "title": "Instant Availability",
+        "text": "No waiting for an appointment. AI Psychologist is available 24/7, whenever you need support."
+      },
+      {
+        "title": "Complete Discretion",
+        "text": "Your conversations are private and secure. No data sharing with third parties."
+      },
+      {
+        "title": "Progress Tracking",
+        "text": "Mood analysis helps you track your progress and motivates you."
+      }
+    ],
+    "rag": {
+      "title": "Next-Gen RAG System",
+      "text": "Our AI assistant uses a Retrieval-Augmented Generation (RAG) architecture – connecting a language model with its own expert psychological database. This allows it to provide accurate, contextually tailored responses in real time, based on verified knowledge and your situation."
+    }
+  },
+  "testimonials": {
+    "title": "Expert Opinions",
+    "subtitle": "What professionals in psychology and psychiatry say about Psychollog.cz.",
+    "avatarAlt": "Photo of {{name}}",
+    "uniqueServiceTitle": "Why is our service unique?",
+    "uniqueServiceText": "Our Psychollog.cz platform is unique due to the combination of advanced artificial intelligence, which draws from verified psychological databases (PubMed Central, Open Psychology Journal, PsyArXiv), and the vision of collaboration with experts from practice. This ensures that the support provided is not only immediately available and discreet but also informationally valuable and based on scientific knowledge. Our goal is to make quality tools for self-discovery and mental well-being accessible to the widest possible range of people."
+  },
+  "howItWorks": {
+    "title": "How does it work?",
+    "subtitle": "Simple steps to get psychological support with AI Psychologist.",
+    "steps": [
+      {
+        "title": "Create an account",
+        "text": "Registration takes just a few seconds. You can start immediately with the free version."
+      },
+      {
+        "title": "Start a conversation",
+        "text": "Share your thoughts and feelings. AI Psychologist will provide an empathetic and supportive response."
+      },
+      {
+        "title": "Get support",
+        "text": "Regular conversations will help you better understand your emotions and find strategies for coping with difficulties."
+      }
+    ]
+  },
+  "proactiveAssistant": {
+    "title": "Our AI Assistant Thinks Ahead – Proactive Care for Your Soul",
+    "subtitle": "Imagine support that not only reacts but actively helps you on your journey to mental well-being. Our Proactive AI Assistant is designed to learn to understand your needs. With your permission, it sensitively analyzes trends in your conversations and diary entries.",
+    "cards": [
+      {
+        "title": "Personalized Suggestions",
+        "text": "Relevant topics for reflection, diary prompts, or exercises tailored to you."
+      },
+      {
+        "title": "Gentle Support",
+        "text": "If you are going through a more challenging period, the assistant will sensitively offer a conversation or remind you of proven techniques."
+      },
+      {
+        "title": "Growth Support",
+        "text": "We actively support your journey to better well-being with relevant tools and prompts for self-reflection."
+      },
+      {
+        "title": "Your Privacy",
+        "text": "You always have full control over sharing information and using proactive suggestions."
+      }
+    ],
+    "footerText": "This unique feature helps you not to be alone with your worries and to actively work on your well-being."
+  },
+  "pricingPreview": {
+    "title": "Available Pricing Plans",
+    "subtitle": "Choose the plan that best suits your needs."
+  },
+  "plans": {
+    "basic": {
+      "name": "Basic",
+      "price": "Free",
+      "priceSuffix": "",
+      "description": "Ideal for trying out the service",
+      "features": [
+        "5 messages per day",
+        "Basic mood analysis",
+        "Basic conversation topics",
+        "Access to personal diary",
+        "Conversation history",
+        "Assistant personality customization",
+        "Next-gen RAG system",
+        "Priority support",
+        "Family sharing",
+        "Calendar integration",
+        "Access to beta versions"
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "€14.99", 
+      "description": "For regular psychological support",
+      "features": [
+        "Unlimited messages",
+        "Advanced mood analysis",
+        "All conversation topics",
+        "Access to personal diary",
+        "Unlimited conversation history",
+        "Assistant personality customization",
+        "Next-gen RAG system",
+        "Priority support",
+        "Family sharing",
+        "Calendar integration",
+        "Access to beta versions"
+      ],
+      "buttonText": "Choose Premium"
+    },
+    "ultra": {
+      "name": "Ultra",
+      "price": "€22.99",
+      "description": "For the most demanding users and family sharing",
+      "features": [
+        "Everything from Premium plan",
+        "Priority support",
+        "Family sharing (up to 3 members)",
+        "Calendar integration",
+        "Access to beta versions"
+      ],
+      "buttonText": "Choose Ultra"
+    }
+  },
+  "cta": {
+    "title": "Start your journey to better mental well-being today",
+    "subtitle": "Try AI Psychologist for free and discover how it can help you better understand your emotions and manage daily challenges."
+  }
+}
