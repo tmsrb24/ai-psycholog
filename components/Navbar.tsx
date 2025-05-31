@@ -2,12 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle } from 'react-icons/fa';
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle, FaLanguage } from 'react-icons/fa'; // Přidána FaLanguage
 import { useTheme } from './ThemeProvider';
 import { useTranslation } from 'next-i18next';
 
 const Navbar: React.FC = () => {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common'); // Přidáno i18n pro changeLanguage
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { theme } = useTheme();
@@ -215,6 +215,27 @@ const Navbar: React.FC = () => {
             )}
             
             {/* Theme toggle button - ODSTRANĚNO */}
+
+            {/* Language Switcher - Desktop */}
+            <div className="ml-4 flex items-center">
+              <FaLanguage className="text-gray-600 dark:text-gray-400 mr-1" size={18}/>
+              {(router.locales || []).map((locale) => (
+                <button
+                  key={locale}
+                  onClick={() => {
+                    i18n.changeLanguage(locale);
+                    router.push(router.pathname, router.asPath, { locale });
+                  }}
+                  className={`px-2 py-1 rounded-md text-xs font-medium transition-colors
+                    ${router.locale === locale 
+                      ? 'bg-blue-500 text-white' 
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700'
+                    }`}
+                >
+                  {locale.toUpperCase()}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -351,7 +372,7 @@ const Navbar: React.FC = () => {
                       <img
                         className="h-8 w-8 rounded-full mr-2"
                         src={session.user.image}
-                        alt={session.user.name || "Profilový obrázek"}
+                        alt={session.user.name || t('navbar.userMenu.profilePicture', 'Profilový obrázek')}
                       />
                     ) : (
                       <FaUserCircle size={24} className="mr-2" />
@@ -365,7 +386,7 @@ const Navbar: React.FC = () => {
                 <Link 
                   href="/profile" 
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-                  onClick={() => setIsProfileMenuOpen(false)}
+                  onClick={() => { closeMenu(); setIsProfileMenuOpen(false); }}
                 >
                   <div className="flex items-center">
                     <FaUser className="mr-2" />
@@ -373,7 +394,7 @@ const Navbar: React.FC = () => {
                   </div>
                 </Link>
                 <button 
-                  onClick={handleSignOut}
+                  onClick={() => { handleSignOut(); closeMenu(); }}
                   className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                 >
                   <div className="flex items-center">
@@ -383,6 +404,29 @@ const Navbar: React.FC = () => {
                 </button>
               </>
             )}
+             {/* Language Switcher - Mobile */}
+            <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-center space-x-2">
+                <FaLanguage className="text-gray-600 dark:text-gray-400" size={18}/>
+                {(router.locales || []).map((locale) => (
+                  <button
+                    key={locale}
+                    onClick={() => {
+                      i18n.changeLanguage(locale);
+                      router.push(router.pathname, router.asPath, { locale });
+                      closeMenu();
+                    }}
+                    className={`px-3 py-1 rounded-md text-sm font-medium transition-colors
+                      ${router.locale === locale 
+                        ? 'bg-blue-500 text-white' 
+                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700'
+                      }`}
+                  >
+                    {locale.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -27,5 +27,16 @@
       "myProfile": "Můj profil",
       "signOut": "Odhlásit se"
     }
+  },
+  "footer": {
+    "tagline": "Moderní psychologická podpora s využitím umělé inteligence. Dostupná kdykoliv a kdekoliv.",
+    "linksTitle": "Odkazy",
+    "contactTitle": "Kontakt",
+    "github": "GitHub",
+    "twitter": "Twitter",
+    "disclaimerTitle": "Důležité upozornění:",
+    "disclaimerText": "AI Psycholog není náhradou za profesionální psychologickou péči. Je to doplňkový nástroj pro podporu psychické pohody. V případě vážných problémů vždy doporučujeme vyhledat odbornou pomoc.",
+    "crisisLineHtml": "<span class=\"font-semibold\">🛟 Pokud jste v krizové situaci, zavolejte na <strong>116 123</strong> (Linka první psychické pomoci) nebo <strong>116 111</strong> (Linka bezpečí). Pomoc je anonymní a nonstop.</span>",
+    "copyright": "© {currentYear} AI Psycholog. Všechna práva vyhrazena."
   }
 }
