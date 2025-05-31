@@ -1,14 +1,31 @@
 import React from 'react';
 import Link from 'next/link';
-import { FaGithub, FaTwitter, FaEnvelope } from 'react-icons/fa';
+import { FaGithub, FaTwitter, FaEnvelope, FaLanguage } from 'react-icons/fa'; // Přidána ikona FaLanguage
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const router = useRouter();
+  const { i18n } = useTranslation();
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    router.push(router.pathname, router.asPath, { locale: lng });
+  };
+
+  const locales = router.locales || [];
+  const currentLocale = router.locale || router.defaultLocale || 'cs';
+
+  // Debugging logs
+  console.log('Footer: router.locales:', router.locales);
+  console.log('Footer: derived locales:', locales);
+  console.log('Footer: currentLocale:', currentLocale);
 
   return (
-    <footer className="bg-transparent shadow-inner mt-auto backdrop-blur-sm bg-white/70 dark:bg-gradient-dark-end/70 border-t border-white/20 dark:border-black/20"> {/* Průhledné pozadí s blur, upravené barvy a border */}
+    <footer className="bg-transparent shadow-inner mt-auto backdrop-blur-sm bg-white/70 dark:bg-gradient-dark-end/70 border-t border-white/20 dark:border-black/20">
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8"> {/* Přidán mb-8 pro oddělení od přepínače */}
           <div>
             <div className="flex items-center mb-4">
               <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-2 px-3 rounded-lg">
@@ -85,20 +102,38 @@ const Footer: React.FC = () => {
           {/* Disclaimer and Crisis Notice Section */}
           <div className="space-y-4">
             <div>
-              <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-1">Důležité upozornění:</h4> {/* Upraveny barvy textu */}
-              <p className="text-sm text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upraveny barvy textu */}
+              <h4 className="font-semibold text-gray-800 dark:text-gray-100 mb-1">Důležité upozornění:</h4>
+              <p className="text-sm text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
                 AI Psycholog není náhradou za profesionální psychologickou péči. Je to doplňkový nástroj pro podporu psychické pohody. V případě vážných problémů vždy doporučujeme vyhledat odbornou pomoc.
               </p>
             </div>
             <div>
-              <p className="text-sm text-gray-700 dark:text-gray-300 max-w-3xl mx-auto"> {/* Upraveny barvy textu */}
+              <p className="text-sm text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
                 <span className="font-semibold">🛟 Pokud jste v krizové situaci, zavolejte na <strong>116 123</strong> (Linka první psychické pomoci) nebo <strong>116 111</strong> (Linka bezpečí). Pomoc je anonymní a nonstop.</span>
               </p>
             </div>
           </div>
+          
+          {/* Language Switcher */}
+          <div className="mt-6 flex justify-center items-center space-x-2">
+            <FaLanguage className="text-gray-600 dark:text-gray-400" size={20}/>
+            {locales.map((locale) => (
+              <button
+                key={locale}
+                onClick={() => changeLanguage(locale)}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors
+                  ${currentLocale === locale 
+                    ? 'bg-blue-500 text-white' 
+                    : 'text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-slate-700'
+                  }`}
+              >
+                {locale.toUpperCase()}
+              </button>
+            ))}
+          </div>
 
           {/* Copyright */}
-          <p className="text-sm text-gray-600 dark:text-gray-400"> {/* Upraveny barvy textu */}
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-6"> {/* Přidán mt-6 */}
             &copy; {currentYear} AI Psycholog. Všechna práva vyhrazena.
           </p>
         </div>
