@@ -11,7 +11,7 @@ import { getSession } from 'next-auth/react'; // Pro ochranu stránky
 type PageProps = {}; // Může být prázdné, pokud getSSP vrací jen i18n props
 
 const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation(['profile', 'common']);
+  const { t } = useTranslation('profile'); // Dočasně jen 'profile' namespace
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const router = useRouter();
@@ -60,9 +60,10 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
     }
   };
 
-  if (loading || !session) { // Session se kontroluje v getServerSideProps, ale pro jistotu i zde
+  if (loading || !session) {
     return (
-      <Layout title={t('common:loading', 'Načítání...')} description={t('pageDescriptionLoading', 'Načítání profilu')}>
+      <Layout title={t('pageDescriptionLoading', 'Načítání profilu')} description={t('pageDescriptionLoading', 'Načítání profilu')}>
+        {/* Používám pageDescriptionLoading i pro title, protože common:loading nemusí být dostupné */}
         <div className="flex justify-center items-center min-h-[calc(100vh-8rem)]">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
         </div>
@@ -72,6 +73,7 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
 
   return (
     <Layout title={t('pageTitle', 'Můj profil | AI Psycholog')} description={t('pageDescription', 'Správa vašeho uživatelského profilu')}>
+      <p>DEBUG: Testovací překlad z profile: {t('header.title', 'Můj profil (fallback)')}</p>
       <section className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('header.title', 'Můj profil')}</h1>
@@ -272,7 +274,7 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
 
   return {
     props: {
-      ...(await serverSideTranslations(context.locale ?? 'cs', ['profile', 'common'])),
+      ...(await serverSideTranslations(context.locale ?? 'cs', ['profile'])), // Dočasně jen 'profile'
     },
   };
 };
