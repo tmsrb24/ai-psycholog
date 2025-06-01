@@ -7,8 +7,10 @@
     "subtitle": "Manage your personal information, security, and account settings."
   },
   "messages": {
-    "profileUpdateSuccess": "Profile updated successfully. Changes may take effect after a new login.",
+    "profileUpdateSuccess": "Profile updated successfully.",
     "profileUpdateError": "Error updating profile.",
+    "languageUpdateSuccess": "Interface language updated successfully.",
+    "languageUpdateError": "Error updating interface language.",
     "serverError": "Error communicating with the server."
   },
   "personalInfo": {
@@ -44,6 +46,13 @@
       "button": "Delete Account",
       "confirm": "Are you sure you want to permanently delete your account? This action is irreversible.",
       "toBeImplemented": "The account deletion feature will be implemented soon."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": {
+      "label": "Preferred Interface Language",
+      "saving": "Saving language..."
     }
   }
 }

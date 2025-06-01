@@ -7,8 +7,10 @@
     "subtitle": "Spravujte své osobní údaje, bezpečnost a nastavení účtu."
   },
   "messages": {
-    "profileUpdateSuccess": "Profil byl úspěšně aktualizován. Změny se mohou projevit po novém přihlášení.",
+    "profileUpdateSuccess": "Profil byl úspěšně aktualizován.",
     "profileUpdateError": "Nastala chyba při aktualizaci profilu.",
+    "languageUpdateSuccess": "Jazyk rozhraní byl úspěšně aktualizován.",
+    "languageUpdateError": "Nastala chyba při aktualizaci jazyka rozhraní.",
     "serverError": "Nastala chyba při komunikaci se serverem."
   },
   "personalInfo": {
@@ -44,6 +46,13 @@
       "button": "Odstranit účet",
       "confirm": "Opravdu chcete trvale odstranit svůj účet? Tato akce je nevratná.",
       "toBeImplemented": "Funkce pro odstranění účtu bude brzy implementována."
+    }
+  },
+  "settings": {
+    "title": "Nastavení",
+    "language": {
+      "label": "Preferovaný jazyk rozhraní",
+      "saving": "Ukládání jazyka..."
     }
   }
 }
