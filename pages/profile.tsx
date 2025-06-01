@@ -262,6 +262,10 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
 export default ProfilePage;
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
+  console.log('[getServerSideProps /profile] context.locale:', context.locale);
+  console.log('[getServerSideProps /profile] context.resolvedUrl:', context.resolvedUrl);
+  console.log('[getServerSideProps /profile] context.req.url:', context.req?.url);
+
   const session = await getSession(context);
 
   if (!session) {
