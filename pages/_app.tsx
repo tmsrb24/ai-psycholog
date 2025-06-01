@@ -8,11 +8,11 @@ import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router'; // Import useRouter
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
-  const router = useRouter(); // Get router instance
+  // const router = useRouter(); // Dočasně odstraněno pro testování
   return (
     <SessionProvider session={session}>
       <ThemeProvider>
-        <Component {...pageProps} key={router.asPath} /> {/* Add key prop */}
+        <Component {...pageProps} /> {/* Dočasně odstraněn key={router.asPath} */}
         <Analytics />
         <SpeedInsights />
       </ThemeProvider>
