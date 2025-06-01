@@ -266,20 +266,21 @@ export const getServerSideProps: GetServerSideProps<PageProps> = async (context)
   console.log('[getServerSideProps /profile] context.resolvedUrl:', context.resolvedUrl);
   console.log('[getServerSideProps /profile] context.req.url:', context.req?.url);
 
-  const session = await getSession(context);
+  // const session = await getSession(context); // Dočasně zakomentováno
 
-  if (!session) {
-    return {
-      redirect: {
-        destination: `/auth/login?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
-        permanent: false,
-      },
-    };
-  }
+  // if (!session) { // Dočasně zakomentováno
+  //   return {
+  //     redirect: {
+  //       destination: `/auth/login?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
+  //       permanent: false,
+  //     },
+  //   };
+  // }
 
   return {
     props: {
-      ...(await serverSideTranslations(context.locale ?? 'cs', ['profile', 'common'])), // Vrácení obou namespaců
+      // session, // Pokud by komponenta potřebovala session přímo z props
+      ...(await serverSideTranslations(context.locale ?? 'cs', ['profile', 'common'])),
     },
   };
 };
