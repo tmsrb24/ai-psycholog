@@ -1,0 +1,57 @@
+{
+  "pageTitle": "My Diary | AI Psychologist",
+  "pageDescription": "Your personal space for thoughts, feelings, and daily reflections.",
+  "loadingAuth": "Loading authentication...",
+  "pleaseLogIn": "Please log in to access your diary.",
+  "header": {
+    "title": "My Diary",
+    "subtitle": "A safe space for your thoughts, feelings, and daily reflections."
+  },
+  "newEntry": {
+    "title": "New Entry",
+    "placeholder": "What's on your mind today?",
+    "moodLabel": "Mood:",
+    "tagsLabel": "Tags:",
+    "saveButton": "Save Entry",
+    "savingButton": "Saving..."
+  },
+  "exportButton": "Export All to PDF",
+  "myEntries": {
+    "title": "My Entries",
+    "loading": "Loading entries...",
+    "noEntries": "You don't have any entries yet.",
+    "startWriting": "Start writing your first diary entry by clicking in the text field above.",
+    "editButton": "Edit"
+  },
+  "editModal": {
+    "title": "Edit Entry",
+    "moodLabel": "Mood:",
+    "tagsLabel": "Tags:",
+    "saveChangesButton": "Save Changes",
+    "savingButton": "Saving..."
+  },
+  "moods": {
+    "happy": "Happy",
+    "sad": "Sad",
+    "neutral": "Neutral",
+    "angry": "Angry",
+    "surprised": "Surprised"
+  },
+  "tags": {
+    "work": "Work",
+    "personal": "Personal",
+    "relationships": "Relationships",
+    "health": "Health",
+    "ideas": "Ideas",
+    "other": "Other"
+  },
+  "errors": {
+    "loadEntriesFailed": "Failed to load entries.",
+    "saveEntryFailed": "Failed to save entry.",
+    "updateEntryFailed": "Failed to update entry."
+  },
+  "success": {
+    "entrySaved": "Entry saved successfully!",
+    "entryUpdated": "Entry updated successfully!"
+  }
+}

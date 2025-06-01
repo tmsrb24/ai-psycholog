@@ -1,0 +1,57 @@
+{
+  "pageTitle": "Můj Deník | AI Psycholog",
+  "pageDescription": "Váš osobní prostor pro myšlenky, pocity a každodenní reflexe.",
+  "loadingAuth": "Načítání autentizace...",
+  "pleaseLogIn": "Pro přístup k deníku se prosím přihlaste.",
+  "header": {
+    "title": "Můj Deník",
+    "subtitle": "Bezpečný prostor pro vaše myšlenky, pocity a každodenní reflexe."
+  },
+  "newEntry": {
+    "title": "Nový zápis",
+    "placeholder": "Co máte dnes na srdci?",
+    "moodLabel": "Nálada:",
+    "tagsLabel": "Štítky:",
+    "saveButton": "Uložit zápis",
+    "savingButton": "Ukládání..."
+  },
+  "exportButton": "Exportovat vše do PDF",
+  "myEntries": {
+    "title": "Moje zápisy",
+    "loading": "Načítání zápisů...",
+    "noEntries": "Zatím nemáte žádné zápisy.",
+    "startWriting": "Začněte psát svůj první zápis do deníku klepnutím do textového pole výše.",
+    "editButton": "Upravit"
+  },
+  "editModal": {
+    "title": "Upravit zápis",
+    "moodLabel": "Nálada:",
+    "tagsLabel": "Štítky:",
+    "saveChangesButton": "Uložit změny",
+    "savingButton": "Ukládání..."
+  },
+  "moods": {
+    "happy": "Šťastný/á",
+    "sad": "Smutný/á",
+    "neutral": "Neutrální",
+    "angry": "Naštvaný/á",
+    "surprised": "Překvapený/á"
+  },
+  "tags": {
+    "work": "Práce",
+    "personal": "Osobní",
+    "relationships": "Vztahy",
+    "health": "Zdraví",
+    "ideas": "Nápady",
+    "other": "Ostatní"
+  },
+  "errors": {
+    "loadEntriesFailed": "Nepodařilo se načíst zápisy.",
+    "saveEntryFailed": "Nepodařilo se uložit zápis.",
+    "updateEntryFailed": "Nepodařilo se aktualizovat zápis."
+  },
+  "success": {
+    "entrySaved": "Zápis úspěšně uložen!",
+    "entryUpdated": "Zápis úspěšně aktualizován!"
+  }
+}
