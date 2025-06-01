@@ -11,10 +11,11 @@ import { useSession } from 'next-auth/react'; // Přidán useSession
 
 function MyApp({ Component, pageProps: { session: initialSession, ...pageProps } }: AppProps) {
   const router = useRouter();
-  const { data: session, status } = useSession({ required: false }); 
-  // const { i18n } = useTranslation(); // Dočasně není potřeba, pokud neaplikujeme jazyk
+  // const { data: session, status } = useSession({ required: false }); // Dočasně odstraněno, způsobuje build error
+  // const { i18n } = useTranslation(); // Dočasně není potřeba
 
   // useEffect(() => { // Dočasně zakomentováno - logika pro automatické nastavení jazyka
+  //   // Pokud by se tato logika vrátila, musela by získat session jinak, nebo být vnořena hlouběji
   //   if (status === "authenticated" && session?.user) {
   //     const userPreferredLang = (session.user as any)?.preferences?.uiLanguage;
   //     if (userPreferredLang && router.locales?.includes(userPreferredLang) && router.locale !== userPreferredLang) {
