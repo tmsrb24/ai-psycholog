@@ -68,6 +68,12 @@ const Navbar: React.FC = () => {
     setIsLangMenuOpen(false); // Zavřít menu po výběru
   };
 
+  const languageFlags: { [key: string]: string } = {
+    cs: '🇨🇿',
+    en: '🇬🇧',
+    uk: '🇺🇦',
+  };
+
   return (
     // Změna pozadí Navbaru: méně průhledné, pevnější barvy pro lepší kontrast a vzhled
     <nav className="bg-white/90 dark:bg-slate-900/90 shadow-lg sticky top-0 z-50 backdrop-blur-md"> 
@@ -234,25 +240,26 @@ const Navbar: React.FC = () => {
                 aria-expanded={isLangMenuOpen}
                 aria-haspopup="true"
               >
-                <FaGlobe size={18} className="mr-1" /> {/* Změna ikony */}
+                <span className="mr-1 text-lg">{languageFlags[router.locale || 'cs']}</span>
                 {router.locale?.toUpperCase()}
                 <svg className={`ml-1 h-4 w-4 transform transition-transform ${isLangMenuOpen ? 'rotate-180' : ''}`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </button>
               {isLangMenuOpen && (
-                <div className="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg py-1 bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-20">
+                <div className="origin-top-right absolute right-0 mt-2 w-40 rounded-md shadow-lg py-1 bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 z-20">
                   {(router.locales || []).map((locale) => (
                     <button
                       key={locale}
                       onClick={() => changeLanguage(locale)}
-                      className={`w-full text-left block px-4 py-2 text-sm 
+                      className={`w-full text-left block px-4 py-2 text-sm flex items-center
                         ${router.locale === locale 
                           ? 'bg-blue-500 text-white dark:bg-blue-600' 
                           : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-slate-700'
                         }`}
                     >
-                      {locale.toUpperCase()} - {t(`languages.${locale}`, locale)} 
+                      <span className="mr-2 text-lg">{languageFlags[locale]}</span> 
+                      {t(`languages.${locale}`, locale.toUpperCase())}
                     </button>
                   ))}
                 </div>
@@ -437,14 +444,14 @@ const Navbar: React.FC = () => {
                       changeLanguage(locale); 
                       closeMenu();
                     }}
-                    className={`w-full text-left block px-3 py-2 rounded-md text-base font-medium transition-colors
+                    className={`w-full text-left block px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center
                       ${router.locale === locale 
                         ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white' 
                         : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
                       }`}
                   >
-                    <FaGlobe size={16} className="inline mr-2 mb-0.5" /> {/* Změna ikony a přidání do položky */}
-                    {locale.toUpperCase()} - {t(`languages.${locale}`, locale)}
+                    <span className="mr-2 text-lg">{languageFlags[locale]}</span>
+                    {t(`languages.${locale}`, locale.toUpperCase())}
                   </button>
                 ))}
               </div>
