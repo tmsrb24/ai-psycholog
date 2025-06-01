@@ -7,10 +7,9 @@ import axios from 'axios';
 import { 
   FaMicrophone, FaVolumeUp, FaVolumeMute, FaCog, FaHistory, 
   FaBookMedical, FaUserFriends, FaSadTear, FaRunning, FaHeart,
-  FaSun, FaMoon, FaRobot, FaUser, FaChartLine, FaTrophy, FaTimes
+  FaUser, FaChartLine, FaTrophy, FaTimes,
+  FaRegSmile, FaRegFrown, FaRegMeh, FaRegAngry, FaRegSurprise // Přidány ikony pro nálady
 } from 'react-icons/fa';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useTheme } from '../components/ThemeProvider';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -21,11 +20,30 @@ import Gamification from '../components/Gamification';
 import CrisisNotice from '../components/CrisisNotice';
 import ChatSettingsModal from '../components/ChatSettingsModal';
 import { Message } from '../types';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { getSession } from 'next-auth/react';
 
-const ChatPage = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' },
-  ]);
+interface DiaryTag {
+  id: string;
+  name: string; 
+  color: string;
+}
+
+interface DiaryMood {
+  id: string;
+  emoji: string;
+  name: string; 
+  icon?: React.ElementType;
+}
+
+type PageProps = {};
+
+const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { t, i18n } = useTranslation(['chat', 'common']);
+  
+  const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingEstimatedTime, setLoadingEstimatedTime] = useState(5);
   const [selectedTopic, setSelectedTopic] = useState<'anxiety' | 'relationships' | 'depression' | 'stress' | 'selfEsteem' | null>(null);
@@ -40,8 +58,8 @@ const ChatPage = () => {
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [currentChatSessionId, setCurrentChatSessionId] = useState<string | null>(null);
   const [showProfile, setShowProfile] = useState(false);
-  const [userProfile, setUserProfile] = useState<UserProfileData>({
-    name: 'Uživatel',
+  const [userProfileData, setUserProfileData] = useState<UserProfileData>({ // Přejmenováno z userProfile, aby se nepletlo s userProfile z hooku
+    name: t('common:userProfile.defaultName', 'Uživatel'),
     avatar_url: null,
     preferences: {
       responseLength: 'medium',
@@ -60,9 +78,100 @@ const ChatPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    const loadInitialData = async () => {
+      if (!(authStatus === "authenticated" && session?.user)) {
+        return;
+      }
+
+      let systemMessageContent = t('systemPrompt.default');
+      if (i18n.language === 'en') {
+        systemMessageContent = t('systemPrompt.en');
+      } else if (i18n.language === 'uk') {
+        systemMessageContent = t('systemPrompt.uk');
+      }
+      const systemMessage: Message = { role: 'system', content: systemMessageContent };
+
+      try {
+        const profileResponse = await fetch('/api/user/profile');
+        if (profileResponse.ok) {
+          const profileData = await profileResponse.json();
+          setUserProfileData(profileData);
+          if (profileData.preferences) {
+            setResponseLength(profileData.preferences.responseLength || 'medium');
+            if (profileData.preferences.assistantGender) setAssistantGender(profileData.preferences.assistantGender);
+            if (profileData.preferences.assistantName) setAssistantName(profileData.preferences.assistantName);
+          }
+        } else {
+          console.error(t('errors.profileLoadFailedConsole'), profileResponse.statusText);
+        }
+      } catch (error) {
+        console.error(t('errors.profileLoadErrorConsole'), error);
+      }
+
+      try {
+        const chatHistoryResponse = await fetch('/api/chat');
+        if (chatHistoryResponse.ok) {
+          const historyData = await chatHistoryResponse.json();
+          let baseMessages = [systemMessage];
+
+          if (historyData.sessionId && historyData.messages && historyData.messages.length > 0) {
+            setCurrentChatSessionId(historyData.sessionId);
+            baseMessages = [
+              systemMessage,
+              ...historyData.messages.map((msg: Message) => ({
+              ...msg,
+              timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
+            }))];
+          }
+          
+          let messagesToSet = baseMessages;
+          const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
+          const now = new Date();
+          let addedProactiveMessage = false;
+
+          const lastUserOrAssistantMessage = [...baseMessages].reverse().find(msg => msg.role === 'user' || msg.role === 'assistant');
+          if (lastUserOrAssistantMessage && lastUserOrAssistantMessage.timestamp && (now.getTime() - new Date(lastUserOrAssistantMessage.timestamp).getTime()) > twentyFourHoursInMs) {
+            messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.welcomeBack'), timestamp: new Date() }];
+            addedProactiveMessage = true;
+          }
+          
+          try {
+            const insightsResponse = await fetch('/api/user-insights');
+            if (insightsResponse.ok) {
+              const insightsData = await insightsResponse.json();
+              if (insightsData && insightsData.proactive_flags) {
+                if (insightsData.proactive_flags.suggest_mood_discussion && !addedProactiveMessage) {
+                  messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.moodSuggestion'), timestamp: new Date() }];
+                  addedProactiveMessage = true;
+                }
+                if (insightsData.proactive_flags.offer_stress_exercise && !addedProactiveMessage) {
+                  messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.stressExerciseSuggestion'), timestamp: new Date() }];
+                }
+              }
+            }
+          } catch (insightsError) {
+            console.error(t('errors.userInsightsLoadErrorConsole'), insightsError);
+          }
+          setMessages(messagesToSet);
+
+        } else {
+            console.error(t('errors.chatHistoryLoadFailedConsole'), chatHistoryResponse.statusText);
+            setMessages([systemMessage]);
+        }
+      } catch (error) {
+        console.error(t('errors.chatHistoryLoadErrorConsole'), error);
+        setMessages([systemMessage]);
+      }
+    };
+
     if (authStatus === "unauthenticated") {
       router.push('/auth/login?callbackUrl=/chat');
+    } else if (authStatus === "authenticated") {
+      loadInitialData();
     }
+  }, [authStatus, session, router, i18n.language, t, setMessages, setUserProfileData, setResponseLength, setAssistantGender, setCurrentChatSessionId, setAssistantName]);
+
+  useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       const synth = window.speechSynthesis;
       setSpeechSynthesis(synth);
@@ -70,119 +179,16 @@ const ChatPage = () => {
         const voices = synth.getVoices();
         if (voices.length > 0) setAvailableVoices(voices);
       };
-      if (synth.getVoices().length === 0) synth.onvoiceschanged = loadVoices;
-      else loadVoices();
-    }
-
-    const loadInitialData = async () => {
-      if (authStatus === "authenticated" && session?.user) {
-        try {
-          const profileResponse = await fetch('/api/user/profile');
-          if (profileResponse.ok) {
-            const profileData = await profileResponse.json();
-            setUserProfile(profileData);
-            if (profileData.preferences) {
-              setResponseLength(profileData.preferences.responseLength || 'medium');
-              if (profileData.preferences.assistantGender) setAssistantGender(profileData.preferences.assistantGender);
-              if (profileData.preferences.assistantName) setAssistantName(profileData.preferences.assistantName);
-            }
-          } else {
-            console.error('Nepodařilo se načíst profil uživatele:', profileResponse.statusText);
-          }
-        } catch (error) {
-          console.error('Chyba při načítání profilu uživatele:', error);
-        }
-        try {
-          const chatHistoryResponse = await fetch('/api/chat');
-          if (chatHistoryResponse.ok) {
-            const historyData = await chatHistoryResponse.json();
-            if (historyData.sessionId && historyData.messages && historyData.messages.length > 0) {
-              setCurrentChatSessionId(historyData.sessionId);
-              let baseMessages = historyData.messages.map((msg: Message) => ({
-                ...msg,
-                timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
-              }));
-
-              let messagesToSet = baseMessages;
-              const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
-              const now = new Date();
-              let addedProactiveMessage = false;
-
-              // 1. Proaktivní zpráva po pauze (již implementováno, mírně upraveno pro kombinaci s dalšími)
-              if (baseMessages.length > 1) { 
-                const lastMessage = baseMessages[baseMessages.length - 1];
-                if (lastMessage.timestamp && (now.getTime() - new Date(lastMessage.timestamp).getTime()) > twentyFourHoursInMs) {
-                  const proactivePauseMessage: Message = {
-                    role: 'assistant',
-                    content: 'Vítejte zpět! Zdá se, že jsme spolu chvíli nemluvili. Chtěl/a byste navázat na naši poslední konverzaci, nebo se dnes zaměříme na něco nového?',
-                    timestamp: new Date()
-                  };
-                  messagesToSet = [...baseMessages, proactivePauseMessage];
-                  addedProactiveMessage = true;
-                }
-              }
-              
-              // 2. Načtení a zpracování user_insights pro další proaktivní zprávy
-              try {
-                const insightsResponse = await fetch('/api/user-insights');
-                if (insightsResponse.ok) {
-                  const insightsData = await insightsResponse.json();
-                  if (insightsData && insightsData.proactive_flags) {
-                    if (insightsData.proactive_flags.suggest_mood_discussion && !addedProactiveMessage) { // Zobrazit jen pokud už nebyla jiná proaktivní zpráva
-                      const moodMessage: Message = {
-                        role: 'assistant',
-                        content: 'Všiml/a jsem si, že jste v poslední době v deníku zaznamenal/a náročnější pocity. Chtěl/a byste si o tom promluvit?',
-                        timestamp: new Date()
-                      };
-                      messagesToSet = [...messagesToSet, moodMessage];
-                      addedProactiveMessage = true;
-                    }
-                    if (insightsData.proactive_flags.offer_stress_exercise && !addedProactiveMessage) {
-                       const stressMessage: Message = {
-                        role: 'assistant',
-                        content: 'Zdá se, že téma stresu se objevuje ve vašich konverzacích. Měl/a byste zájem o krátké cvičení na uvolnění stresu?',
-                        timestamp: new Date()
-                      };
-                      messagesToSet = [...messagesToSet, stressMessage];
-                      addedProactiveMessage = true;
-                    }
-                    // Zde by mohly být další podmínky pro jiné flagy
-                  }
-                }
-              } catch (insightsError) {
-                console.error("Chyba při načítání user insights:", insightsError);
-              }
-              setMessages(messagesToSet);
-            } else { // Žádná historie chatu
-              let initialMessages: Message[] = [{ role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' }];
-              try {
-                const insightsResponse = await fetch('/api/user-insights');
-                if (insightsResponse.ok) {
-                  const insightsData = await insightsResponse.json();
-                  if (insightsData && insightsData.proactive_flags && insightsData.proactive_flags.suggest_mood_discussion) {
-                     const moodMessage: Message = {
-                        role: 'assistant',
-                        content: 'Vítejte! Všiml/a jsem si, že jste v poslední době v deníku zaznamenal/a náročnější pocity. Chtěl/a byste si o tom promluvit?',
-                        timestamp: new Date()
-                      };
-                      initialMessages = [...initialMessages, moodMessage];
-                  }
-                }
-              } catch (insightsError) {
-                console.error("Chyba při načítání user insights (no chat history):", insightsError);
-              }
-              setMessages(initialMessages);
-            }
-          } else {
-            console.error('Nepodařilo se načíst historii chatu:', chatHistoryResponse.statusText);
-          }
-        } catch (error) {
-          console.error('Chyba při načítání historie chatu:', error);
-        }
+      if (synth.getVoices().length === 0) {
+        synth.onvoiceschanged = loadVoices;
+      } else {
+        loadVoices();
       }
-    };
-    loadInitialData();
-  }, [authStatus, session, router]); 
+      return () => {
+        if (synth) synth.onvoiceschanged = null;
+      };
+    }
+  }, []);
   
   useEffect(() => {
     if (chatContainerRef.current) {
@@ -194,31 +200,37 @@ const ChatPage = () => {
     if (speechSynthesis) {
       speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'cs-CZ';
-      const czechVoice = availableVoices.find(voice => voice.lang === 'cs-CZ');
-      if (czechVoice) utterance.voice = czechVoice;
-      else console.warn('Český hlas pro TTS nebyl nalezen.');
+      const currentLang = i18n.language;
+      let targetLangForTTS = 'cs-CZ';
+      if (currentLang === 'en') targetLangForTTS = 'en-US';
+      else if (currentLang === 'uk') targetLangForTTS = 'uk-UA';
+      
+      utterance.lang = targetLangForTTS;
+      const voice = availableVoices.find(v => v.lang === targetLangForTTS);
+      if (voice) utterance.voice = voice;
+      else console.warn(t('errors.ttsVoiceNotFound', { lang: targetLangForTTS }));
       speechSynthesis.speak(utterance);
       setIsSpeaking(true);
       utterance.onend = () => setIsSpeaking(false);
     }
   };
+
   const stopSpeaking = () => { 
     if (speechSynthesis) {
       speechSynthesis.cancel();
       setIsSpeaking(false);
     }
   };
+
   const sendMessage = async (inputText: string) => { 
-    if (!inputText || !inputText.trim()) {
-      return;
-    }
-    if (authStatus !== "authenticated") {
-      return;
-    }
+    if (!inputText || !inputText.trim() || authStatus !== "authenticated") return;
 
     const userMessage: Message = { role: 'user', content: inputText, timestamp: new Date() };
-    const newMessages = [...messages, userMessage];
+    
+    const currentSystemMessage = messages.find(msg => msg.role === 'system') || { role: 'system', content: t('systemPrompt.default') };
+    const messagesWithSystem = messages.length > 0 ? messages : [currentSystemMessage];
+
+    const newMessages = [...messagesWithSystem, userMessage];
     setMessages(newMessages);
     setLoading(true);
     try {
@@ -228,53 +240,64 @@ const ChatPage = () => {
         personality: selectedPersonality,
         saveHistory, 
         responseLength,
-        userProfile, 
-        sessionId: currentChatSessionId 
+        userProfile: userProfileData, // Použití userProfileData
+        sessionId: currentChatSessionId,
+        chatLanguage: i18n.language 
       };
       const res = await axios.post('/api/chat', requestData);
       
-      if (res.data.sessionId && !currentChatSessionId) {
-        setCurrentChatSessionId(res.data.sessionId); 
-      }
-      if (res.data.estimatedReadingTime) {
-        setLoadingEstimatedTime(prev => Math.round((prev * 0.7) + (res.data.estimatedReadingTime || 5) * 0.3));
-      }
+      if (res.data.sessionId && !currentChatSessionId) setCurrentChatSessionId(res.data.sessionId); 
+      if (res.data.estimatedReadingTime) setLoadingEstimatedTime(prev => Math.round((prev * 0.7) + (res.data.estimatedReadingTime || 5) * 0.3));
+      
       const assistantMessage: Message = {
         role: 'assistant',
-        content: res.data.content || 'Omlouvám se, nastala chyba.',
+        content: res.data.content || t('errors.apiResponseError'),
         timestamp: new Date(),
         isCrisis: res.data.isCrisis
       };
       setMessages(prev => [...prev, assistantMessage]); 
     } catch (error) {
-      console.error('Chyba při volání API /api/chat:', error);
-      const errorMessage: Message = {
-        role: 'assistant',
-        content: 'Omlouvám se, nastala chyba při komunikaci se serverem. Zkuste to prosím znovu za chvíli.',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      console.error(t('errors.apiCallFailedConsole'), error);
+      setMessages(prev => [...prev, { role: 'assistant', content: t('errors.apiCommunicationError'), timestamp: new Date() }]);
     } finally {
       setLoading(false);
     }
   };
-  const handleProfileChange = async (updatedProfile: UserProfileData) => { /* ... implementace ... */ };
+
+  const handleProfileChange = async (updatedProfile: UserProfileData) => { setUserProfileData(updatedProfile); };
+  
+  const availableMoods: DiaryMood[] = [
+    { id: 'happy', emoji: '😄', name: t('common:moods.happy'), icon: FaRegSmile },
+    { id: 'sad', emoji: '😔', name: t('common:moods.sad'), icon: FaRegFrown },
+    { id: 'neutral', emoji: '😐', name: t('common:moods.neutral'), icon: FaRegMeh },
+    { id: 'angry', emoji: '😠', name: t('common:moods.angry'), icon: FaRegAngry },
+    { id: 'surprised', emoji: '😮', name: t('common:moods.surprised'), icon: FaRegSurprise },
+  ];
+
+  const availableTags: DiaryTag[] = [
+    { id: 'work', name: t('common:tags.work'), color: 'bg-blue-500' },
+    { id: 'personal', name: t('common:tags.personal'), color: 'bg-green-500' },
+    { id: 'relationships', name: t('common:tags.relationships'), color: 'bg-pink-500' },
+    { id: 'health', name: t('common:tags.health'), color: 'bg-red-500' },
+    { id: 'ideas', name: t('common:tags.ideas'), color: 'bg-yellow-500' },
+    { id: 'other', name: t('common:tags.other'), color: 'bg-gray-500' },
+  ];
   
   const TOPICS = {
-    anxiety: { title: 'Úzkost', icon: <FaSadTear /> },
-    relationships: { title: 'Vztahy', icon: <FaUserFriends /> },
-    depression: { title: 'Deprese', icon: <FaSadTear /> }, // Možná jiná ikona?
-    stress: { title: 'Stres', icon: <FaRunning /> }, // Ikona pro běh jako zvládání stresu?
-    selfEsteem: { title: 'Sebevědomí', icon: <FaHeart /> }, // Nebo FaStar?
+    anxiety: { title: t('topics.anxiety'), icon: <FaSadTear /> },
+    relationships: { title: t('topics.relationships'), icon: <FaUserFriends /> },
+    depression: { title: t('topics.depression'), icon: <FaSadTear /> },
+    stress: { title: t('topics.stress'), icon: <FaRunning /> },
+    selfEsteem: { title: t('topics.selfEsteem'), icon: <FaHeart /> },
   };
   
   const PERSONALITIES = {
-    supportive: { title: 'Podpůrná' },
-    practical: { title: 'Praktická' },
-    analytical: { title: 'Analytická' },
-    mentor: { title: 'Mentor' },
-    coach: { title: 'Kouč' },
-    mediator: { title: 'Mediátor' },
+    supportive: { title: t('personalities.supportive') },
+    practical: { title: t('personalities.practical') },
+    analytical: { title: t('personalities.analytical') },
+    mentor: { title: t('personalities.mentor') },
+    coach: { title: t('personalities.coach') },
+    mediator: { title: t('personalities.mediator') },
   };
 
   const handleResetSettings = () => {
@@ -284,8 +307,7 @@ const ChatPage = () => {
     setAssistantGender('male');
     setAssistantName('');
     setSaveHistory(true);
-    // Zde by se také měly resetovat hodnoty v UserProfile a uložit na backend, pokud je to žádoucí
-    console.log("Nastavení chatu resetována na výchozí hodnoty.");
+    console.log(t('settingsModal.resetMessageConsole'));
   };
 
   const formatDateSeparator = (date: Date | undefined): string | null => {
@@ -294,35 +316,39 @@ const ChatPage = () => {
     const yesterday = new Date(Date.now() - 86400000).toDateString();
     const messageDateStr = date.toDateString();
 
-    if (messageDateStr === today) return "Dnes";
-    if (messageDateStr === yesterday) return "Včera";
-    return date.toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' });
+    if (messageDateStr === today) return t('dateSeparators.today');
+    if (messageDateStr === yesterday) return t('dateSeparators.yesterday');
+    return date.toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
+  const sidebarItems = [
+    { labelKey: 'sidebar.profile', icon: FaUser, action: () => setShowProfile(!showProfile), active: showProfile },
+    { labelKey: 'sidebar.analysis', icon: FaChartLine, action: () => setShowAnalytics(!showAnalytics), active: showAnalytics, disabled: messages.filter((m: Message) => m.role !== 'system').length < 2 },
+    { labelKey: 'sidebar.achievements', icon: FaTrophy, action: () => setShowGamification(!showGamification), active: showGamification },
+    { labelKey: 'sidebar.settings', icon: FaCog, action: () => setShowSettingsModal(true), active: showSettingsModal }
+  ];
+
+  if (authStatus === "loading") return <Layout title={t('common:loading')}><p className="text-center p-8">{t('loadingAuth')}</p></Layout>;
+  
   return (
-    <Layout title="Chat | AI Psycholog" description="Chatujte s AI psychologem a získejte podporu kdykoliv potřebujete.">
+    <Layout title={t('pageTitle')} description={t('pageDescription')}>
       <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
         <div className="w-full md:w-72 md:mr-6 mb-4 md:mb-0 flex-shrink-0">
           <div className="space-y-4">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
               <div className="grid grid-cols-2 gap-3">
-                {[
-                  { label: 'Profil', icon: FaUser, action: () => setShowProfile(!showProfile), active: showProfile },
-                  { label: 'Analýza', icon: FaChartLine, action: () => setShowAnalytics(!showAnalytics), active: showAnalytics, disabled: messages.length <= 1 },
-                  { label: 'Úspěchy', icon: FaTrophy, action: () => setShowGamification(!showGamification), active: showGamification },
-                  { label: 'Nastavení', icon: FaCog, action: () => setShowSettingsModal(true), active: showSettingsModal }
-                ].map(item => (
+                {sidebarItems.map(item => (
                   <button 
-                    key={item.label}
+                    key={item.labelKey}
                     onClick={item.action}
                     disabled={item.disabled}
                     className={`p-3 rounded-lg text-sm font-medium flex flex-col items-center justify-center space-y-1 transition-all duration-150 ease-in-out
                                 ${item.active ? 'bg-blue-500 text-white shadow-md scale-105' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200'}
                                 ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    title={item.label}
+                    title={t(item.labelKey)}
                   >
                     <item.icon size={20} className={item.active ? 'text-white' : 'text-blue-500 dark:text-blue-400'} />
-                    <span>{item.label}</span>
+                    <span>{t(item.labelKey)}</span>
                   </button>
                 ))}
               </div>
@@ -332,7 +358,7 @@ const ChatPage = () => {
                 <UserProfile onProfileChange={handleProfileChange} />
               </div>
             )}
-            {showAnalytics && messages.length > 1 && (
+            {showAnalytics && messages.filter((m: Message) => m.role !== 'system').length >= 2 && (
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
                 <SentimentAnalyzer messages={messages} />
               </div>
@@ -351,16 +377,21 @@ const ChatPage = () => {
         
         <div className="flex-grow flex flex-col">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]" ref={chatContainerRef}>
-            {messages.filter(msg => msg.role !== 'system').map((message, index, arr) => {
+            {messages.filter((msg: Message) => msg.role !== 'system').map((message, index, arr) => {
               let showDateSeparator = false;
               const currentMessageTimestamp = message.timestamp ? new Date(message.timestamp) : new Date(0);
               
               if (index === 0) {
                 showDateSeparator = true;
               } else {
-                const prevMessageTimestamp = arr[index - 1].timestamp ? new Date(arr[index - 1].timestamp!) : new Date(0);
-                if (currentMessageTimestamp.toDateString() !== prevMessageTimestamp.toDateString()) {
-                  showDateSeparator = true;
+                const prevMessage = arr[index - 1];
+                if (prevMessage.role !== 'system') {
+                    const prevMessageTimestamp = prevMessage.timestamp ? new Date(prevMessage.timestamp) : new Date(0);
+                    if (currentMessageTimestamp.toDateString() !== prevMessageTimestamp.toDateString()) {
+                        showDateSeparator = true;
+                    }
+                } else if (arr.length > 1 && index > 0) { 
+                    showDateSeparator = true;
                 }
               }
               
@@ -378,7 +409,7 @@ const ChatPage = () => {
                   <ChatMessage 
                     key={messageKey}
                     message={message}
-                    isSpeaking={isSpeaking && index === arr.length - 1 && message.role === 'assistant'}
+                    isSpeaking={isSpeaking && index === arr.filter((m: Message) =>m.role !== 'system').length - 1 && message.role === 'assistant'}
                     onSpeakText={speakText}
                     onStopSpeaking={stopSpeaking}
                   />
@@ -396,6 +427,7 @@ const ChatPage = () => {
           <ChatInput 
             onSendMessage={sendMessage}
             isLoading={loading}
+            placeholder={t('chatInputPlaceholder', 'Napište zprávu...')}
           />
           
           <CrisisNotice />
@@ -407,10 +439,10 @@ const ChatPage = () => {
         onClose={() => setShowSettingsModal(false)}
         selectedTopic={selectedTopic}
         setSelectedTopic={setSelectedTopic}
-        TOPICS={TOPICS}
+        TOPICS={TOPICS} 
         selectedPersonality={selectedPersonality}
         setSelectedPersonality={setSelectedPersonality}
-        PERSONALITIES={PERSONALITIES}
+        PERSONALITIES={PERSONALITIES} 
         responseLength={responseLength}
         setResponseLength={setResponseLength}
         assistantGender={assistantGender}
@@ -426,3 +458,22 @@ const ChatPage = () => {
 };
 
 export default ChatPage;
+
+export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/auth/login?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? 'cs', ['chat', 'common'])),
+    },
+  };
+};

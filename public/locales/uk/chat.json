@@ -1,0 +1,78 @@
+{
+  "pageTitle": "Чат | AI Психолог",
+  "pageDescription": "Спілкуйтеся з AI психологом та отримуйте підтримку, коли вам це потрібно.",
+  "loadingAuth": "Завантаження автентифікації...",
+  "pleaseLogIn": "Будь ласка, увійдіть, щоб отримати доступ до чату.",
+  "systemPrompt": {
+    "default": "Ти чеський психолог. Відповідай спокійно, емпатично і ніколи не став діагноз.",
+    "en": "You are an English speaking psychologist. Respond calmly, empathetically, and never diagnose.",
+    "uk": "Ти україномовний психолог. Відповідай спокійно, емпатично і ніколи не став діагноз."
+  },
+  "userProfile": {
+    "defaultName": "Користувач"
+  },
+  "errors": {
+    "profileLoadFailedConsole": "Не вдалося завантажити профіль користувача:",
+    "profileLoadErrorConsole": "Помилка завантаження профілю користувача:",
+    "chatHistoryLoadFailedConsole": "Не вдалося завантажити історію чату:",
+    "chatHistoryLoadErrorConsole": "Помилка завантаження історії чату:",
+    "userInsightsLoadErrorConsole": "Помилка завантаження інсайтів користувача:",
+    "userInsightsLoadErrorConsoleNoHistory": "Помилка завантаження інсайтів користувача (немає історії чату):",
+    "ttsVoiceNotFound": "Голос для {{lang}} не знайдено.",
+    "apiResponseError": "Вибачте, сталася помилка.",
+    "apiCallFailedConsole": "Помилка виклику API /api/chat:",
+    "apiCommunicationError": "Вибачте, сталася помилка під час зв'язку з сервером. Будь ласка, спробуйте ще раз за мить."
+  },
+  "proactiveMessages": {
+    "welcomeBack": "З поверненням! Здається, ми деякий час не спілкувалися. Хочете продовжити нашу останню розмову чи зосередимося сьогодні на чомусь новому?",
+    "moodSuggestion": "Я помітив/ла, що останнім часом ви записували у щоденнику досить складні почуття. Хочете про це поговорити?",
+    "stressExerciseSuggestion": "Здається, тема стресу часто з'являється у ваших розмовах. Чи не хотіли б ви виконати коротку вправу для зняття стресу?",
+    "initialMoodSuggestion": "Ласкаво просимо! Я помітив/ла, що останнім часом ви записували у щоденнику досить складні почуття. Хочете про це поговорити?"
+  },
+  "topics": {
+    "anxiety": "Тривожність",
+    "relationships": "Стосунки",
+    "depression": "Депресія",
+    "stress": "Стрес",
+    "selfEsteem": "Самооцінка"
+  },
+  "personalities": {
+    "supportive": "Підтримуюча",
+    "practical": "Практична",
+    "analytical": "Аналітична",
+    "mentor": "Ментор",
+    "coach": "Коуч",
+    "mediator": "Медіатор"
+  },
+  "settingsModal": {
+    "title": "Налаштування Чату",
+    "topicLabel": "Тема розмови:",
+    "topicPlaceholder": "Оберіть тему",
+    "personalityLabel": "Особистість асистента:",
+    "personalityPlaceholder": "Оберіть особистість",
+    "responseLengthLabel": "Довжина відповідей:",
+    "lengthShort": "Короткі",
+    "lengthMedium": "Середні",
+    "lengthLong": "Довгі",
+    "assistantGenderLabel": "Стать асистента:",
+    "genderMale": "Чоловік",
+    "genderFemale": "Жінка",
+    "assistantNameLabel": "Ім'я асистента (необов'язково):",
+    "saveHistoryLabel": "Зберігати історію чату",
+    "resetButton": "Скинути налаштування",
+    "closeButton": "Закрити",
+    "saveButton": "Зберегти налаштування",
+    "resetMessageConsole": "Налаштування чату скинуто до стандартних."
+  },
+  "dateSeparators": {
+    "today": "Сьогодні",
+    "yesterday": "Вчора"
+  },
+  "sidebar": {
+    "profile": "Профіль",
+    "analysis": "Аналіз",
+    "achievements": "Досягнення",
+    "settings": "Налаштування"
+  },
+  "chatInputPlaceholder": "Напишіть повідомлення..."
+}

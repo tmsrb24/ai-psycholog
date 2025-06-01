@@ -1,0 +1,78 @@
+{
+  "pageTitle": "Chat | AI Psychologist",
+  "pageDescription": "Chat with an AI psychologist and get support whenever you need it.",
+  "loadingAuth": "Loading authentication...",
+  "pleaseLogIn": "Please log in to access the chat.",
+  "systemPrompt": {
+    "default": "You are a Czech psychologist. Respond calmly, empathetically, and never diagnose.",
+    "en": "You are an English speaking psychologist. Respond calmly, empathetically, and never diagnose.",
+    "uk": "You are a Ukrainian speaking psychologist. Respond calmly, empathetically, and never diagnose."
+  },
+  "userProfile": {
+    "defaultName": "User"
+  },
+  "errors": {
+    "profileLoadFailedConsole": "Failed to load user profile:",
+    "profileLoadErrorConsole": "Error loading user profile:",
+    "chatHistoryLoadFailedConsole": "Failed to load chat history:",
+    "chatHistoryLoadErrorConsole": "Error loading chat history:",
+    "userInsightsLoadErrorConsole": "Error loading user insights:",
+    "userInsightsLoadErrorConsoleNoHistory": "Error loading user insights (no chat history):",
+    "ttsVoiceNotFound": "Voice for {{lang}} not found.",
+    "apiResponseError": "Sorry, an error occurred.",
+    "apiCallFailedConsole": "Error calling API /api/chat:",
+    "apiCommunicationError": "Sorry, an error occurred while communicating with the server. Please try again in a moment."
+  },
+  "proactiveMessages": {
+    "welcomeBack": "Welcome back! It seems we haven't talked in a while. Would you like to pick up where we left off, or focus on something new today?",
+    "moodSuggestion": "I noticed you've logged some challenging feelings in your diary lately. Would you like to talk about it?",
+    "stressExerciseSuggestion": "It seems the topic of stress has come up in your conversations. Would you be interested in a short stress-relief exercise?",
+    "initialMoodSuggestion": "Welcome! I noticed you've logged some challenging feelings in your diary lately. Would you like to talk about it?"
+  },
+  "topics": {
+    "anxiety": "Anxiety",
+    "relationships": "Relationships",
+    "depression": "Depression",
+    "stress": "Stress",
+    "selfEsteem": "Self-Esteem"
+  },
+  "personalities": {
+    "supportive": "Supportive",
+    "practical": "Practical",
+    "analytical": "Analytical",
+    "mentor": "Mentor",
+    "coach": "Coach",
+    "mediator": "Mediator"
+  },
+  "settingsModal": {
+    "title": "Chat Settings",
+    "topicLabel": "Conversation Topic:",
+    "topicPlaceholder": "Select a topic",
+    "personalityLabel": "Assistant Personality:",
+    "personalityPlaceholder": "Select a personality",
+    "responseLengthLabel": "Response Length:",
+    "lengthShort": "Short",
+    "lengthMedium": "Medium",
+    "lengthLong": "Long",
+    "assistantGenderLabel": "Assistant Gender:",
+    "genderMale": "Male",
+    "genderFemale": "Female",
+    "assistantNameLabel": "Assistant Name (optional):",
+    "saveHistoryLabel": "Save chat history",
+    "resetButton": "Reset Settings",
+    "closeButton": "Close",
+    "saveButton": "Save Settings",
+    "resetMessageConsole": "Chat settings have been reset to default."
+  },
+  "dateSeparators": {
+    "today": "Today",
+    "yesterday": "Yesterday"
+  },
+  "sidebar": {
+    "profile": "Profile",
+    "analysis": "Analysis",
+    "achievements": "Achievements",
+    "settings": "Settings"
+  },
+  "chatInputPlaceholder": "Type a message..."
+}

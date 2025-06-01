@@ -1,0 +1,78 @@
+{
+  "pageTitle": "Chat | AI Psycholog",
+  "pageDescription": "Chatujte s AI psychologem a získejte podporu kdykoliv potřebujete.",
+  "loadingAuth": "Načítání autentizace...",
+  "pleaseLogIn": "Pro přístup k chatu se prosím přihlaste.",
+  "systemPrompt": {
+    "default": "Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.",
+    "en": "You are an English speaking psychologist. Respond calmly, empathetically, and never diagnose.",
+    "uk": "Ти україномовний психолог. Відповідай спокійно, емпатично і ніколи не став діагноз."
+  },
+  "userProfile": {
+    "defaultName": "Uživatel"
+  },
+  "errors": {
+    "profileLoadFailedConsole": "Nepodařilo se načíst profil uživatele:",
+    "profileLoadErrorConsole": "Chyba při načítání profilu uživatele:",
+    "chatHistoryLoadFailedConsole": "Nepodařilo se načíst historii chatu:",
+    "chatHistoryLoadErrorConsole": "Chyba při načítání historie chatu:",
+    "userInsightsLoadErrorConsole": "Chyba při načítání user insights:",
+    "userInsightsLoadErrorConsoleNoHistory": "Chyba při načítání user insights (no chat history):",
+    "ttsVoiceNotFound": "Hlas pro {{lang}} nebyl nalezen.",
+    "apiResponseError": "Omlouvám se, nastala chyba.",
+    "apiCallFailedConsole": "Chyba při volání API /api/chat:",
+    "apiCommunicationError": "Omlouvám se, nastala chyba při komunikaci se serverem. Zkuste to prosím znovu za chvíli."
+  },
+  "proactiveMessages": {
+    "welcomeBack": "Vítejte zpět! Zdá se, že jsme spolu chvíli nemluvili. Chtěl/a byste navázat na naši poslední konverzaci, nebo se dnes zaměříme na něco nového?",
+    "moodSuggestion": "Všiml/a jsem si, že jste v poslední době v deníku zaznamenal/a náročnější pocity. Chtěl/a byste si o tom promluvit?",
+    "stressExerciseSuggestion": "Zdá se, že téma stresu se objevuje ve vašich konverzacích. Měl/a byste zájem o krátké cvičení na uvolnění stresu?",
+    "initialMoodSuggestion": "Vítejte! Všiml/a jsem si, že jste v poslední době v deníku zaznamenal/a náročnější pocity. Chtěl/a byste si o tom promluvit?"
+  },
+  "topics": {
+    "anxiety": "Úzkost",
+    "relationships": "Vztahy",
+    "depression": "Deprese",
+    "stress": "Stres",
+    "selfEsteem": "Sebevědomí"
+  },
+  "personalities": {
+    "supportive": "Podpůrná",
+    "practical": "Praktická",
+    "analytical": "Analytická",
+    "mentor": "Mentor",
+    "coach": "Kouč",
+    "mediator": "Mediátor"
+  },
+  "settingsModal": {
+    "title": "Nastavení Chatu",
+    "topicLabel": "Téma konverzace:",
+    "topicPlaceholder": "Vyberte téma",
+    "personalityLabel": "Osobnost asistenta:",
+    "personalityPlaceholder": "Vyberte osobnost",
+    "responseLengthLabel": "Délka odpovědí:",
+    "lengthShort": "Krátké",
+    "lengthMedium": "Střední",
+    "lengthLong": "Dlouhé",
+    "assistantGenderLabel": "Pohlaví asistenta:",
+    "genderMale": "Muž",
+    "genderFemale": "Žena",
+    "assistantNameLabel": "Jméno asistenta (nepovinné):",
+    "saveHistoryLabel": "Ukládat historii chatu",
+    "resetButton": "Resetovat nastavení",
+    "closeButton": "Zavřít",
+    "saveButton": "Uložit nastavení",
+    "resetMessageConsole": "Nastavení chatu resetována na výchozí hodnoty."
+  },
+  "dateSeparators": {
+    "today": "Dnes",
+    "yesterday": "Včera"
+  },
+  "sidebar": {
+    "profile": "Profil",
+    "analysis": "Analýza",
+    "achievements": "Úspěchy",
+    "settings": "Nastavení"
+  },
+  "chatInputPlaceholder": "Napište zprávu..."
+}
