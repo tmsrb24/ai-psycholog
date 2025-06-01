@@ -20,11 +20,11 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [preferredUILanguage, setPreferredUILanguage] = useState(router.locale || 'cs');
+  // const [preferredUILanguage, setPreferredUILanguage] = useState(router.locale || 'cs'); // Dočasně odstraněno
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
-  const [isUpdatingLanguage, setIsUpdatingLanguage] = useState(false);
+  // const [isUpdatingLanguage, setIsUpdatingLanguage] = useState(false); // Dočasně odstraněno
   const [message, setMessage] = useState({ type: '', text: '' });
-  const { i18n } = useTranslation(); // Pro changeLanguage
+  // const { i18n } = useTranslation(); // Dočasně odstraněno, pokud se nepoužívá jinde
 
   useEffect(() => {
     if (!loading && !session) {
@@ -36,21 +36,15 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
     if (session?.user) {
       setName(session.user.name || '');
       setEmail(session.user.email || '');
-      // Předpokládáme, že preference jazyka je uložena v session.user.preferences.uiLanguage
-      // Toto bude potřeba implementovat na backendu a v next-auth session callbacku
-      const userPreferredLang = (session.user as any)?.preferences?.uiLanguage;
-      if (userPreferredLang && router.locales?.includes(userPreferredLang)) {
-        setPreferredUILanguage(userPreferredLang);
-        if (router.locale !== userPreferredLang) {
-          // Pokud aktuální locale neodpovídá uložené preferenci, změníme ho
-          // Toto by se mělo ideálně dít na úrovni _app.tsx při načtení session
-          // router.push(router.pathname, router.asPath, { locale: userPreferredLang });
-        }
-      } else {
-        setPreferredUILanguage(router.locale || 'cs');
-      }
+      // Logika pro nastavení preferredUILanguage dočasně odstraněna
+      // const userPreferredLang = (session.user as any)?.preferences?.uiLanguage;
+      // if (userPreferredLang && router.locales?.includes(userPreferredLang)) {
+      //   setPreferredUILanguage(userPreferredLang);
+      // } else {
+      //   setPreferredUILanguage(router.locale || 'cs');
+      // }
     }
-  }, [session, router.locale, router.locales, router.pathname, router.asPath]);
+  }, [session]); // Odebrány závislosti na router.locale atd. související s jazykem
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,10 +52,10 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
     setMessage({ type: '', text: '' });
 
     try {
-      const response = await fetch('/api/user/update-profile', {
-        method: 'POST',
+      const response = await fetch('/api/user/profile', { // Endpoint je /api/user/profile
+        method: 'PUT', // Změna na PUT
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email }), // Pouze jméno a email
+        body: JSON.stringify({ name, email }), 
       });
       const data = await response.json();
       if (response.ok) {
@@ -76,34 +70,32 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
     }
   };
   
-  const handleLanguageChange = async (newLang: string) => {
-    setPreferredUILanguage(newLang);
-    setIsUpdatingLanguage(true);
-    setMessage({ type: '', text: '' });
-    try {
-      const response = await fetch('/api/user/update-profile', { // Používáme stejný endpoint
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preferences: { uiLanguage: newLang } }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setMessage({ type: 'success', text: t('messages.languageUpdateSuccess') });
-        // Změnit jazyk UI
-        i18n.changeLanguage(newLang);
-        router.push(router.pathname, router.asPath, { locale: newLang });
-      } else {
-        setMessage({ type: 'error', text: data.message || t('messages.languageUpdateError') });
-        // Vrátit dropdown na původní hodnotu, pokud uložení selhalo
-        setPreferredUILanguage(router.locale || 'cs');
-      }
-    } catch (error) {
-      setMessage({ type: 'error', text: t('messages.serverError') });
-      setPreferredUILanguage(router.locale || 'cs');
-    } finally {
-      setIsUpdatingLanguage(false);
-    }
-  };
+  // const handleLanguageChange = async (newLang: string) => { // Dočasně odstraněno
+  //   setPreferredUILanguage(newLang);
+  //   setIsUpdatingLanguage(true);
+  //   setMessage({ type: '', text: '' });
+  //   try {
+  //     const response = await fetch('/api/user/profile', { 
+  //       method: 'PUT', 
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({ preferences: { uiLanguage: newLang } }),
+  //     });
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       setMessage({ type: 'success', text: t('messages.languageUpdateSuccess') });
+  //       i18n.changeLanguage(newLang);
+  //       router.push(router.pathname, router.asPath, { locale: newLang });
+  //     } else {
+  //       setMessage({ type: 'error', text: data.message || t('messages.languageUpdateError') });
+  //       setPreferredUILanguage(router.locale || 'cs');
+  //     }
+  //   } catch (error) {
+  //     setMessage({ type: 'error', text: t('messages.serverError') });
+  //     setPreferredUILanguage(router.locale || 'cs');
+  //   } finally {
+  //     setIsUpdatingLanguage(false);
+  //   }
+  // };
 
 
   if (loading || !session) { 
@@ -250,11 +242,11 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
           </div>
         </div>
 
-        {/* Nastavení Section */}
+        {/* Nastavení Section - DOČASNĚ ODSTRANĚNO
         <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
           <div className="p-6 md:p-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-              <FaCog className="mr-3 text-blue-500" /> {/* Ikona pro nastavení */}
+              <FaCog className="mr-3 text-blue-500" />
               {t('settings.title', 'Nastavení')}
             </h2>
             <div className="space-y-4">
@@ -281,6 +273,7 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
             </div>
           </div>
         </div>
+        */}
 
         {/* Bezpečnost a správa účtu Section */}
         <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
