@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const { i18n: i18nConfig } = require('./next-i18next.config.js');
-const runtimeCaching = require("next-pwa/cache");
+const { cache: runtimeCaching } = require("next-pwa"); // Upravený import
 
 const withPWA = require('next-pwa')({
   dest: 'public',
