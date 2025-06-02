@@ -7,9 +7,9 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'], // Nastavení Inter jako výchozího sans-serif fontu
-      },
+      // fontFamily: { // Odstraněno, řeší next/font
+      //   sans: ['Inter', 'sans-serif'], 
+      // },
       backgroundImage: {
         'main-gradient-light': 'linear-gradient(135deg, #E0F2FE 0%, #A5F3FC 50%, #67E8F9 100%)', 
         'main-gradient-dark': 'linear-gradient(135deg, #082f49 0%, #0C4A6E 50%, #0E7490 100%)', 

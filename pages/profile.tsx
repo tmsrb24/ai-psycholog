@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
-import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog } from 'react-icons/fa'; // Přidána FaCog
+import Image from 'next/image'; // Přidán import Next Image
+import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog } from 'react-icons/fa';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'; // Změna na GetServerSideProps
@@ -143,10 +144,13 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
               <div className="mb-6 md:mb-0 md:mr-8 text-center">
                 <div className="relative w-32 h-32 mx-auto">
                   {session.user?.image ? (
-                    <img 
+                    <Image 
                       src={session.user.image} 
                       alt={session.user.name || t('personalInfo.avatarAlt', 'Profilový obrázek')} 
-                      className="h-32 w-32 rounded-full object-cover shadow-md"
+                      width={128} // w-32
+                      height={128} // h-32
+                      className="rounded-full object-cover shadow-md"
+                      priority 
                     />
                   ) : (
                     <div className="h-32 w-32 rounded-full bg-blue-500 flex items-center justify-center text-white text-5xl shadow-md">
