@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "cz.psychollog.www.twa",
+    "sha256_cert_fingerprints": ["AE:C8:1E:64:49:7F:80:F0:04:70:09:94:25:CA:77:30:41:76:B6:94:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX:XX"]
+  }
+}]
