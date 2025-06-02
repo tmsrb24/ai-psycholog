@@ -30,22 +30,6 @@
       "purpose": "maskable"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/screenshots/screenshot1.png",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "platform": "narrow",
-      "label": "Ukázka chatu s AI Psychologem"
-    },
-    {
-      "src": "/screenshots/screenshot2.png",
-      "sizes": "1080x1920",
-      "type": "image/png",
-      "platform": "narrow",
-      "label": "Ukázka deníkových zápisů"
-    }
-  ],
   "categories": [
     "health",
     "lifestyle",
