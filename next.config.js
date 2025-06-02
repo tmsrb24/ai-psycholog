@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
-const { i18n: i18nConfig } = require('./next-i18next.config.js'); // Přejmenováno, aby se nepletlo s i18n klíčem
+const { i18n: i18nConfig } = require('./next-i18next.config.js');
+const runtimeCaching = require("next-pwa/cache");
+
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development', // Vypne PWA ve vývojovém prostředí
+  runtimeCaching,
+  buildExcludes: [/middleware-manifest.json$/], // Vyloučení souboru, který může způsobovat problémy
+});
 
 const nextConfig = {
   reactStrictMode: true,
@@ -69,7 +79,8 @@ const nextConfig = {
 // Import Sentry webpack plugin
 const { withSentryConfig } = require("@sentry/nextjs");
 
-module.exports = withSentryConfig(
+// Obalení konfigurace nejprve withPWA, pak withSentryConfig
+module.exports = withPWA(withSentryConfig(
   nextConfig,
   {
     // For all available options, see:
@@ -95,4 +106,4 @@ module.exports = withSentryConfig(
     // https://docs.sentry.io/ zowelplatforms/javascript/guides/nextjs/configuration/ Optionen/ #automatic-instrumentation-of-vercel-cron-monitors
     automaticVercelMonitors: true,
   }
-);
+)); // Přidána chybějící uzavírací závorka pro withPWA

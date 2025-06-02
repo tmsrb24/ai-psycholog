@@ -4,13 +4,12 @@ import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from '../components/ThemeProvider';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { appWithTranslation } from 'next-i18next'; // Odebrán useTranslation, pokud se nepoužívá zde
+import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-// import { useEffect } from 'react'; // Odebrán useEffect, pokud se nepoužívá zde
-// import { useSession } from 'next-auth/react'; // Odebrán useSession, pokud se nepoužívá zde
-import { Inter } from 'next/font/google'; // Přidán import Inter
+import Head from 'next/head'; // Přidán import Head
+import { Inter } from 'next/font/google';
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ['latin', 'latin-ext'], // Přidána podpora pro latinku-rozšířenou (české znaky)
   display: 'swap', // Zajišťuje fallback font, dokud se Inter nenačte
 });
@@ -37,7 +36,11 @@ function MyApp({ Component, pageProps: { session: initialSession, ...pageProps }
   return (
     <SessionProvider session={initialSession}>
       <ThemeProvider>
-        <main className={inter.className}> {/* Aplikace třídy fontu na hlavní kontejner */}
+        <Head>
+          <link rel="manifest" href="/manifest.json" />
+          <meta name="theme-color" content="#2563EB" /> {/* Může být také v manifestu, ale zde pro jistotu */}
+        </Head>
+        <main className={inter.className}>
           <Component {...pageProps} key={router.asPath} />
         </main>
         <Analytics />
