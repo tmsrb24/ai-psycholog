@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image'; // Added Image import
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
-import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle, FaGlobe } from 'react-icons/fa'; // Změna FaLanguage na FaGlobe
+import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle, FaGlobe } from 'react-icons/fa';
 import { useTheme } from './ThemeProvider';
 import { useTranslation } from 'next-i18next';
 
@@ -10,13 +11,13 @@ const Navbar: React.FC = () => {
   const { t, i18n } = useTranslation('common');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false); // Stav pro jazykové menu
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const { theme } = useTheme();
   const router = useRouter();
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const profileMenuRef = useRef<HTMLDivElement>(null);
-  const langMenuRef = useRef<HTMLDivElement>(null); // Ref pro jazykové menu
+  const langMenuRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -31,10 +32,9 @@ const Navbar: React.FC = () => {
   };
 
   const handleSignOut = async () => {
-    console.log("Attempting to sign out..."); // Debug log
+    console.log("Attempting to sign out...");
     try {
-      await signOut(); // Výchozí chování s přesměrováním
-      // router.push('/'); // Toto by nemělo být potřeba, signOut by měl přesměrovat
+      await signOut(); 
       console.log("Sign out successful (or at least initiated).");
     } catch (error) {
       console.error("Error during sign out:", error);
@@ -45,7 +45,6 @@ const Navbar: React.FC = () => {
     return router.pathname === path;
   };
 
-  // Close profile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
@@ -65,7 +64,7 @@ const Navbar: React.FC = () => {
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
     router.push(router.pathname, router.asPath, { locale: lng });
-    setIsLangMenuOpen(false); // Zavřít menu po výběru
+    setIsLangMenuOpen(false);
   };
 
   const languageFlags: { [key: string]: string } = {
@@ -75,16 +74,19 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    // Změna pozadí Navbaru: méně průhledné, pevnější barvy pro lepší kontrast a vzhled
     <nav className="bg-white/90 dark:bg-slate-900/90 shadow-lg sticky top-0 z-50 backdrop-blur-md"> 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center" onClick={closeMenu}>
-              {/* Logo zůstává s vlastním gradientem, aby bylo viditelné */}
-              <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-2 px-3 rounded-lg">
-                <span className="font-bold text-xl">Psychollog.cz</span>
-              </div>
+            <Link href="/" className="flex-shrink-0 flex items-center space-x-2" onClick={closeMenu}>
+              <Image
+                src="/images/hero-avatar.png" // Using the new hero avatar
+                alt={t('appName', 'Psychollog Logo')}
+                width={32} // Adjusted size for navbar
+                height={32}
+                className="h-8 w-auto" // Tailwind classes for size
+              />
+              <span className="font-bold text-xl text-gray-800 dark:text-white">Psychollog</span> {/* Removed .cz */}
             </Link>
           </div>
 
@@ -94,7 +96,7 @@ const Navbar: React.FC = () => {
               href="/"
               className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/')
-                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm' // Výraznější aktivní odkaz
+                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
@@ -157,7 +159,6 @@ const Navbar: React.FC = () => {
               {t('navbar.contact', 'Kontakt')}
             </Link>
             
-            {/* Authentication UI */}
             {loading ? (
               <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
             ) : session ? (
@@ -230,9 +231,6 @@ const Navbar: React.FC = () => {
               </div>
             )}
             
-            {/* Theme toggle button - ODSTRANĚNO */}
-
-            {/* Language Switcher - Desktop */}
             <div className="relative ml-3" ref={langMenuRef}>
               <button
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
@@ -267,11 +265,7 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Mobile menu button */}
           <div className="flex items-center md:hidden">
-            {/* Theme toggle button - ODSTRANĚNO */}
-            
-            {/* Authentication UI for mobile */}
             {!loading && session && (
               <button
                 onClick={toggleProfileMenu}
@@ -289,7 +283,6 @@ const Navbar: React.FC = () => {
               </button>
             )}
             
-            {/* Menu toggle button */}
             <button
               onClick={toggleMenu}
               className="p-2 rounded-md text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
@@ -301,10 +294,9 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-800 shadow-lg"> {/* Upravena barva pozadí */}
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-800 shadow-lg">
             <Link 
               href="/" 
               className={`block px-3 py-2 rounded-md text-base ${
@@ -372,7 +364,6 @@ const Navbar: React.FC = () => {
               {t('navbar.contact', 'Kontakt')}
             </Link>
             
-            {/* Authentication links for mobile */}
             {!loading && !session && (
               <>
                 <Link 
@@ -392,7 +383,6 @@ const Navbar: React.FC = () => {
               </>
             )}
             
-            {/* User profile for mobile */}
             {!loading && session && (
               <>
                 <div className="px-3 py-2 border-t border-gray-200 dark:border-gray-700">
@@ -433,7 +423,6 @@ const Navbar: React.FC = () => {
                 </button>
               </>
             )}
-            {/* Language Switcher - Mobile */}
             <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-700">
               <div className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 px-1">{t('navbar.language', 'Jazyk')}:</div>
               <div className="flex flex-col space-y-1">
@@ -460,7 +449,6 @@ const Navbar: React.FC = () => {
         </div>
       )}
       
-      {/* Mobile profile menu */}
       {isProfileMenuOpen && !isMenuOpen && (
         <div className="md:hidden absolute right-0 left-0 z-10">
           <div className="px-2 pt-2 pb-3 mx-4 mt-2 rounded-md bg-white dark:bg-gray-800 shadow-lg">
