@@ -1,9 +1,9 @@
-import React, { ReactNode, useState } from 'react'; // Přidán useState
+import React, { ReactNode, useState } from 'react';
 import Head from 'next/head';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import WidgetChatButton from './WidgetChatButton'; // Přidán import
-import WidgetChatWindow from './WidgetChatWindow'; // Přidán import
+import WidgetChatButton from './WidgetChatButton';
+import WidgetChatWindow from './WidgetChatWindow';
 
 interface LayoutProps {
   children: ReactNode;
@@ -28,7 +28,16 @@ const Layout: React.FC<LayoutProps> = ({
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        
+        {/* Favicon links */}
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#2563EB" /> {/* Tailwind blue-600 */}
+        <link rel="icon" href="/favicon.ico" /> {/* Fallback favicon */}
       </Head>
       
       <Navbar />
