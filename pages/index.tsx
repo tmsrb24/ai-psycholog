@@ -150,7 +150,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 <div className="absolute inset-0 bg-blue-400 dark:bg-blue-700 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0s' }}></div>
                 <div className="absolute inset-3 sm:inset-5 md:inset-6 bg-blue-300 dark:bg-blue-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
                 <div className="absolute inset-6 sm:inset-10 md:inset-12 bg-blue-200 dark:bg-blue-500 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.6s' }}></div>
-                <div className="absolute inset-0 flex items-center justify-center z-10 p-2 sm:p-3 md:p-4">
+                <div className="absolute inset-0 flex items-center justify-center z-10 p-8 sm:p-10 md:p-12"> {/* Increased padding */}
                   <Image 
                     src="/images/hero-avatar.png" 
                     alt="AI Psycholog Avatar" 
@@ -161,22 +161,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     sizes="(max-width: 640px) 256px, (max-width: 768px) 320px, 416px"
                   />
                 </div>
-                <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
-                  <svg 
-                    viewBox="0 0 100 100" 
-                    className="w-full h-full opacity-75 animate-pulse" 
-                    style={{ animationDelay: '0.45s' }}
-                  >
-                    <path 
-                      d="M38 62 L50 72 L62 62" 
-                      stroke="rgba(255, 255, 255, 0.8)" 
-                      strokeWidth="1.5" 
-                      fill="none"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </div>
+                {/* SVG Overlay Removed */}
               </div>
             </div>
           </div>
@@ -487,3 +472,90 @@ export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => ({
 });
 
 export default HomePage;
+
+</final_file_content>
+
+IMPORTANT: For any future changes to this file, use the final_file_content shown above as your reference. This content reflects the current state of the file, including any auto-formatting (e.g., if you used single quotes but the formatter converted them to double quotes). Always base your SEARCH/REPLACE operations on this final version to ensure accuracy.
+
+<environment_details>
+# VSCode Visible Files
+ai-psycholog/pages/index.tsx
+
+# VSCode Open Tabs
+ai-psycholog/pages/admin/users.tsx
+ai-psycholog/components/UserProfile.tsx
+ai-psycholog/lib/supabaseClient.ts
+ai-psycholog/components/Layout.tsx
+ai-psycholog/components/ThemeProvider.tsx
+ai-psycholog/components/ChatMessage.tsx
+ai-psycholog/types.ts
+ai-psycholog/pages/api/diary/index.ts
+ai-psycholog/pages/api/user-insights.ts
+ai-psycholog/pages/api/cron/process-user-insights.ts
+ai-psycholog/vercel.json
+ai-psycholog/next-auth.d.ts
+ai-psycholog/public/locales/cs/homepage.json
+ai-psycholog/components/ChatSettingsModal.tsx
+ai-psycholog/styles/globals.css
+ai-psycholog/public/locales/en/homepage.json
+ai-psycholog/public/locales/uk/homepage.json
+ai-psycholog/components/Footer.tsx
+ai-psycholog/pages/gdpr.tsx
+ai-psycholog/public/locales/cs/gdpr.json
+ai-psycholog/public/locales/en/gdpr.json
+ai-psycholog/public/locales/uk/gdpr.json
+ai-psycholog/pages/pricing.tsx
+ai-psycholog/public/locales/cs/pricing.json
+ai-psycholog/public/locales/en/pricing.json
+ai-psycholog/public/locales/uk/pricing.json
+ai-psycholog/pages/kontakt.tsx
+ai-psycholog/public/locales/cs/contact.json
+ai-psycholog/public/locales/en/contact.json
+ai-psycholog/public/locales/uk/contact.json
+ai-psycholog/next-i18next.config.js
+ai-psycholog/pages/diary.tsx
+ai-psycholog/public/locales/cs/diary.json
+ai-psycholog/public/locales/en/diary.json
+ai-psycholog/public/locales/uk/diary.json
+ai-psycholog/pages/chat.tsx
+ai-psycholog/public/locales/cs/chat.json
+ai-psycholog/public/locales/en/chat.json
+ai-psycholog/public/locales/uk/chat.json
+ai-psycholog/components/Navbar.tsx
+ai-psycholog/public/locales/cs/profile.json
+ai-psycholog/public/locales/en/profile.json
+ai-psycholog/public/locales/uk/profile.json
+ai-psycholog/pages/api/user/profile.ts
+ai-psycholog/pages/api/auth/[...nextauth].ts
+ai-psycholog/pages/profile.tsx
+ai-psycholog/tailwind.config.js
+ai-psycholog/pages/_app.tsx
+ai-psycholog/next.config.js
+ai-psycholog/public/manifest.json
+ai-psycholog/public/.well-known/assetlinks.json
+ai-psycholog/pages/auth/register.tsx
+ai-psycholog/pages/auth/login.tsx
+ai-psycholog/components/WidgetChatButton.tsx
+ai-psycholog/components/WidgetChatWindow.tsx
+ai-psycholog/public/locales/cs/common.json
+ai-psycholog/public/locales/en/common.json
+ai-psycholog/public/locales/uk/common.json
+ai-psycholog/lib/responseValidation.ts
+ai-psycholog/pages/api/widget-chat.ts
+ai-psycholog/pages/api/chat.ts
+ai-psycholog/pages/index.tsx
+ai-psycholog/pages/api/admin/users.ts
+ai-psycholog/lib/emailService.ts
+ai-psycholog/pages/api/contact.ts
+ai-psycholog/postcss.config.js
+ai-psycholog/components/CrisisNotice.tsx
+
+# Current Time
+6/5/2025, 6:59:57 PM (Europe/Prague, UTC+2:00)
+
+# Context Window Usage
+831,569 / 1,048.576K tokens used (79%)
+
+# Current Mode
+ACT MODE
+</environment_details>
