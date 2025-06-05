@@ -49,6 +49,11 @@
     "openHelp": "Otevřít Nápovědu",
     "closeHelp": "Zavřít Nápovědu",
     "askUs": "Zeptejte se",
-    "close": "Zavřít"
+    "close": "Zavřít",
+    "title": "Potřebujete poradit?",
+    "welcomeMessage": "Dobrý den! Jak vám mohu pomoci s informacemi o webu Psychollog.cz?",
+    "inputPlaceholder": "Napište svůj dotaz...",
+    "apiError": "Omlouvám se, došlo k chybě při zpracování vašeho dotazu.",
+    "genericError": "Omlouvám se, došlo k chybě."
   }
 }

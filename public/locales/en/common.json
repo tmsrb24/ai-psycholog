@@ -49,6 +49,11 @@
     "openHelp": "Open Help",
     "closeHelp": "Close Help",
     "askUs": "Ask us",
-    "close": "Close"
+    "close": "Close",
+    "title": "Need advice?",
+    "welcomeMessage": "Hello! How can I help you with information about the Psychollog.cz website?",
+    "inputPlaceholder": "Write your question...",
+    "apiError": "Sorry, an error occurred while processing your request.",
+    "genericError": "Sorry, an error occurred."
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'next-i18next';
 import { FaPaperPlane, FaSpinner } from 'react-icons/fa';
-import { Message } from '../types'; // Předpokládáme existenci typu Message
+import { Message } from '../types'; 
 
 interface WidgetChatWindowProps {
   isOpen: boolean;
@@ -8,6 +9,7 @@ interface WidgetChatWindowProps {
 }
 
 const WidgetChatWindow: React.FC<WidgetChatWindowProps> = ({ isOpen, onClose }) => {
+  const { t } = useTranslation('common');
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -20,13 +22,16 @@ const WidgetChatWindow: React.FC<WidgetChatWindowProps> = ({ isOpen, onClose }) 
   useEffect(scrollToBottom, [messages]);
 
   useEffect(() => {
-    // Přivítací zpráva při prvním otevření (pokud je okno otevřené a nejsou žádné zprávy)
     if (isOpen && messages.length === 0) {
       setMessages([
-        { role: 'assistant', content: 'Dobrý den! Jak vám mohu pomoci s informacemi o webu Psychollog.cz?', timestamp: new Date() }
+        { 
+          role: 'assistant', 
+          content: t('widgetChat.welcomeMessage', 'Dobrý den! Jak vám mohu pomoci s informacemi o webu Psychollog.cz?'), 
+          timestamp: new Date() 
+        }
       ]);
     }
-  }, [isOpen]);
+  }, [isOpen, messages.length, t]); // Added t to dependency array
 
 
   const handleSendMessage = async (e?: React.FormEvent<HTMLFormElement>) => {
@@ -42,7 +47,7 @@ const WidgetChatWindow: React.FC<WidgetChatWindowProps> = ({ isOpen, onClose }) 
       const response = await fetch('/api/widget-chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: [...messages, userMessage] }), // Posíláme historii pro kontext
+        body: JSON.stringify({ messages: [...messages, userMessage] }),
       });
       
       const data = await response.json();
@@ -52,12 +57,20 @@ const WidgetChatWindow: React.FC<WidgetChatWindowProps> = ({ isOpen, onClose }) 
         setMessages(prev => [...prev, assistantMessage]);
       } else {
         console.error("Error from /api/widget-chat:", data.error || 'Neznámá chyba API');
-        const errorMessage: Message = { role: 'assistant', content: data.content || 'Omlouvám se, došlo k chybě při zpracování vašeho dotazu.', timestamp: new Date() };
+        const errorMessage: Message = { 
+          role: 'assistant', 
+          content: data.content || t('widgetChat.apiError', 'Omlouvám se, došlo k chybě při zpracování vašeho dotazu.'), 
+          timestamp: new Date() 
+        };
         setMessages(prev => [...prev, errorMessage]);
       }
     } catch (error) {
       console.error("Error sending widget message to API:", error);
-      const errorMessage: Message = { role: 'assistant', content: 'Omlouvám se, došlo k chybě.', timestamp: new Date() };
+      const errorMessage: Message = { 
+        role: 'assistant', 
+        content: t('widgetChat.genericError', 'Omlouvám se, došlo k chybě.'), 
+        timestamp: new Date() 
+      };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
@@ -69,7 +82,7 @@ const WidgetChatWindow: React.FC<WidgetChatWindowProps> = ({ isOpen, onClose }) 
   return (
     <div className="fixed bottom-24 right-6 w-80 sm:w-96 h-[70vh] max-h-[500px] bg-white dark:bg-gray-800 rounded-lg shadow-xl flex flex-col z-40 border border-gray-300 dark:border-gray-700">
       <header className="bg-blue-600 text-white p-3 flex justify-between items-center rounded-t-lg">
-        <h3 className="font-semibold text-lg">Potřebujete poradit?</h3>
+        <h3 className="font-semibold text-lg">{t('widgetChat.title', 'Potřebujete poradit?')}</h3>
         {/* Tlačítko pro zavření je nyní v WidgetChatButton */}
       </header>
 
@@ -84,9 +97,6 @@ const WidgetChatWindow: React.FC<WidgetChatWindowProps> = ({ isOpen, onClose }) 
               }`}
             >
               <p className="text-sm">{msg.content}</p>
-              {/* <span className="text-xs opacity-70 block mt-1 text-right">
-                {msg.timestamp?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </span> */}
             </div>
           </div>
         ))}
@@ -99,7 +109,7 @@ const WidgetChatWindow: React.FC<WidgetChatWindowProps> = ({ isOpen, onClose }) 
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Napište svůj dotaz..."
+            placeholder={t('widgetChat.inputPlaceholder', 'Napište svůj dotaz...')}
             className="flex-grow p-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
             disabled={isLoading}
           />
