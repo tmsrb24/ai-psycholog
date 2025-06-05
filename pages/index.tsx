@@ -156,7 +156,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     alt="AI Psycholog Avatar" 
                     width={280} 
                     height={280} 
-                    className="object-contain"
+                    className="object-contain w-full h-full" 
                     priority 
                     sizes="(max-width: 640px) 256px, (max-width: 768px) 320px, 416px"
                   />
