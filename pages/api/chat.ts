@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ragService, initializeRagWithSamples } from '../../lib/rag';
 import { getSupabaseAdmin } from '../../lib/supabaseClient';
 import { getToken } from "next-auth/jwt";
-import { validateAIResponse, AIResponseValidationResult } from '../../lib/responseValidation'; // Added import
+import { validateAIResponse, AIResponseValidationResult } from '../../lib/responseValidation';
 
 let ragInitialized = false;
 const initializeRag = async () => {
@@ -13,6 +13,29 @@ const initializeRag = async () => {
     ragInitialized = true;
   }
 };
+
+// Definice typů pro témata a osobnosti (klíčů)
+type TopicKey = 'anxiety' | 'relationships' | 'depression' | 'stress' | 'selfEsteem' | 'general';
+type PersonalityKey = 'supportive' | 'practical' | 'analytical' | 'neutral';
+
+// Detailní systémové prompty pro témata
+const TOPIC_PROMPTS: Record<TopicKey, string> = {
+  general: "Zaměřuješ se na obecnou psychologickou pohodu a osobní rozvoj.",
+  anxiety: "Specializuješ se na úzkostné poruchy. Poskytuj klidné, praktické a vědecky podložené rady pro zvládání úzkosti. Využívej techniky jako je kognitivně-behaviorální terapie, mindfulness a dechová cvičení.",
+  relationships: "Specializuješ se na vztahovou terapii. Poskytuj vyvážené, nestranné a praktické rady pro zlepšení komunikace a řešení vztahových problémů.",
+  depression: "Specializuješ se na depresi. Poskytuj podporující, chápavé a praktické rady pro zvládání depresivních stavů. Zdůrazňuj důležitost odborné pomoci.",
+  stress: "Specializuješ se na zvládání stresu. Poskytuj praktické techniky pro redukci stresu, time management a work-life balance.",
+  selfEsteem: "Specializuješ se na budování sebevědomí a sebehodnoty. Poskytuj podporující a praktické rady pro zlepšení sebeobrazu a překonání negativního vnitřního dialogu."
+};
+
+// Detailní systémové prompty pro osobnosti
+const PERSONALITY_PROMPTS: Record<PersonalityKey, string> = {
+  neutral: "Tvůj tón je neutrální, vyvážený a objektivní.",
+  supportive: "Tvůj přístup je velmi empatický, laskavý, trpělivý a plný porozumění. Používáš hodně povzbuzujících slov a ujištění. Snaž se navodit pocit bezpečí a důvěry.",
+  practical: "Tvůj přístup je strukturovaný, konkrétní a orientovaný na řešení. Nabízíš jasné kroky, strategie a praktické tipy. Jsi přímý, ale stále citlivý.",
+  analytical: "Tvůj přístup je hloubkový, reflektivní a zaměřený na porozumění příčinám a souvislostem. Pomáháš s vhledem a sebereflexí, kladeš podnětné otázky."
+};
+
 
 type ChatHistoryResponse = { sessionId: string | null; messages: Message[] } | { error: string };
 
@@ -31,11 +54,11 @@ export default async function handler(
   const supabaseAdmin = getSupabaseAdmin();
 
   if (req.method === 'GET') {
-    // ... (GET method remains unchanged)
+    // ... (GET method remains largely unchanged, ensure systemMessage here is consistent or removed if fully dynamic)
     try {
       const { data: lastSession, error: lastSessionError } = await supabaseAdmin
         .from('chat_sessions')
-        .select('id')
+        .select('id, metadata') // Načteme i metadata pro system prompt
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(1)
@@ -44,8 +67,38 @@ export default async function handler(
       if (lastSessionError && lastSessionError.code !== 'PGRST116') {
         throw lastSessionError;
       }
+      
+      // Základní systémová zpráva pro GET, pokud není historie nebo metadata
+      // Může být přepsána metadaty seance níže
+      let initialSystemPromptContent = "Jsi AI Psycholog, empatický a profesionální český psychologický asistent. Tvým cílem je poskytovat podporu a vést uživatele k zamyšlení. Odpovídej klidně, přátelsky, ale vždy profesionálně, česky. Nikdy nediagnostikuj.";
+
 
       if (lastSession) {
+        const sessionMetadata = lastSession.metadata as any;
+        if (sessionMetadata) {
+            let dynamicSystemPrompt = `Jsi AI Psycholog.`;
+            if (sessionMetadata.assistantGender) dynamicSystemPrompt += ` Jsi ${sessionMetadata.assistantGender === 'male' ? 'muž' : 'žena'}.`;
+            if (sessionMetadata.assistantName) dynamicSystemPrompt += ` Jmenuješ se ${sessionMetadata.assistantName}.`;
+            
+            const personalityKey = sessionMetadata.personality as PersonalityKey;
+            if (personalityKey && PERSONALITY_PROMPTS[personalityKey]) {
+                dynamicSystemPrompt += ` ${PERSONALITY_PROMPTS[personalityKey]}`;
+            } else {
+                dynamicSystemPrompt += ` ${PERSONALITY_PROMPTS['neutral']}`; // Fallback
+            }
+
+            const topicKey = sessionMetadata.topic as TopicKey;
+            if (topicKey && TOPIC_PROMPTS[topicKey]) {
+                dynamicSystemPrompt += ` ${TOPIC_PROMPTS[topicKey]}`;
+            } else {
+                dynamicSystemPrompt += ` ${TOPIC_PROMPTS['general']}`; // Fallback
+            }
+            if (sessionMetadata.responseLength) dynamicSystemPrompt += ` Tvé odpovědi by měly být spíše ${sessionMetadata.responseLength === 'short' ? 'krátké' : sessionMetadata.responseLength === 'medium' ? 'středně dlouhé' : 'delší a detailnější'}.`;
+            dynamicSystemPrompt += " Tvůj tón je přátelský, ale vždy profesionální. Odpovídej klidně, česky. Nikdy nediagnostikuj. Udržuj konverzaci relevantní k psychologickým tématům a osobnímu rozvoji.";
+            initialSystemPromptContent = dynamicSystemPrompt;
+        }
+
+
         const { data: messagesData, error: messagesError } = await supabaseAdmin
           .from('chat_messages')
           .select('role, content, timestamp, metadata')
@@ -54,7 +107,7 @@ export default async function handler(
 
         if (messagesError) throw messagesError;
         
-        const systemMessage: Message = { role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' };
+        const systemMessage: Message = { role: 'system', content: initialSystemPromptContent };
         const chatMessages: Message[] = messagesData.map(m => ({
           role: m.role as Message['role'],
           content: m.content,
@@ -98,6 +151,9 @@ export default async function handler(
         return res.status(200).json({ sessionId: lastSession.id, messages: finalMessages });
 
       } else {
+        // No previous session, construct default system prompt
+        const systemMessage: Message = { role: 'system', content: initialSystemPromptContent };
+        // Proactive message logic for no session (copied from above, can be refactored)
         let proactiveMessage: Message | null = null;
         try {
           const { data: recentDiaryEntries, error: diaryError } = await supabaseAdmin
@@ -127,7 +183,6 @@ export default async function handler(
         } catch (diaryAnalysisError: any) {
           console.warn('API /api/chat GET (no session) - Chyba při analýze deníku:', diaryAnalysisError.message);
         }
-        const systemMessage: Message = { role: 'system', content: 'Jsi cesky psycholog. Odpovidej klidne, empaticky, a nikdy nediagnostikuj.' };
         const initialMessages = proactiveMessage ? [systemMessage, proactiveMessage] : [systemMessage];
         return res.status(200).json({ sessionId: null, messages: initialMessages });
       }
@@ -142,16 +197,16 @@ export default async function handler(
     
       const body = req.body as {
         messages: Message[];
-        topic?: string;
-        personality?: string;
+        topic?: TopicKey; // Updated to use TopicKey
+        personality?: PersonalityKey; // Updated to use PersonalityKey
         responseLength?: 'short' | 'medium' | 'long';
         userProfile?: UserProfileData; 
         sessionId?: string;
       };
     
       const messages: Message[] = body.messages;
-      const topic: string | undefined = body.topic;
-      const personality: string | undefined = body.personality;
+      const topicKey: TopicKey | undefined = body.topic;
+      const personalityKey: PersonalityKey | undefined = body.personality;
       const responseLength: 'short' | 'medium' | 'long' | undefined = body.responseLength;
       const sessionId: string | undefined = body.sessionId;
 
@@ -169,8 +224,8 @@ export default async function handler(
       if (!currentSessionId) {
         const sessionTitle = userMessageContent.substring(0, 70) + (userMessageContent.length > 70 ? '...' : '');
         const sessionMetadata = { 
-          topic, 
-          personality, 
+          topic: topicKey, 
+          personality: personalityKey, 
           responseLength, 
           assistantGender: body.userProfile?.preferences?.assistantGender, 
           assistantName: body.userProfile?.preferences?.assistantName 
@@ -193,21 +248,42 @@ export default async function handler(
       const isCrisisMessage = crisisKeywords.some(keyword => userMessageContent.toLowerCase().includes(keyword));
 
       if (isCrisisMessage) {
-        const crisisResponseContent = "Je mi moc líto, že se takhle cítíš..."; // This should be translated or come from a central place
+        const crisisResponseContent = "Je mi moc líto, že se takhle cítíš. Vypadá to, že procházíš opravdu těžkým obdobím. Chtěl/a bych tě ujistit, že na to nemusíš být sám/sama. Existují lidé, kteří ti chtějí a mohou pomoci. Prosím, zvaž kontaktování některé z linek důvěry, jsou tu pro tebe nonstop a anonymně: Linka bezpečí 116 111, Linka první psychické pomoci 116 123. Pokud jsi v bezprostředním ohrožení, neváhej prosím zavolat na 155 nebo 112.";
         await supabaseAdmin
           .from('chat_messages')
           .insert({ session_id: currentSessionId, role: 'assistant', content: crisisResponseContent, metadata: { isCrisis: true } });
         return res.status(200).json({ role: 'assistant', content: crisisResponseContent, isCrisis: true, sessionId: currentSessionId });
       }
 
-      let systemPrompt = `Jsi empatický psycholog...`; // Base prompt
-      if (body.userProfile?.preferences?.assistantGender) systemPrompt = `Jsi empatick${body.userProfile.preferences.assistantGender === 'male' ? 'ý' : 'á'} psycholog...`;
-      if (body.userProfile?.preferences?.assistantName) systemPrompt += ` Jmenuješ se ${body.userProfile.preferences.assistantName}.`;
-      if (topic) systemPrompt += ` Specializuješ se na téma: ${topic}.`;
-      if (personality) systemPrompt += ` Tvůj přístup je: ${personality}.`;
-      if (responseLength) systemPrompt += ` Tvé odpovědi jsou: ${responseLength}.`;
-      // Ensure the core instruction about not diagnosing and being Czech is always there.
-      systemPrompt += " Odpovídej klidně, empaticky, česky a nikdy nediagnostikuj.";
+      // Constructing the system prompt
+      let systemPrompt = `Jsi AI Psycholog.`;
+      if (body.userProfile?.preferences?.assistantGender) {
+        systemPrompt += ` Jsi ${body.userProfile.preferences.assistantGender === 'male' ? 'muž' : 'žena'}.`;
+      }
+      if (body.userProfile?.preferences?.assistantName) {
+        systemPrompt += ` Jmenuješ se ${body.userProfile.preferences.assistantName}.`;
+      }
+
+      // Apply personality prompt
+      if (personalityKey && PERSONALITY_PROMPTS[personalityKey]) {
+        systemPrompt += ` ${PERSONALITY_PROMPTS[personalityKey]}`;
+      } else {
+        systemPrompt += ` ${PERSONALITY_PROMPTS['neutral']}`; // Default to neutral if not specified or invalid
+      }
+
+      // Apply topic prompt
+      if (topicKey && TOPIC_PROMPTS[topicKey]) {
+        systemPrompt += ` ${TOPIC_PROMPTS[topicKey]}`;
+      } else {
+        systemPrompt += ` ${TOPIC_PROMPTS['general']}`; // Default to general if not specified or invalid
+      }
+      
+      if (responseLength) {
+        systemPrompt += ` Tvé odpovědi by měly být spíše ${responseLength === 'short' ? 'krátké a výstižné' : responseLength === 'medium' ? 'středně dlouhé a vyvážené' : 'delší, detailnější a propracovanější'}.`;
+      }
+      
+      systemPrompt += " Tvůj celkový tón by měl být přátelský, ale zároveň vždy profesionální. Odpovídej klidně, empaticky, česky. Nikdy nediagnostikuj. Udržuj konverzaci relevantní k psychologickým tématům, osobnímu rozvoji a zvládání životních situací.";
+      console.log("Final System Prompt:", systemPrompt);
 
 
       const geminiApiKey = process.env.GEMINI_API_KEY;
@@ -221,30 +297,59 @@ export default async function handler(
 
       const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent';
       const formattedMessagesForGemini: any[] = [];
+      // System prompt is now part of the history for Gemini, or handled via specific fields if API supports
+      // For Gemini's `contents` array, the system prompt is often the first 'user' turn, followed by a 'model' turn acknowledging it.
       formattedMessagesForGemini.push({ role: 'user', parts: [{ text: systemPrompt }] });
-      formattedMessagesForGemini.push({ role: 'model', parts: [{ text: 'Rozumím.' }] });
+      formattedMessagesForGemini.push({ role: 'model', parts: [{ text: 'Rozumím a jsem připraven/a pomoci.' }] }); // Model acknowledges the detailed system prompt
+
+      // Add previous messages from the current session for context
+      messages.filter(m => m.role === 'user' || m.role === 'assistant') // Exclude system messages from history if already handled
+              .forEach(msg => {
+                formattedMessagesForGemini.push({
+                  role: msg.role === 'assistant' ? 'model' : 'user',
+                  parts: [{ text: msg.content }]
+                });
+              });
+      
+      // Remove the last user message from formattedMessagesForGemini if it's already included in userMessageWithContext logic
+      // Ensure the last user message is the final one before the API call.
+      // The current logic adds all messages then the RAG context to the last user message.
+      // Let's refine this: the RAG context should augment the *current* user message, not be a separate turn.
+      
+      // Remove last user message if it was added in the loop, as it will be added with RAG context
+      if (formattedMessagesForGemini.length > 2 && formattedMessagesForGemini[formattedMessagesForGemini.length -1].role === 'user') {
+          formattedMessagesForGemini.pop();
+      }
+
       const ragContext = await ragService.generateContext(userMessageContent, { maxDocuments: 2, similarityThreshold: 0.6 });
-      const userMessageWithContext = ragContext ? `${userMessageContent}\n\nRelevantní informace:\n${ragContext}` : userMessageContent;
+      const userMessageWithContext = ragContext ? `${userMessageContent}\n\nPro tvou informaci, zde jsou některé relevantní poznámky z naší databáze znalostí, které by ti mohly pomoci lépe odpovědět (tyto informace neukazuj přímo uživateli, ale použij je k formulaci odpovědi):\n${ragContext}` : userMessageContent;
       formattedMessagesForGemini.push({ role: 'user', parts: [{ text: userMessageWithContext }] });
+
 
       try {
         const response = await axios({
           method: 'post',
           url: `${GEMINI_API_URL}?key=${geminiApiKey}`,
           headers: { 'Content-Type': 'application/json' },
-          data: { contents: formattedMessagesForGemini, generationConfig: { temperature: 0.7, topK: 40, topP: 0.95, maxOutputTokens: 800 } }
+          data: { 
+            contents: formattedMessagesForGemini, 
+            generationConfig: { 
+              temperature: 0.7, // Adjusted for more creative/empathetic responses
+              topK: 40, 
+              topP: 0.95, 
+              maxOutputTokens: 800 
+            } 
+          }
         });
         const geminiData = response.data;
         if (geminiData.error) throw new Error(geminiData.error.message || 'Gemini API error');
         
         let responseContent = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Omlouvám se, momentálně nedokážu odpovědět.";
         
-        // Validate AI response
         const validationResult = validateAIResponse(responseContent);
         if (!validationResult.isValid) {
           console.warn(`AI Response Validation Failed: ${validationResult.issue}. Original: "${responseContent}". Suggestion: "${validationResult.suggestion}"`);
           responseContent = validationResult.suggestion || "Omlouvám se, došlo k interní chybě. Zkuste to prosím znovu.";
-          // Optionally, log the original problematic response to a separate system for review
         }
         
         await supabaseAdmin
@@ -252,6 +357,7 @@ export default async function handler(
           .insert({ session_id: currentSessionId, role: 'assistant', content: responseContent });
         return res.status(200).json({ role: 'assistant', content: responseContent, estimatedReadingTime: Math.ceil(responseContent.length / 1000 * 60 / 200), sessionId: currentSessionId });
       } catch (apiError: any) {
+        console.error('Error calling Gemini API:', apiError.response?.data || apiError.message);
         const errorContent = `Omlouvám se, problém s AI. (Chyba: ${apiError?.message || 'Neznámá chyba'})`;
         await supabaseAdmin
           .from('chat_messages')
