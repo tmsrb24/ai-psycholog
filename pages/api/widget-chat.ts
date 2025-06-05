@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Message, ApiResponse } from '../../types'; // Použijeme existující typy
 import axios from 'axios';
+import { validateAIResponse, AIResponseValidationResult } from '../../lib/responseValidation'; // Added import
+
 // RAG a Supabase zde pravděpodobně nebudeme potřebovat, pokud to má být jednoduchý FAQ bot
 
 // Systémový prompt pro FAQ/info bota
@@ -50,7 +52,6 @@ export default async function handler(
     return res.status(500).json({ error: 'Chyba konfigurace serveru (chybí API klíč).', role: 'assistant', content: 'Omlouvám se, služba není správně nakonfigurována.' });
   }
 
-  // Sestavení zpráv pro Gemini API
   const formattedMessagesForGemini: any[] = [{ role: 'user', parts: [{ text: SYSTEM_PROMPT_WIDGET }] }];
   formattedMessagesForGemini.push({ role: 'model', parts: [{ text: 'Rozumím, jsem připraven odpovídat na otázky o webu Psychollog.cz.' }] });
   
@@ -61,7 +62,7 @@ export default async function handler(
     });
   });
   
-  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent'; // Použití Flash modelu pro rychlejší a levnější odpovědi
+  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
 
   try {
     const response = await axios({
@@ -71,12 +72,11 @@ export default async function handler(
       data: {
         contents: formattedMessagesForGemini,
         generationConfig: {
-          temperature: 0.5, // Nižší teplota pro faktické odpovědi
+          temperature: 0.5, 
           topK: 30,
           topP: 0.90,
-          maxOutputTokens: 200, // Kratší odpovědi pro widget
+          maxOutputTokens: 200, 
         },
-        // safetySettings: [ ... ] // Možnost přidat safety settings
       },
     });
 
@@ -85,7 +85,14 @@ export default async function handler(
       throw new Error(geminiData.error.message || 'Gemini API error');
     }
     
-    const responseContent = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Omlouvám se, na tuto otázku momentálně nedokážu odpovědět.";
+    let responseContent = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Omlouvám se, na tuto otázku momentálně nedokážu odpovědět.";
+
+    // Validate AI response
+    const validationResult = validateAIResponse(responseContent);
+    if (!validationResult.isValid) {
+      console.warn(`AI Response Validation Failed (widget-chat): ${validationResult.issue}. Original: "${responseContent}". Suggestion: "${validationResult.suggestion}"`);
+      responseContent = validationResult.suggestion || "Omlouvám se, došlo k interní chybě. Zkuste to prosím znovu.";
+    }
 
     return res.status(200).json({
       role: 'assistant',

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ragService, initializeRagWithSamples } from '../../lib/rag';
 import { getSupabaseAdmin } from '../../lib/supabaseClient';
 import { getToken } from "next-auth/jwt";
+import { validateAIResponse, AIResponseValidationResult } from '../../lib/responseValidation'; // Added import
 
 let ragInitialized = false;
 const initializeRag = async () => {
@@ -13,7 +14,6 @@ const initializeRag = async () => {
   }
 };
 
-// Definice typu pro odpověď GET požadavku
 type ChatHistoryResponse = { sessionId: string | null; messages: Message[] } | { error: string };
 
 export default async function handler(
@@ -31,6 +31,7 @@ export default async function handler(
   const supabaseAdmin = getSupabaseAdmin();
 
   if (req.method === 'GET') {
+    // ... (GET method remains unchanged)
     try {
       const { data: lastSession, error: lastSessionError } = await supabaseAdmin
         .from('chat_sessions')
@@ -62,24 +63,22 @@ export default async function handler(
         }));
 
         let proactiveMessage: Message | null = null;
-        // Logika pro proaktivní zprávu na základě nálad z deníku
         try {
           const { data: recentDiaryEntries, error: diaryError } = await supabaseAdmin
             .from('diary_entries')
             .select('mood_id, entry_date')
             .eq('user_id', userId)
             .order('entry_date', { ascending: false })
-            .limit(3); // Načteme poslední 3 zápisy
+            .limit(3); 
 
           if (diaryError) {
             console.warn('API /api/chat GET - Chyba při načítání deníkových zápisů pro proaktivitu:', diaryError.message);
           } else if (recentDiaryEntries && recentDiaryEntries.length === 3) {
             const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-            // Zkontrolujeme, zda jsou všechny 3 zápisy z posledních 7 dní
             const allRecentEnough = recentDiaryEntries.every(entry => new Date(entry.entry_date) > sevenDaysAgo);
             
             if (allRecentEnough) {
-              const negativeMoods = ['sad', 'angry']; // Definice negativních nálad
+              const negativeMoods = ['sad', 'angry']; 
               const recentMoodsAreNegative = recentDiaryEntries.every(entry => entry.mood_id && negativeMoods.includes(entry.mood_id));
 
               if (recentMoodsAreNegative) {
@@ -99,7 +98,6 @@ export default async function handler(
         return res.status(200).json({ sessionId: lastSession.id, messages: finalMessages });
 
       } else {
-        // Žádná předchozí seance, ale můžeme zkontrolovat deník i zde
         let proactiveMessage: Message | null = null;
         try {
           const { data: recentDiaryEntries, error: diaryError } = await supabaseAdmin
@@ -195,19 +193,22 @@ export default async function handler(
       const isCrisisMessage = crisisKeywords.some(keyword => userMessageContent.toLowerCase().includes(keyword));
 
       if (isCrisisMessage) {
-        const crisisResponseContent = "Je mi moc líto, že se takhle cítíš...";
+        const crisisResponseContent = "Je mi moc líto, že se takhle cítíš..."; // This should be translated or come from a central place
         await supabaseAdmin
           .from('chat_messages')
           .insert({ session_id: currentSessionId, role: 'assistant', content: crisisResponseContent, metadata: { isCrisis: true } });
         return res.status(200).json({ role: 'assistant', content: crisisResponseContent, isCrisis: true, sessionId: currentSessionId });
       }
 
-      let systemPrompt = `Jsi empatický psycholog...`;
+      let systemPrompt = `Jsi empatický psycholog...`; // Base prompt
       if (body.userProfile?.preferences?.assistantGender) systemPrompt = `Jsi empatick${body.userProfile.preferences.assistantGender === 'male' ? 'ý' : 'á'} psycholog...`;
       if (body.userProfile?.preferences?.assistantName) systemPrompt += ` Jmenuješ se ${body.userProfile.preferences.assistantName}.`;
       if (topic) systemPrompt += ` Specializuješ se na téma: ${topic}.`;
       if (personality) systemPrompt += ` Tvůj přístup je: ${personality}.`;
       if (responseLength) systemPrompt += ` Tvé odpovědi jsou: ${responseLength}.`;
+      // Ensure the core instruction about not diagnosing and being Czech is always there.
+      systemPrompt += " Odpovídej klidně, empaticky, česky a nikdy nediagnostikuj.";
+
 
       const geminiApiKey = process.env.GEMINI_API_KEY;
       if (!geminiApiKey) {
@@ -235,7 +236,16 @@ export default async function handler(
         });
         const geminiData = response.data;
         if (geminiData.error) throw new Error(geminiData.error.message || 'Gemini API error');
-        const responseContent = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Omlouvám se, momentálně nedokážu odpovědět.";
+        
+        let responseContent = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Omlouvám se, momentálně nedokážu odpovědět.";
+        
+        // Validate AI response
+        const validationResult = validateAIResponse(responseContent);
+        if (!validationResult.isValid) {
+          console.warn(`AI Response Validation Failed: ${validationResult.issue}. Original: "${responseContent}". Suggestion: "${validationResult.suggestion}"`);
+          responseContent = validationResult.suggestion || "Omlouvám se, došlo k interní chybě. Zkuste to prosím znovu.";
+          // Optionally, log the original problematic response to a separate system for review
+        }
         
         await supabaseAdmin
           .from('chat_messages')
