@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 
+// Interface definitions (Feature, Plan, Props) remain the same...
 interface Feature {
   text: string;
   included: boolean;
@@ -125,13 +126,13 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <Layout>
-      {/* Hero Section */}
+      {/* Hero Section - Force re-commit by adding a comment */}
       <section className="bg-hero-gradient-light dark:bg-hero-gradient-dark text-white py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left">
-              <h1 className="text-3xl sm:text-4xl md:text-4xl lg:text-5xl font-bold mb-4">
-                {t('hero.titleLine1', 'Psychologická podpora')}<br />{t('hero.titleLine2', 's pokročilou AI')}
+              <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold mb-4"> {/* Font size reduced */}
+                {t('hero.titleLine1', 'Psychologická podpora')} {t('hero.titleLine2', 's pokročilou AI')} {/* Removed <br /> */}
               </h1>
               <p className="text-lg sm:text-xl mb-8">
                 {t('hero.subtitle', 'Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.')}
