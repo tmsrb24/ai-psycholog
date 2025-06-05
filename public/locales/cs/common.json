@@ -44,5 +44,11 @@
     "en": "English",
     "uk": "Українська"
   },
-  "loading": "Načítání..."
+  "loading": "Načítání...",
+  "widgetChat": {
+    "openHelp": "Otevřít Nápovědu",
+    "closeHelp": "Zavřít Nápovědu",
+    "askUs": "Zeptejte se",
+    "close": "Zavřít"
+  }
 }

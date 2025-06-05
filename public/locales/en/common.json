@@ -44,5 +44,11 @@
     "en": "English",
     "uk": "Українська"
   },
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "widgetChat": {
+    "openHelp": "Open Help",
+    "closeHelp": "Close Help",
+    "askUs": "Ask us",
+    "close": "Close"
+  }
 }
