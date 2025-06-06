@@ -170,7 +170,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
       loadInitialData();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authStatus, i18n.language]); 
+  }, [authStatus, i18n.language]); // Simplified dependency array
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -378,10 +378,10 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         </div>
         
         {/* Main Chat Area */}
-        <div className="flex-grow flex flex-col overflow-hidden"> {/* MODIFIED: Added overflow-hidden */}
+        <div className="flex-grow flex flex-col"> {/* REVERTED: Removed overflow-hidden */}
           {/* Message Display Area */}
           <div 
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4" /* MODIFIED: Removed max-h constraints */
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]" /* REVERTED: Added back max-h constraints */
             ref={chatContainerRef}
           >
             {messages.filter((msg: Message) => msg.role !== 'system').map((message, index, arr) => {
