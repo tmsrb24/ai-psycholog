@@ -1,5 +1,5 @@
-import React, { useState } from 'react'; // Přidán useState
-import { FaVolumeUp, FaVolumeMute, FaCopy, FaCheck } from 'react-icons/fa'; // Přidány FaCopy, FaCheck
+import React, { useState } from 'react';
+import { FaVolumeUp, FaVolumeMute, FaCopy, FaCheck } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Message } from '../types';
 
@@ -19,36 +19,40 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const isUser = message.role === 'user';
   const [copied, setCopied] = useState(false);
   
-  // Format message content with Markdown
   const formatContent = (content: string) => {
-    // Simple Markdown formatting
     return content
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-      .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic
-      .replace(/\n/g, '<br />'); // Line breaks
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n/g, '<br />');
   };
   
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }} // Slightly reduced y for a subtler entry
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}
+      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3`} // Reduced mb
     >
-      <div className={`max-w-[80%] ${isUser ? 'user-message' : 'assistant-message'}`}>
+      <div 
+        className={`max-w-[80%] p-3 rounded-xl shadow ${ // Added padding and base rounding
+          isUser 
+            ? 'bg-blue-500 text-white rounded-bl-xl' // User: blue bg, white text, tail bottom-left (visual right)
+            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-br-xl' // Assistant: gray bg, tail bottom-right (visual left)
+        }`}
+      >
         <div 
-          className="prose prose-sm dark:prose-invert break-words" // Přidáno break-words pro lepší zalamování
+          className={`prose prose-sm dark:prose-invert break-words ${isUser ? 'text-white' : ''}`} // Ensure prose text color contrasts with bubble
           dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}
         />
         
-        <div className="flex justify-end items-center mt-2 space-x-3">
+        <div className="flex items-center mt-1.5 space-x-2 justify-end"> {/* Adjusted spacing and alignment */}
           {!isUser && onSpeakText && onStopSpeaking && (
             <button
               onClick={() => isSpeaking ? onStopSpeaking() : onSpeakText(message.content)}
-              className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+              className={`hover:opacity-75 ${isUser ? 'text-blue-100 hover:text-white' : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'}`}
               title={isSpeaking ? 'Zastavit předčítání' : 'Přečíst zprávu nahlas'}
             >
-              {isSpeaking ? <FaVolumeMute size={16} /> : <FaVolumeUp size={16} />}
+              {isSpeaking ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
             </button>
           )}
           <button
@@ -57,15 +61,15 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               setCopied(true);
               setTimeout(() => setCopied(false), 2000);
             }}
-            className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+            className={`hover:opacity-75 ${isUser ? 'text-blue-100 hover:text-white' : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'}`}
             title="Kopírovat zprávu"
           >
-            {copied ? <FaCheck size={16} className="text-green-500" /> : <FaCopy size={16} />}
+            {copied ? <FaCheck size={14} className="text-green-400" /> : <FaCopy size={14} />}
           </button>
         </div>
         
         {message.timestamp && (
-          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+          <div className={`text-xs mt-1 text-right ${isUser ? 'text-blue-200' : 'text-gray-400 dark:text-gray-500'}`}>
             {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </div>
         )}
