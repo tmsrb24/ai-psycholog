@@ -38,6 +38,27 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation('homepage'); 
   const { t: tCommon } = useTranslation('common'); 
 
+  const featureContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // Delay between children animations
+      },
+    },
+  };
+
+  const featureCardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
   const plans: Plan[] = [
     {
       name: t('plans.basic.name', 'Základní'),
@@ -172,10 +193,10 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       {/* Features Section (Proč AI Psycholog?) */}
       <motion.section 
         className="py-12 sm:py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial="hidden" // Changed from opacity:0, y:50 for variants
+        whileInView="visible" // Changed from opacity:1, y:0 for variants
         viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.5 }}
+        // transition={{ duration: 0.5 }} // Transition handled by variants
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-12">
@@ -186,8 +207,18 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {t('features.subtitleLine3', 'Zastavte se. Popovídejte si. Ulevte si.')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            variants={featureContainerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }} // Ensure viewport is set on container if children rely on it
+          >
+            {/* Card 1 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+            >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
@@ -195,8 +226,12 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300">
                 {t('features.cards.0.text', 'Žádné čekání na termín. AI Psycholog je k dispozici 24/7, kdykoliv potřebujete podporu.')}
               </p>
-            </div>
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+            </motion.div>
+            {/* Card 2 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+            >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaLock className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
@@ -204,8 +239,12 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300">
                 {t('features.cards.1.text', 'Vaše konverzace jsou soukromé a bezpečné. Žádné sdílení dat s třetími stranami.')}
               </p>
-            </div>
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+            </motion.div>
+            {/* Card 3 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+            >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
@@ -213,10 +252,17 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300">
                 {t('features.cards.2.text', 'Analýza nálady vám pomůže sledovat váš pokrok a motivovat vás.')}
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
           <div className="mt-8">
-            <div className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-md rounded-lg shadow-xl p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-500 dark:border-blue-400">
+             {/* RAG System Card - can also be animated if desired */}
+            <motion.div 
+              variants={featureCardVariants} // Can reuse or create specific variant
+              initial="hidden" // Apply initial and whileInView if it's a standalone animated item
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-md rounded-lg shadow-xl p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-500 dark:border-blue-400"
+            >
               <div className="flex items-center mb-4">
                 <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mr-4">
                   <FaRobot className="text-blue-600 dark:text-blue-300" size={24} />
@@ -229,7 +275,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300">
                 {t('features.rag.text', 'Náš AI asistent využívá architekturu typu Retrieval-Augmented Generation (RAG) – propojuje jazykový model s vlastní odbornou psychologickou databází. Díky tomu poskytuje přesné, kontextově přizpůsobené odpovědi v reálném čase, které vycházejí z ověřených poznatků a vaší situace.')}
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </motion.section>
@@ -237,10 +283,10 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       {/* Testimonials Section */}
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }} // Adjusted amount for earlier trigger
+        // transition={{ duration: 0.5, delay: 0.1 }} // Handled by variants
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -249,9 +295,17 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {t('testimonials.subtitle', 'Co o Psychollog.cz říkají profesionálové z oboru psychologie a psychiatrie.')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            variants={featureContainerVariants} // Reusing container variants
+            // initial, whileInView, viewport already on parent section
+          >
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+              <motion.div 
+                key={index} 
+                variants={featureCardVariants} // Reusing card variants
+                className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+              >
                 <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-600">
                   <Image 
                     src={testimonial.avatar} 
@@ -264,9 +318,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">{testimonial.name}</h3>
                 <p className="text-sm text-blue-600 dark:text-blue-400 mb-3">{testimonial.specialization}</p>
                 <p className="text-gray-600 dark:text-gray-400 text-sm italic">"{testimonial.quote}"</p>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
           <div className="mt-12 text-center">
             <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">{t('testimonials.uniqueServiceTitle', 'Proč je naše služba unikátní?')}</h3>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
@@ -279,10 +333,10 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       {/* How It Works Section */}
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        // transition={{ duration: 0.5, delay: 0.1 }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -291,8 +345,15 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {t('howItWorks.subtitle', 'Jednoduché kroky k získání psychologické podpory s AI Psychologem.')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            variants={featureContainerVariants}
+          >
+            {/* Step 1 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"
+            >
               <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">1</span>
               </div>
@@ -300,8 +361,12 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300">
                 {t('howItWorks.steps.0.text', 'Registrace zabere jen pár vteřin. Můžete začít ihned s bezplatnou verzí.')}
               </p>
-            </div>
-            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500">
+            </motion.div>
+            {/* Step 2 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"
+            >
               <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">2</span>
               </div>
@@ -309,8 +374,12 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300">
                 {t('howItWorks.steps.1.text', 'Sdílejte své myšlenky a pocity. AI Psycholog vám poskytne empatickou a podporující odpověď.')}
               </p>
-            </div>
-            <div className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500">
+            </motion.div>
+            {/* Step 3 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"
+            >
               <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">3</span>
               </div>
@@ -318,18 +387,18 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300">
                 {t('howItWorks.steps.2.text', 'Pravidelné konverzace vám pomohou lépe porozumět vašim emocím a najít strategie pro zvládání obtíží.')}
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </motion.section>
 
       {/* Proactive AI Assistant Section */}
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        // transition={{ duration: 0.5, delay: 0.1 }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -338,8 +407,15 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {t('proactiveAssistant.subtitle', 'Představte si podporu, která nejen reaguje, ale aktivně vám pomáhá na vaší cestě k duševní pohodě. Náš Proaktivní AI Asistent je navržen tak, aby se učil rozumět vašim potřebám. S vaším svolením citlivě analyzuje trendy ve vašich konverzacích a deníkových zápiscích.')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
-            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center"
+            variants={featureContainerVariants}
+          >
+            {/* Card 1 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+            >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaLightbulb className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
@@ -347,8 +423,12 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300 text-sm">
                 {t('proactiveAssistant.cards.0.text', 'Relevantní témata k zamyšlení, deníkové výzvy nebo cvičení šitá na míru.')}
               </p>
-            </div>
-            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+            </motion.div>
+            {/* Card 2 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+            >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaHandHoldingHeart className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
@@ -356,8 +436,12 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300 text-sm">
                 {t('proactiveAssistant.cards.1.text', 'Pokud procházíte náročnějším obdobím, asistent vám citlivě nabídne rozhovor nebo připomene osvědčené techniky.')}
               </p>
-            </div>
-            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+            </motion.div>
+            {/* Card 3 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+            >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaSeedling className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
@@ -365,8 +449,12 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300 text-sm">
                 {t('proactiveAssistant.cards.2.text', 'Aktivně podporujeme vaši cestu k lepší pohodě relevantními nástroji a podněty k sebereflexi.')}
               </p>
-            </div>
-            <div className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500">
+            </motion.div>
+            {/* Card 4 */}
+            <motion.div 
+              variants={featureCardVariants}
+              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+            >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaUserShield className="text-blue-600 dark:text-blue-300" size={32} />
               </div>
@@ -374,8 +462,8 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <p className="text-gray-600 dark:text-gray-300 text-sm">
                 {t('proactiveAssistant.cards.3.text', 'Vždy máte plnou kontrolu nad sdílením informací a využíváním proaktivních návrhů.')}
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
            <p className="text-center text-md text-gray-500 dark:text-gray-400 mt-10">
             {t('proactiveAssistant.footerText', 'Tato unikátní funkce vám pomáhá nezůstat na své starosti sami a aktivně pracovat na svém well-beingu.')}
           </p>
@@ -385,10 +473,10 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       {/* Pricing Preview Section */}
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        // transition={{ duration: 0.5, delay: 0.1 }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -397,10 +485,14 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               {t('pricingPreview.subtitle', 'Vyberte si plán, který nejlépe vyhovuje vašim potřebám.')}
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch"
+            variants={featureContainerVariants} // Reusing for pricing plans
+          >
             {plans.map((plan) => (
-              <div 
+              <motion.div 
                 key={plan.name} 
+                variants={featureCardVariants} // Reusing for pricing plans
                 className={`bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 border-t-4 ${plan.borderColor} flex flex-col ${plan.isRecommended ? 'lg:scale-105 ring-2 ring-offset-2 ring-blue-500 dark:ring-blue-400' : 'hover:shadow-xl hover:lg:scale-[1.02] transition-all duration-300 ease-in-out'} relative`}
               >
                 {plan.isRecommended && (
@@ -438,9 +530,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 >
                   {plan.buttonText}
                 </Link>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </motion.section>
 
