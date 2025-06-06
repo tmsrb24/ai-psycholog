@@ -65,13 +65,15 @@ export default async function handler(
         throw lastSessionError;
       }
       
-      let systemPromptContent = CORE_INSTRUCTIONS; // Start with core instructions
+      let systemPromptContent = CORE_INSTRUCTIONS; 
 
       if (lastSession?.metadata) {
         const meta = lastSession.metadata as any;
         let specificInstructions = "";
         if (meta.assistantGender) specificInstructions += ` Jsi ${meta.assistantGender === 'male' ? 'muž' : 'žena'}.`;
-        if (meta.assistantName) specificInstructions += ` Tvé jméno je ${meta.assistantName}.`;
+        if (meta.assistantName) {
+          specificInstructions += ` Tvé jméno je ${meta.assistantName}. Používej toto jméno, když mluvíš o sobě nebo když se tě na něj někdo zeptá.`;
+        }
         
         const personalityKey = meta.personality as PersonalityKey;
         specificInstructions += ` ${PERSONALITY_PROMPTS[personalityKey] || PERSONALITY_PROMPTS['neutral']}`;
@@ -229,7 +231,7 @@ export default async function handler(
         .from('chat_messages')
         .insert({ session_id: currentSessionId, role: 'user', content: userMessageContent });
 
-      const crisisKeywords = ["chci se zabít", "nechci žít", "ukončit život", "sebevražda", "zabít se"]; // Consider moving to a shared constants file
+      const crisisKeywords = ["chci se zabít", "nechci žít", "ukončit život", "sebevražda", "zabít se"];
       const isCrisisMessage = crisisKeywords.some(keyword => userMessageContent.toLowerCase().includes(keyword));
 
       if (isCrisisMessage) {
@@ -247,7 +249,7 @@ export default async function handler(
         specificInstructions += ` Jsi ${body.userProfile.preferences.assistantGender === 'male' ? 'muž' : 'žena'}.`;
       }
       if (body.userProfile?.preferences?.assistantName) {
-        specificInstructions += ` Tvé jméno je ${body.userProfile.preferences.assistantName}.`;
+        specificInstructions += ` Tvé jméno je ${body.userProfile.preferences.assistantName}. Používej toto jméno, když mluvíš o sobě nebo když se tě na něj někdo zeptá.`;
       }
       
       specificInstructions += ` ${PERSONALITY_PROMPTS[personalityKey]}`;
@@ -274,7 +276,7 @@ export default async function handler(
       formattedMessagesForGemini.push({ role: 'user', parts: [{ text: systemPrompt }] });
       formattedMessagesForGemini.push({ role: 'model', parts: [{ text: 'Rozumím a jsem připraven/a pomoci.' }] });
 
-      const historyMessages = messages.slice(0, -1); // All messages except the last user message
+      const historyMessages = messages.slice(0, -1); 
       historyMessages.filter(m => m.role === 'user' || m.role === 'assistant')
               .forEach(msg => {
                 formattedMessagesForGemini.push({
@@ -296,10 +298,10 @@ export default async function handler(
           data: { 
             contents: formattedMessagesForGemini, 
             generationConfig: { 
-              temperature: 0.75, // Slightly increased for more natural, less rigid responses
+              temperature: 0.75,
               topK: 40, 
               topP: 0.95, 
-              maxOutputTokens: 1024 // Increased for potentially longer, more detailed responses if needed
+              maxOutputTokens: 1024
             } 
           }
         });
@@ -311,7 +313,6 @@ export default async function handler(
         const validationResult = validateAIResponse(responseContent);
         if (!validationResult.isValid) {
           console.warn(`AI Response Validation Failed: ${validationResult.issue}. Original: "${responseContent}". Suggestion: "${validationResult.suggestion}"`);
-          // For persona breaks, use a more direct re-prompt or a specific canned response
           if (validationResult.issue?.includes("undesirable phrase")) {
              responseContent = "Prosím, soustřeďme se na vaši situaci. Jak vám mohu dnes pomoci v rámci mé role psychologického asistenta?";
           } else {
