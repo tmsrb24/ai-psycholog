@@ -58,6 +58,30 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       },
     },
   };
+  
+  const heroTextContainerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const heroTextItemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
+  };
+
 
   const plans: Plan[] = [
     {
@@ -147,32 +171,45 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <Layout>
-      {/* Hero Section - Force re-commit by adding a comment */}
       <section className="bg-hero-gradient-light dark:bg-hero-gradient-dark text-white py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left">
-              <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold mb-4"> {/* Font size reduced */}
-                {t('hero.titleLine1', 'Psychologická podpora')} {t('hero.titleLine2', 's pokročilou AI')} {/* Removed <br /> */}
-              </h1>
-              <p className="text-lg sm:text-xl mb-8">
+            <motion.div 
+              className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left"
+              variants={heroTextContainerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.h1 
+                variants={heroTextItemVariants}
+                className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold mb-4"
+              >
+                {t('hero.titleLine1', 'Psychologická podpora')} {t('hero.titleLine2', 's pokročilou AI')}
+              </motion.h1>
+              <motion.p 
+                variants={heroTextItemVariants}
+                className="text-lg sm:text-xl mb-8"
+              >
                 {t('hero.subtitle', 'Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.')}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg shadow-md transition-colors">
+              </motion.p>
+              <motion.div 
+                variants={heroTextItemVariants}
+                className="flex flex-col sm:flex-row gap-4"
+              >
+                <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform">
                   {tCommon('buttons.tryForFree', 'Vyzkoušet zdarma')}
                 </Link>
-                <Link href="/pricing" className="btn bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-colors">
+                <Link href="/pricing" className="btn bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform">
                   {tCommon('buttons.pricing', 'Ceník')}
                 </Link>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
             <div className="md:w-1/2 flex justify-center md:justify-end md:pr-8 lg:pr-0">
               <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[26rem] md:h-[26rem]">
                 <div className="absolute inset-0 bg-blue-400 dark:bg-blue-700 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0s' }}></div>
                 <div className="absolute inset-3 sm:inset-5 md:inset-6 bg-blue-300 dark:bg-blue-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
                 <div className="absolute inset-6 sm:inset-10 md:inset-12 bg-blue-200 dark:bg-blue-500 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.6s' }}></div>
-                <div className="absolute inset-0 flex items-center justify-center z-10 p-8 sm:p-10 md:p-12"> {/* Increased padding */}
+                <div className="absolute inset-0 flex items-center justify-center z-10 p-8 sm:p-10 md:p-12">
                   <Image 
                     src="/images/hero-avatar.png" 
                     alt="AI Psycholog Avatar" 
@@ -183,20 +220,17 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     sizes="(max-width: 640px) 256px, (max-width: 768px) 320px, 416px"
                   />
                 </div>
-                {/* SVG Overlay Removed */}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section (Proč AI Psycholog?) */}
       <motion.section 
         className="py-12 sm:py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        initial="hidden" // Changed from opacity:0, y:50 for variants
-        whileInView="visible" // Changed from opacity:1, y:0 for variants
+        initial="hidden"
+        whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
-        // transition={{ duration: 0.5 }} // Transition handled by variants
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10 sm:mb-12">
@@ -210,14 +244,10 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
             variants={featureContainerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }} // Ensure viewport is set on container if children rely on it
           >
-            {/* Card 1 */}
             <motion.div 
               variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
@@ -227,10 +257,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 {t('features.cards.0.text', 'Žádné čekání na termín. AI Psycholog je k dispozici 24/7, kdykoliv potřebujete podporu.')}
               </p>
             </motion.div>
-            {/* Card 2 */}
             <motion.div 
               variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaLock className="text-blue-600 dark:text-blue-300" size={24} />
@@ -240,10 +269,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 {t('features.cards.1.text', 'Vaše konverzace jsou soukromé a bezpečné. Žádné sdílení dat s třetími stranami.')}
               </p>
             </motion.div>
-            {/* Card 3 */}
             <motion.div 
               variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
                 <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
@@ -255,13 +283,12 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </motion.div>
           </motion.div>
           <div className="mt-8">
-             {/* RAG System Card - can also be animated if desired */}
             <motion.div 
-              variants={featureCardVariants} // Can reuse or create specific variant
-              initial="hidden" // Apply initial and whileInView if it's a standalone animated item
+              variants={featureCardVariants} 
+              initial="hidden" 
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-md rounded-lg shadow-xl p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-500 dark:border-blue-400"
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-md rounded-lg shadow-xl p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-500 dark:border-blue-400 hover:scale-105 transform"
             >
               <div className="flex items-center mb-4">
                 <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mr-4">
@@ -280,13 +307,11 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
         </div>
       </motion.section>
 
-      {/* Testimonials Section */}
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }} // Adjusted amount for earlier trigger
-        // transition={{ duration: 0.5, delay: 0.1 }} // Handled by variants
+        viewport={{ once: true, amount: 0.1 }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -297,14 +322,13 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
           </div>
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            variants={featureContainerVariants} // Reusing container variants
-            // initial, whileInView, viewport already on parent section
+            variants={featureContainerVariants}
           >
             {testimonials.map((testimonial, index) => (
               <motion.div 
                 key={index} 
-                variants={featureCardVariants} // Reusing card variants
-                className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+                variants={featureCardVariants}
+                className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
               >
                 <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-600">
                   <Image 
@@ -330,13 +354,11 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
         </div>
       </motion.section>
 
-      {/* How It Works Section */}
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
-        // transition={{ duration: 0.5, delay: 0.1 }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -349,10 +371,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
             variants={featureContainerVariants}
           >
-            {/* Step 1 */}
             <motion.div 
               variants={featureCardVariants}
-              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"
+              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500 hover:scale-105 transform"
             >
               <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">1</span>
@@ -362,10 +383,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 {t('howItWorks.steps.0.text', 'Registrace zabere jen pár vteřin. Můžete začít ihned s bezplatnou verzí.')}
               </p>
             </motion.div>
-            {/* Step 2 */}
             <motion.div 
               variants={featureCardVariants}
-              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"
+              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500 hover:scale-105 transform"
             >
               <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">2</span>
@@ -375,10 +395,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 {t('howItWorks.steps.1.text', 'Sdílejte své myšlenky a pocity. AI Psycholog vám poskytne empatickou a podporující odpověď.')}
               </p>
             </motion.div>
-            {/* Step 3 */}
             <motion.div 
               variants={featureCardVariants}
-              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500"
+              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500 hover:scale-105 transform"
             >
               <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">3</span>
@@ -392,13 +411,11 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
         </div>
       </motion.section>
 
-      {/* Proactive AI Assistant Section */}
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
-        // transition={{ duration: 0.5, delay: 0.1 }}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -411,10 +428,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center"
             variants={featureContainerVariants}
           >
-            {/* Card 1 */}
             <motion.div 
               variants={featureCardVariants}
-              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaLightbulb className="text-blue-600 dark:text-blue-300" size={32} />
@@ -424,10 +440,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 {t('proactiveAssistant.cards.0.text', 'Relevantní témata k zamyšlení, deníkové výzvy nebo cvičení šitá na míru.')}
               </p>
             </motion.div>
-            {/* Card 2 */}
             <motion.div 
               variants={featureCardVariants}
-              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaHandHoldingHeart className="text-blue-600 dark:text-blue-300" size={32} />
@@ -437,10 +452,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 {t('proactiveAssistant.cards.1.text', 'Pokud procházíte náročnějším obdobím, asistent vám citlivě nabídne rozhovor nebo připomene osvědčené techniky.')}
               </p>
             </motion.div>
-            {/* Card 3 */}
             <motion.div 
               variants={featureCardVariants}
-              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaSeedling className="text-blue-600 dark:text-blue-300" size={32} />
@@ -450,10 +464,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 {t('proactiveAssistant.cards.2.text', 'Aktivně podporujeme vaši cestu k lepší pohodě relevantními nástroji a podněty k sebereflexi.')}
               </p>
             </motion.div>
-            {/* Card 4 */}
             <motion.div 
               variants={featureCardVariants}
-              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500"
+              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
               <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
                 <FaUserShield className="text-blue-600 dark:text-blue-300" size={32} />
@@ -470,13 +483,11 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
         </div>
       </motion.section>
 
-      {/* Pricing Preview Section */}
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
-        // transition={{ duration: 0.5, delay: 0.1 }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -487,12 +498,12 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
           </div>
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch"
-            variants={featureContainerVariants} // Reusing for pricing plans
+            variants={featureContainerVariants}
           >
             {plans.map((plan) => (
               <motion.div 
                 key={plan.name} 
-                variants={featureCardVariants} // Reusing for pricing plans
+                variants={featureCardVariants}
                 className={`bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 border-t-4 ${plan.borderColor} flex flex-col ${plan.isRecommended ? 'lg:scale-105 ring-2 ring-offset-2 ring-blue-500 dark:ring-blue-400' : 'hover:shadow-xl hover:lg:scale-[1.02] transition-all duration-300 ease-in-out'} relative`}
               >
                 {plan.isRecommended && (
@@ -526,7 +537,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     plan.name === t('plans.basic.name', 'Základní') ? 'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100' : 
                     plan.borderColor === 'border-blue-600' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 
                     'bg-purple-600 hover:bg-purple-700 text-white'
-                  } font-semibold py-3 px-6 rounded-lg transition-colors shadow-md`}
+                  } font-semibold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform shadow-md`}
                 >
                   {plan.buttonText}
                 </Link>
@@ -536,7 +547,6 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
         </div>
       </motion.section>
 
-      {/* CTA Section */}
       <motion.section 
         className="py-16 bg-cta-gradient-light dark:bg-cta-gradient-dark text-white"
         initial={{ opacity: 0, y: 50 }}
@@ -549,7 +559,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
           <p className="text-xl mb-8 max-w-3xl mx-auto">
             {t('cta.subtitle', 'Vyzkoušejte AI Psychologa zdarma a objevte, jak vám může pomoci lépe porozumět vašim emocím a zvládat každodenní výzvy.')}
           </p>
-          <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg shadow-md transition-colors text-lg">
+          <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform text-lg">
             {tCommon('buttons.startForFree', 'Začít zdarma')}
           </Link>
         </div>
