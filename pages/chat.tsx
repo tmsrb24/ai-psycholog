@@ -58,7 +58,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [currentChatSessionId, setCurrentChatSessionId] = useState<string | null>(null);
   const [showProfile, setShowProfile] = useState(false);
-  const [userProfileData, setUserProfileData] = useState<UserProfileData>({ // Přejmenováno z userProfile, aby se nepletlo s userProfile z hooku
+  const [userProfileData, setUserProfileData] = useState<UserProfileData>({
     name: t('common:userProfile.defaultName', 'Uživatel'),
     avatar_url: null,
     preferences: {
@@ -169,7 +169,8 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
     } else if (authStatus === "authenticated") {
       loadInitialData();
     }
-  }, [authStatus, session, router, i18n.language, t, setMessages, setUserProfileData, setResponseLength, setAssistantGender, setCurrentChatSessionId, setAssistantName]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authStatus, i18n.language]); 
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -240,7 +241,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         personality: selectedPersonality,
         saveHistory, 
         responseLength,
-        userProfile: userProfileData, // Použití userProfileData
+        userProfile: userProfileData,
         sessionId: currentChatSessionId,
         chatLanguage: i18n.language 
       };
@@ -333,6 +334,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   return (
     <Layout title={t('pageTitle')} description={t('pageDescription')}>
       <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
+        {/* Sidebar */}
         <div className="w-full md:w-72 md:mr-6 mb-4 md:mb-0 flex-shrink-0">
           <div className="space-y-4">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
@@ -375,8 +377,13 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
           </div>
         </div>
         
-        <div className="flex-grow flex flex-col">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]" ref={chatContainerRef}>
+        {/* Main Chat Area */}
+        <div className="flex-grow flex flex-col overflow-hidden"> {/* MODIFIED: Added overflow-hidden */}
+          {/* Message Display Area */}
+          <div 
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4" /* MODIFIED: Removed max-h constraints */
+            ref={chatContainerRef}
+          >
             {messages.filter((msg: Message) => msg.role !== 'system').map((message, index, arr) => {
               let showDateSeparator = false;
               const currentMessageTimestamp = message.timestamp ? new Date(message.timestamp) : new Date(0);
