@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image'; // Added Image import
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle, FaGlobe } from 'react-icons/fa';
@@ -12,7 +12,8 @@ const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
-  const { theme } = useTheme();
+  const [isScrolled, setIsScrolled] = useState(false); // State for scroll effect
+  // const { theme } = useTheme(); // theme is not used, can be removed if not planned for future
   const router = useRouter();
   const { data: session, status } = useSession();
   const loading = status === "loading";
@@ -45,6 +46,25 @@ const Navbar: React.FC = () => {
     return router.pathname === path;
   };
 
+  // Effect for scroll handling
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // Call handler once on mount to set initial state
+    handleScroll(); 
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (profileMenuRef.current && !profileMenuRef.current.contains(event.target as Node)) {
@@ -73,20 +93,26 @@ const Navbar: React.FC = () => {
     uk: '🇺🇦',
   };
 
+  const navClasses = `sticky top-0 z-50 backdrop-blur-md transition-all duration-300 ${
+    isScrolled 
+      ? 'bg-white/95 dark:bg-slate-900/95 shadow-lg' 
+      : 'bg-white/70 dark:bg-slate-900/70 shadow-none'
+  }`;
+
   return (
-    <nav className="bg-white/90 dark:bg-slate-900/90 shadow-lg sticky top-0 z-50 backdrop-blur-md"> 
+    <nav className={navClasses}> 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center space-x-2" onClick={closeMenu}>
               <Image
-                src="/images/hero-avatar.png" // Using the new hero avatar
+                src="/images/hero-avatar.png"
                 alt={t('appName', 'Psychollog Logo')}
-                width={32} // Adjusted size for navbar
+                width={32}
                 height={32}
-                className="h-8 w-auto" // Tailwind classes for size
+                className="h-8 w-auto" 
               />
-              <span className="font-bold text-xl text-gray-800 dark:text-white">Psychollog</span> {/* Removed .cz */}
+              <span className="font-bold text-xl text-gray-800 dark:text-white">Psychollog</span>
             </Link>
           </div>
 
@@ -114,6 +140,7 @@ const Navbar: React.FC = () => {
             >
               {t('navbar.chat', 'Chat')}
             </Link>
+            {/* ... other nav links ... */}
             <Link
               href="/diary"
               className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
@@ -297,6 +324,7 @@ const Navbar: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white dark:bg-gray-800 shadow-lg">
+            {/* Mobile nav links */}
             <Link 
               href="/" 
               className={`block px-3 py-2 rounded-md text-base ${
