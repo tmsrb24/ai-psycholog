@@ -1,6 +1,4 @@
-declare global {
-  // eslint-disable-next-line no-var
-  var _mongoClientPromise: Promise<any>;
-}
+// This file can be used for other global type declarations if needed in the future.
+// For now, it's empty after removing MongoDB-specific types.
 
 export {};

@@ -1,6 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-// import { MongoClient } from 'mongodb'; // MongoDB not used for now
-// import bcrypt from 'bcryptjs'; // Bcrypt not used if not storing passwords
 import { Resend } from 'resend';
 
 const resendApiKey = process.env.RESEND_API_KEY;
@@ -11,10 +9,6 @@ if (resendApiKey) {
 } else {
   console.warn('RESEND_API_KEY is not set. Email sending will be disabled.');
 }
-
-// MongoDB connection details removed as MongoDB is not used for now
-// const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/ai-psycholog";
-// const options = {};
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,14 +33,11 @@ export default async function handler(
     return res.status(400).json({ message: 'Password must be at least 8 characters long' });
   }
 
-  // MongoDB logic (user creation, duplicate check, password hashing) is removed for now.
-  // This means users registered via this endpoint are not stored in a database.
+  // MongoDB logic (user creation, duplicate check, password hashing) is removed.
   // This endpoint will only attempt to send a welcome email if Resend is configured.
 
   if (!resend) {
     console.error('Resend client is not initialized. RESEND_API_KEY might be missing.');
-    // Still return a "success" to the client as user data was validated, but email part failed.
-    // Or, decide if this should be a server error. For now, let's inform about email part.
     return res.status(200).json({ 
       message: 'Žádost o registraci přijata. Problém s konfigurací odesílání e-mailů. Kontaktujte podporu.',
       emailSent: false
@@ -86,7 +77,7 @@ export default async function handler(
       emailId: data?.id
     });
 
-  } catch (error) { // Catch any other unexpected errors
+  } catch (error) { 
     console.error('Unexpected error in registration request / sending email:', error);
     const errorMessage = error instanceof Error ? error.message : 'Neznámá chyba serveru.';
     return res.status(500).json({ message: 'Interní chyba serveru při odesílání e-mailu.', errorDetail: errorMessage, emailSent: false });
