@@ -51,24 +51,18 @@ export const authOptions: NextAuthOptions = {
           if (user.email) {
             try {
               const supabaseAdmin = getSupabaseAdmin();
-              // Fetch a list of users and filter manually due to TS issues with query/filter params
-              const { data: { users: allUsers }, error: listUsersError } = await supabaseAdmin.auth.admin.listUsers({
-                page: 1,
-                perPage: 1000, // Adjust as needed, hope to find the user in the first batch
-              });
+              // Try using email filter with listUsers, casting options to 'any' to bypass TS error
+              const listUserParams: any = { email: user.email, page: 1, perPage: 5 };
+              const { data: { users: foundUsers }, error: listUsersError } = await supabaseAdmin.auth.admin.listUsers(listUserParams);
 
               if (listUsersError) {
-                console.error("[NextAuth] JWT: Error listing Supabase auth users:", listUsersError.message);
-              } else if (allUsers && allUsers.length > 0) {
-                const exactMatchUser = allUsers.find(u => u.email === user.email);
-                if (exactMatchUser) {
-                  supabaseUserId = exactMatchUser.id; 
-                  console.log(`[NextAuth] JWT: Found Supabase auth user by email (manual filter). UUID: ${supabaseUserId}`);
-                } else {
-                   console.warn(`[NextAuth] JWT: Supabase auth user not found for exact email '${user.email}' after listing users.`);
-                }
+                console.error("[NextAuth] JWT: Error listing Supabase auth users by email:", listUsersError.message);
+              } else if (foundUsers && foundUsers.length > 0) {
+                // Assuming email is unique, the first user is the one.
+                supabaseUserId = foundUsers[0].id; 
+                console.log(`[NextAuth] JWT: Found Supabase auth user by email (using email filter). UUID: ${supabaseUserId}`);
               } else {
-                console.warn(`[NextAuth] JWT: No users returned from listUsers or list was empty for email '${user.email}'.`);
+                console.warn(`[NextAuth] JWT: Supabase auth user not found for email '${user.email}' using listUsers with email filter.`);
               }
             } catch (e: any) {
               console.error("[NextAuth] JWT: Exception while fetching/handling Supabase auth user by email:", e.message);
