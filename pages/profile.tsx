@@ -1,31 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react'; // Added signOut
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
-import Image from 'next/image'; // Přidán import Next Image
-import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog } from 'react-icons/fa';
+import Image from 'next/image';
+import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog, FaSpinner } from 'react-icons/fa'; // Added FaSpinner
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'; // Změna na GetServerSideProps
-import { getSession } from 'next-auth/react'; // Pro ochranu stránky
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { getSession } from 'next-auth/react';
 
-type PageProps = {}; // Může být prázdné, pokud getSSP vrací jen i18n props
+type PageProps = {};
 
 const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { t } = useTranslation(['profile', 'common']); // Vrácení obou namespaců
+  const { t } = useTranslation(['profile', 'common']);
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const router = useRouter();
   
-  // console.log('Profile page router.locale:', router.locale); // DEBUG LOG ODSTRANĚN
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  // const [preferredUILanguage, setPreferredUILanguage] = useState(router.locale || 'cs'); // Dočasně odstraněno
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
-  // const [isUpdatingLanguage, setIsUpdatingLanguage] = useState(false); // Dočasně odstraněno
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false); // New state for delete
   const [message, setMessage] = useState({ type: '', text: '' });
-  // const { i18n } = useTranslation(); // Dočasně odstraněno, pokud se nepoužívá jinde
 
   useEffect(() => {
     if (!loading && !session) {
@@ -37,15 +33,8 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
     if (session?.user) {
       setName(session.user.name || '');
       setEmail(session.user.email || '');
-      // Logika pro nastavení preferredUILanguage dočasně odstraněna
-      // const userPreferredLang = (session.user as any)?.preferences?.uiLanguage;
-      // if (userPreferredLang && router.locales?.includes(userPreferredLang)) {
-      //   setPreferredUILanguage(userPreferredLang);
-      // } else {
-      //   setPreferredUILanguage(router.locale || 'cs');
-      // }
     }
-  }, [session]); // Odebrány závislosti na router.locale atd. související s jazykem
+  }, [session]);
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,14 +42,16 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
     setMessage({ type: '', text: '' });
 
     try {
-      const response = await fetch('/api/user/profile', { // Endpoint je /api/user/profile
-        method: 'PUT', // Změna na PUT
+      const response = await fetch('/api/user/profile', {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email }), 
       });
       const data = await response.json();
       if (response.ok) {
         setMessage({ type: 'success', text: t('messages.profileUpdateSuccess') });
+        // Optionally, update session data if name/email change affects it
+        // await update({ ...session, user: { ...session?.user, name, email } }); // Requires update from useSession
       } else {
         setMessage({ type: 'error', text: data.message || t('messages.profileUpdateError') });
       }
@@ -70,35 +61,31 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
       setIsUpdatingProfile(false);
     }
   };
+
+  const handleDeleteAccount = async () => {
+    if (!window.confirm(t('security.deleteAccount.confirm'))) {
+      return;
+    }
+    setIsDeletingAccount(true);
+    setMessage({ type: '', text: '' });
+    try {
+      const response = await fetch('/api/user/account', { // New API endpoint
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        setMessage({ type: 'success', text: t('security.deleteAccount.deleteSuccess') });
+        await signOut({ callbackUrl: '/' }); // Sign out and redirect to home
+      } else {
+        const data = await response.json();
+        setMessage({ type: 'error', text: data.message || t('security.deleteAccount.deleteError') });
+        setIsDeletingAccount(false);
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: t('messages.serverError') });
+      setIsDeletingAccount(false);
+    }
+  };
   
-  // const handleLanguageChange = async (newLang: string) => { // Dočasně odstraněno
-  //   setPreferredUILanguage(newLang);
-  //   setIsUpdatingLanguage(true);
-  //   setMessage({ type: '', text: '' });
-  //   try {
-  //     const response = await fetch('/api/user/profile', { 
-  //       method: 'PUT', 
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify({ preferences: { uiLanguage: newLang } }),
-  //     });
-  //     const data = await response.json();
-  //     if (response.ok) {
-  //       setMessage({ type: 'success', text: t('messages.languageUpdateSuccess') });
-  //       i18n.changeLanguage(newLang);
-  //       router.push(router.pathname, router.asPath, { locale: newLang });
-  //     } else {
-  //       setMessage({ type: 'error', text: data.message || t('messages.languageUpdateError') });
-  //       setPreferredUILanguage(router.locale || 'cs');
-  //     }
-  //   } catch (error) {
-  //     setMessage({ type: 'error', text: t('messages.serverError') });
-  //     setPreferredUILanguage(router.locale || 'cs');
-  //   } finally {
-  //     setIsUpdatingLanguage(false);
-  //   }
-  // };
-
-
   if (loading || !session) { 
     return (
       <Layout title={t('common:loading')} description={t('pageDescriptionLoading')}>
@@ -111,7 +98,6 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
 
   return (
     <Layout title={t('pageTitle', 'Můj profil | AI Psycholog')} description={t('pageDescription', 'Správa vašeho uživatelského profilu')}>
-      {/* <p>DEBUG: Testovací překlad z profile: {t('header.title', 'Můj profil (fallback)')}</p> */}
       <section className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('header.title', 'Můj profil')}</h1>
@@ -132,7 +118,6 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
           </div>
         )}
 
-        {/* Osobní údaje Section */}
         <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
           <div className="p-6 md:p-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
@@ -147,8 +132,8 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                     <Image 
                       src={session.user.image} 
                       alt={session.user.name || t('personalInfo.avatarAlt', 'Profilový obrázek')} 
-                      width={128} // w-32
-                      height={128} // h-32
+                      width={128}
+                      height={128}
                       className="rounded-full object-cover shadow-md"
                       priority 
                     />
@@ -174,9 +159,6 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                 <p className="text-gray-500 dark:text-gray-400">
                   {session.user?.email}
                 </p>
-                {/* <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
-                  {t('personalInfo.memberSince', 'Člen od:')} {session.user.createdAt ? new Date(session.user.createdAt).toLocaleDateString(router.locale) : t('personalInfo.unknown', 'Neznámé')}
-                </p> */}
               </div>
             </div>
 
@@ -218,7 +200,7 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                     onChange={(e) => setEmail(e.target.value)}
                     className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder={t('personalInfo.form.email.placeholder')}
-                    disabled={isUpdatingProfile}
+                    disabled={isUpdatingProfile} // Email change should be handled carefully, perhaps separately
                   />
                 </div>
               </div>
@@ -231,7 +213,7 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                 >
                   {isUpdatingProfile ? (
                     <>
-                      <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
+                      <FaSpinner className="animate-spin mr-2 h-4 w-4" /> {/* Added spinner */}
                       {t('personalInfo.form.saving')}
                     </>
                   ) : (
@@ -246,40 +228,6 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
           </div>
         </div>
 
-        {/* Nastavení Section - DOČASNĚ ODSTRANĚNO
-        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
-          <div className="p-6 md:p-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-              <FaCog className="mr-3 text-blue-500" />
-              {t('settings.title', 'Nastavení')}
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <label htmlFor="ui-language" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('settings.language.label', 'Preferovaný jazyk rozhraní')}
-                </label>
-                <select
-                  id="ui-language"
-                  name="uiLanguage"
-                  value={preferredUILanguage}
-                  onChange={(e) => handleLanguageChange(e.target.value)}
-                  disabled={isUpdatingLanguage}
-                  className="block w-full pl-3 pr-10 py-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:border-blue-500"
-                >
-                  {(router.locales || []).map((locale) => (
-                    <option key={locale} value={locale}>
-                      {t(`common:languages.${locale}`, locale.toUpperCase())}
-                    </option>
-                  ))}
-                </select>
-                {isUpdatingLanguage && <p className="text-sm text-gray-500 mt-1">{t('settings.language.saving', 'Ukládání jazyka...')}</p>}
-              </div>
-            </div>
-          </div>
-        </div>
-        */}
-
-        {/* Bezpečnost a správa účtu Section */}
         <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
           <div className="p-6 md:p-8">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
@@ -303,21 +251,25 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                 </div>
               </div>
               
-              <div className="p-4 border border-gray-200 dark:border-gray-700 rounded-md">
+              <div className="p-4 border border-red-200 dark:border-red-700/50 rounded-md bg-red-50/30 dark:bg-red-900/10">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
                   <div className="mb-3 sm:mb-0">
-                    <h4 className="text-md font-medium text-gray-800 dark:text-white flex items-center"><FaTrashAlt className="mr-2 text-red-500 dark:text-red-400"/>{t('security.deleteAccount.title')}</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('security.deleteAccount.description')}</p>
+                    <h4 className="text-md font-medium text-red-700 dark:text-red-300 flex items-center"><FaTrashAlt className="mr-2"/>{t('security.deleteAccount.title')}</h4>
+                    <p className="text-sm text-red-600/80 dark:text-red-400/80 mt-1">{t('security.deleteAccount.description')}</p>
                   </div>
                   <button
-                    className="px-4 py-2 border border-red-500 dark:border-red-600 rounded-md shadow-sm text-sm font-medium text-red-600 dark:text-red-300 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-800 whitespace-nowrap"
-                    onClick={() => {
-                      if (window.confirm(t('security.deleteAccount.confirm'))) {
-                        alert(t('security.deleteAccount.toBeImplemented'));
-                      }
-                    }}
+                    className="px-4 py-2 border border-red-500 dark:border-red-600 rounded-md shadow-sm text-sm font-medium text-red-600 dark:text-red-300 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:focus:ring-offset-gray-800 whitespace-nowrap disabled:opacity-70"
+                    onClick={handleDeleteAccount}
+                    disabled={isDeletingAccount}
                   >
-                    {t('security.deleteAccount.button')}
+                    {isDeletingAccount ? (
+                      <>
+                        <FaSpinner className="animate-spin mr-2 h-4 w-4" />
+                        {t('security.deleteAccount.deleting')}
+                      </>
+                    ) : (
+                      t('security.deleteAccount.button')
+                    )}
                   </button>
                 </div>
               </div>
@@ -332,13 +284,9 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
 export default ProfilePage;
 
 export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
-  // console.log('[getServerSideProps /profile] context.locale:', context.locale); // DEBUG LOG ODSTRANĚN
-  // console.log('[getServerSideProps /profile] context.resolvedUrl:', context.resolvedUrl); // DEBUG LOG ODSTRANĚN
-  // console.log('[getServerSideProps /profile] context.req.url:', context.req?.url); // DEBUG LOG ODSTRANĚN
-
   const session = await getSession(context);
 
-  if (!session) { // Vrácení přesměrování
+  if (!session) { 
     return {
       redirect: {
         destination: `/auth/login?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
