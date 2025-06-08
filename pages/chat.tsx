@@ -1,29 +1,33 @@
-import React from 'react';
+import React, { Suspense } from 'react'; // Added Suspense
 import Layout from '../components/Layout';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy } from 'react'; // Added lazy
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { 
   FaMicrophone, FaVolumeUp, FaVolumeMute, FaCog, FaHistory, 
   FaBookMedical, FaUserFriends, FaSadTear, FaRunning, FaHeart,
-  FaUser, FaChartLine, FaTrophy, FaTimes,
-  FaRegSmile, FaRegFrown, FaRegMeh, FaRegAngry, FaRegSurprise // Přidány ikony pro nálady
+  FaUser, FaChartLine, FaTrophy, FaTimes, FaSpinner,
+  FaRegSmile, FaRegFrown, FaRegMeh, FaRegAngry, FaRegSurprise 
 } from 'react-icons/fa';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import LoadingIndicator from '../components/LoadingIndicator';
-import UserProfile from '../components/UserProfile';
-import { UserProfileData } from '../types';
-import SentimentAnalyzer from '../components/SentimentAnalyzer';
-import Gamification from '../components/Gamification';
+// import UserProfile from '../components/UserProfile'; // Lazy loaded
+// import SentimentAnalyzer from '../components/SentimentAnalyzer'; // Lazy loaded
+// import Gamification from '../components/Gamification'; // Lazy loaded
 import CrisisNotice from '../components/CrisisNotice';
 import ChatSettingsModal from '../components/ChatSettingsModal';
-import { Message } from '../types';
+import { Message, UserProfileData } from '../types'; // Combined UserProfileData import
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
+
+// Lazy load components
+const UserProfile = lazy(() => import('../components/UserProfile'));
+const SentimentAnalyzer = lazy(() => import('../components/SentimentAnalyzer'));
+const Gamification = lazy(() => import('../components/Gamification'));
 
 interface DiaryTag {
   id: string;
@@ -44,7 +48,8 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   const { t, i18n } = useTranslation(['chat', 'common']);
   
   const [messages, setMessages] = useState<Message[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [initialDataLoading, setInitialDataLoading] = useState(true); 
+  const [loading, setLoading] = useState(false); 
   const [loadingEstimatedTime, setLoadingEstimatedTime] = useState(5);
   const [selectedTopic, setSelectedTopic] = useState<'anxiety' | 'relationships' | 'depression' | 'stress' | 'selfEsteem' | null>(null);
   const [selectedPersonality, setSelectedPersonality] = useState<'supportive' | 'practical' | 'analytical' | 'mentor' | 'coach' | 'mediator' | null>(null);
@@ -80,21 +85,27 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   useEffect(() => {
     const loadInitialData = async () => {
       if (!(authStatus === "authenticated" && session?.user)) {
+        setInitialDataLoading(false);
         return;
       }
+      setInitialDataLoading(true);
 
       let systemMessageContent = t('systemPrompt.default');
-      if (i18n.language === 'en') {
-        systemMessageContent = t('systemPrompt.en');
-      } else if (i18n.language === 'uk') {
-        systemMessageContent = t('systemPrompt.uk');
-      }
+      if (i18n.language === 'en') systemMessageContent = t('systemPrompt.en');
+      else if (i18n.language === 'uk') systemMessageContent = t('systemPrompt.uk');
       const systemMessage: Message = { role: 'system', content: systemMessageContent };
+      
+      setMessages([systemMessage, {role: 'assistant', content: t('loadingMessages', 'Načítám zprávy...'), timestamp: new Date()}]);
 
       try {
-        const profileResponse = await fetch('/api/user/profile');
-        if (profileResponse.ok) {
-          const profileData = await profileResponse.json();
+        const [profileRes, chatHistoryRes, insightsRes] = await Promise.all([
+          fetch('/api/user/profile'),
+          fetch('/api/chat'), 
+          fetch('/api/user-insights') 
+        ]);
+
+        if (profileRes.ok) {
+          const profileData = await profileRes.json();
           setUserProfileData(profileData);
           if (profileData.preferences) {
             setResponseLength(profileData.preferences.responseLength || 'medium');
@@ -102,65 +113,63 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
             if (profileData.preferences.assistantName) setAssistantName(profileData.preferences.assistantName);
           }
         } else {
-          console.error(t('errors.profileLoadFailedConsole'), profileResponse.statusText);
+          console.error(t('errors.profileLoadFailedConsole'), profileRes.statusText);
         }
-      } catch (error) {
-        console.error(t('errors.profileLoadErrorConsole'), error);
-      }
 
-      try {
-        const chatHistoryResponse = await fetch('/api/chat');
-        if (chatHistoryResponse.ok) {
-          const historyData = await chatHistoryResponse.json();
-          let baseMessages = [systemMessage];
-
+        let baseMessages = [systemMessage];
+        if (chatHistoryRes.ok) {
+          const historyData = await chatHistoryRes.json();
           if (historyData.sessionId && historyData.messages && historyData.messages.length > 0) {
             setCurrentChatSessionId(historyData.sessionId);
             baseMessages = [
               systemMessage,
               ...historyData.messages.map((msg: Message) => ({
-              ...msg,
-              timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
-            }))];
+                ...msg,
+                timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
+              }))
+            ];
           }
-          
-          let messagesToSet = baseMessages;
-          const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
-          const now = new Date();
-          let addedProactiveMessage = false;
+        } else {
+          console.error(t('errors.chatHistoryLoadFailedConsole'), chatHistoryRes.statusText);
+        }
+        
+        let messagesToSet = baseMessages;
+        const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
+        const now = new Date();
+        let addedProactiveMessage = false;
 
-          const lastUserOrAssistantMessage = [...baseMessages].reverse().find(msg => msg.role === 'user' || msg.role === 'assistant');
-          if (lastUserOrAssistantMessage && lastUserOrAssistantMessage.timestamp && (now.getTime() - new Date(lastUserOrAssistantMessage.timestamp).getTime()) > twentyFourHoursInMs) {
-            messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.welcomeBack'), timestamp: new Date() }];
-            addedProactiveMessage = true;
-          }
-          
+        const lastUserOrAssistantMessage = [...baseMessages].reverse().find(msg => msg.role === 'user' || msg.role === 'assistant');
+        if (lastUserOrAssistantMessage && lastUserOrAssistantMessage.timestamp && (now.getTime() - new Date(lastUserOrAssistantMessage.timestamp).getTime()) > twentyFourHoursInMs) {
+          messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.welcomeBack'), timestamp: new Date() }];
+          addedProactiveMessage = true;
+        }
+        
+        if (insightsRes.ok) {
           try {
-            const insightsResponse = await fetch('/api/user-insights');
-            if (insightsResponse.ok) {
-              const insightsData = await insightsResponse.json();
-              if (insightsData && insightsData.proactive_flags) {
-                if (insightsData.proactive_flags.suggest_mood_discussion && !addedProactiveMessage) {
-                  messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.moodSuggestion'), timestamp: new Date() }];
-                  addedProactiveMessage = true;
-                }
-                if (insightsData.proactive_flags.offer_stress_exercise && !addedProactiveMessage) {
-                  messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.stressExerciseSuggestion'), timestamp: new Date() }];
-                }
+            const insightsData = await insightsRes.json();
+            if (insightsData && insightsData.proactive_flags) {
+              if (insightsData.proactive_flags.suggest_mood_discussion && !addedProactiveMessage) {
+                messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.moodSuggestion'), timestamp: new Date() }];
+                addedProactiveMessage = true;
+              }
+              if (insightsData.proactive_flags.offer_stress_exercise && !addedProactiveMessage) {
+                 messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.stressExerciseSuggestion'), timestamp: new Date() }];
               }
             }
-          } catch (insightsError) {
-            console.error(t('errors.userInsightsLoadErrorConsole'), insightsError);
+          } catch (insightsParseError) {
+             console.error(t('errors.userInsightsParseErrorConsole'), insightsParseError);
           }
-          setMessages(messagesToSet);
-
         } else {
-            console.error(t('errors.chatHistoryLoadFailedConsole'), chatHistoryResponse.statusText);
-            setMessages([systemMessage]);
+            console.warn(t('errors.userInsightsLoadFailedConsoleWarn'), insightsRes.statusText);
         }
+        
+        setMessages(messagesToSet);
+
       } catch (error) {
-        console.error(t('errors.chatHistoryLoadErrorConsole'), error);
-        setMessages([systemMessage]);
+        console.error(t('errors.initialDataLoadErrorConsole'), error);
+        setMessages([systemMessage, {role: 'assistant', content: t('errors.chatHistoryLoadError'), timestamp: new Date()}]);
+      } finally {
+        setInitialDataLoading(false);
       }
     };
 
@@ -170,7 +179,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
       loadInitialData();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authStatus, i18n.language]); // Simplified dependency array
+  }, [authStatus, i18n.language]); 
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -233,7 +242,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
 
     const newMessages = [...messagesWithSystem, userMessage];
     setMessages(newMessages);
-    setLoading(true);
+    setLoading(true); 
     try {
       const requestData = {
         messages: newMessages, 
@@ -261,7 +270,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
       console.error(t('errors.apiCallFailedConsole'), error);
       setMessages(prev => [...prev, { role: 'assistant', content: t('errors.apiCommunicationError'), timestamp: new Date() }]);
     } finally {
-      setLoading(false);
+      setLoading(false); 
     }
   };
 
@@ -329,6 +338,12 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
     { labelKey: 'sidebar.settings', icon: FaCog, action: () => setShowSettingsModal(true), active: showSettingsModal }
   ];
 
+  const SidebarFallback = () => (
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex justify-center items-center h-32">
+      <FaSpinner className="animate-spin text-blue-500 text-2xl" />
+    </div>
+  );
+
   if (authStatus === "loading") return <Layout title={t('common:loading')}><p className="text-center p-8">{t('loadingAuth')}</p></Layout>;
   
   return (
@@ -355,36 +370,43 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                 ))}
               </div>
             </div>
-            {showProfile && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                <UserProfile onProfileChange={handleProfileChange} />
-              </div>
-            )}
-            {showAnalytics && messages.filter((m: Message) => m.role !== 'system').length >= 2 && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                <SentimentAnalyzer messages={messages} />
-              </div>
-            )}
-            {showGamification && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                <Gamification 
-                  sessionCount={sessionCount} 
-                  streakDays={streakDays}
-                  lastSessionDate={lastSessionDate || undefined}
-                />
-              </div>
-            )}
+            <Suspense fallback={<SidebarFallback />}>
+              {showProfile && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                  <UserProfile onProfileChange={handleProfileChange} />
+                </div>
+              )}
+              {showAnalytics && messages.filter((m: Message) => m.role !== 'system').length >= 2 && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                  <SentimentAnalyzer messages={messages} />
+                </div>
+              )}
+              {showGamification && (
+                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                  <Gamification 
+                    sessionCount={sessionCount} 
+                    streakDays={streakDays}
+                    lastSessionDate={lastSessionDate || undefined}
+                  />
+                </div>
+              )}
+            </Suspense>
           </div>
         </div>
         
         {/* Main Chat Area */}
-        <div className="flex-grow flex flex-col"> {/* REVERTED: Removed overflow-hidden */}
+        <div className="flex-grow flex flex-col">
           {/* Message Display Area */}
           <div 
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]" /* REVERTED: Added back max-h constraints */
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]"
             ref={chatContainerRef}
           >
-            {messages.filter((msg: Message) => msg.role !== 'system').map((message, index, arr) => {
+            {(initialDataLoading && messages.length <=1 ) ? ( 
+                 <div className="flex justify-center items-center h-full">
+                   <FaSpinner className="animate-spin text-blue-500 text-3xl" />
+                   <p className="ml-2 text-gray-500 dark:text-gray-400">{t('loadingChatHistory', 'Načítám historii chatu...')}</p>
+                 </div>
+            ) : messages.filter((msg: Message) => msg.role !== 'system').map((message, index, arr) => {
               let showDateSeparator = false;
               const currentMessageTimestamp = message.timestamp ? new Date(message.timestamp) : new Date(0);
               
@@ -423,7 +445,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                 </React.Fragment>
               );
             })}
-            {loading && (
+            {loading && !initialDataLoading && ( 
               <LoadingIndicator 
                 isVisible={loading} 
                 estimatedTime={loadingEstimatedTime}
@@ -433,7 +455,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
           
           <ChatInput 
             onSendMessage={sendMessage}
-            isLoading={loading}
+            isLoading={loading} 
             placeholder={t('chatInputPlaceholder', 'Napište zprávu...')}
           />
           
