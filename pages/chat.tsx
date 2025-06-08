@@ -1,6 +1,6 @@
-import React, { Suspense } from 'react'; // Added Suspense
+import React, { Suspense } from 'react'; 
 import Layout from '../components/Layout';
-import { useState, useEffect, useRef, lazy } from 'react'; // Added lazy
+import { useState, useEffect, useRef, lazy } from 'react'; 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -18,13 +18,12 @@ import LoadingIndicator from '../components/LoadingIndicator';
 // import Gamification from '../components/Gamification'; // Lazy loaded
 import CrisisNotice from '../components/CrisisNotice';
 import ChatSettingsModal from '../components/ChatSettingsModal';
-import { Message, UserProfileData } from '../types'; // Combined UserProfileData import
+import { Message, UserProfileData } from '../types'; 
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
 
-// Lazy load components
 const UserProfile = lazy(() => import('../components/UserProfile'));
 const SentimentAnalyzer = lazy(() => import('../components/SentimentAnalyzer'));
 const Gamification = lazy(() => import('../components/Gamification'));
@@ -98,10 +97,11 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
       setMessages([systemMessage, {role: 'assistant', content: t('loadingMessages', 'Načítám zprávy...'), timestamp: new Date()}]);
 
       try {
-        const [profileRes, chatHistoryRes, insightsRes] = await Promise.all([
+        // const [profileRes, chatHistoryRes, insightsRes] = await Promise.all([
+        const [profileRes, chatHistoryRes] = await Promise.all([ // Temporarily remove insightsRes
           fetch('/api/user/profile'),
           fetch('/api/chat'), 
-          fetch('/api/user-insights') 
+          // fetch('/api/user-insights') // Temporarily commented out
         ]);
 
         if (profileRes.ok) {
@@ -144,24 +144,25 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
           addedProactiveMessage = true;
         }
         
-        if (insightsRes.ok) {
-          try {
-            const insightsData = await insightsRes.json();
-            if (insightsData && insightsData.proactive_flags) {
-              if (insightsData.proactive_flags.suggest_mood_discussion && !addedProactiveMessage) {
-                messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.moodSuggestion'), timestamp: new Date() }];
-                addedProactiveMessage = true;
-              }
-              if (insightsData.proactive_flags.offer_stress_exercise && !addedProactiveMessage) {
-                 messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.stressExerciseSuggestion'), timestamp: new Date() }];
-              }
-            }
-          } catch (insightsParseError) {
-             console.error(t('errors.userInsightsParseErrorConsole'), insightsParseError);
-          }
-        } else {
-            console.warn(t('errors.userInsightsLoadFailedConsoleWarn'), insightsRes.statusText);
-        }
+        // Temporarily comment out insights processing
+        // if (insightsRes.ok) {
+        //   try {
+        //     const insightsData = await insightsRes.json();
+        //     if (insightsData && insightsData.proactive_flags) {
+        //       if (insightsData.proactive_flags.suggest_mood_discussion && !addedProactiveMessage) {
+        //         messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.moodSuggestion'), timestamp: new Date() }];
+        //         addedProactiveMessage = true;
+        //       }
+        //       if (insightsData.proactive_flags.offer_stress_exercise && !addedProactiveMessage) {
+        //          messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.stressExerciseSuggestion'), timestamp: new Date() }];
+        //       }
+        //     }
+        //   } catch (insightsParseError) {
+        //      console.error(t('errors.userInsightsParseErrorConsole'), insightsParseError);
+        //   }
+        // } else {
+        //     console.warn(t('errors.userInsightsLoadFailedConsoleWarn'), insightsRes.statusText);
+        // }
         
         setMessages(messagesToSet);
 
