@@ -51,20 +51,27 @@ export const authOptions: NextAuthOptions = {
           if (user.email) {
             try {
               const supabaseAdmin = getSupabaseAdmin();
-              // Supabase stores user identities in auth.users, email is unique there.
-              // We need to query the raw auth.users table, not user_profiles for the auth ID.
-              const { data: supabaseUser, error: fetchError } = await supabaseAdmin.from('users').select('id').eq('email', user.email).single(); // Assuming 'users' is the table in 'auth' schema
+              // Fetch a list of users and filter manually due to TS issues with query/filter params
+              const { data: { users: allUsers }, error: listUsersError } = await supabaseAdmin.auth.admin.listUsers({
+                page: 1,
+                perPage: 1000, // Adjust as needed, hope to find the user in the first batch
+              });
 
-              if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 = no rows found
-                console.error("[NextAuth] JWT: Error fetching Supabase user by email:", fetchError);
-              } else if (supabaseUser) {
-                supabaseUserId = supabaseUser.id;
-                console.log(`[NextAuth] JWT: Found Supabase user by email. UUID: ${supabaseUserId}`);
+              if (listUsersError) {
+                console.error("[NextAuth] JWT: Error listing Supabase auth users:", listUsersError.message);
+              } else if (allUsers && allUsers.length > 0) {
+                const exactMatchUser = allUsers.find(u => u.email === user.email);
+                if (exactMatchUser) {
+                  supabaseUserId = exactMatchUser.id; 
+                  console.log(`[NextAuth] JWT: Found Supabase auth user by email (manual filter). UUID: ${supabaseUserId}`);
+                } else {
+                   console.warn(`[NextAuth] JWT: Supabase auth user not found for exact email '${user.email}' after listing users.`);
+                }
               } else {
-                console.error(`[NextAuth] JWT CRITICAL: Supabase user not found for email '${user.email}'. This might indicate a new user whose Supabase auth record hasn't been created or synced yet, or an issue with Supabase Auth setup.`);
+                console.warn(`[NextAuth] JWT: No users returned from listUsers or list was empty for email '${user.email}'.`);
               }
-            } catch (e) {
-              console.error("[NextAuth] JWT: Exception while fetching Supabase user by email:", e);
+            } catch (e: any) {
+              console.error("[NextAuth] JWT: Exception while fetching/handling Supabase auth user by email:", e.message);
             }
           } else {
             console.error("[NextAuth] JWT CRITICAL: user.email is missing, cannot look up Supabase user.");
@@ -73,10 +80,9 @@ export const authOptions: NextAuthOptions = {
 
         if (supabaseUserId) {
           token.sub = supabaseUserId;
-          token.id = supabaseUserId; // For consistency
+          token.id = supabaseUserId; 
 
-          // Welcome email logic (only if account is present, indicating first sign-in/link)
-          if (account && user.email) {
+          if (account && user.email) { 
             try {
               const supabaseAdmin = getSupabaseAdmin();
               const { data: existingProfile, error: profileError } = await supabaseAdmin
@@ -85,27 +91,26 @@ export const authOptions: NextAuthOptions = {
                 .eq('id', supabaseUserId) 
                 .maybeSingle();
 
-              if (profileError && profileError.code !== 'PGRST116') {
+              if (profileError && profileError.code !== 'PGRST116') { 
                 console.error("[NextAuth] JWT: Error checking user_profiles for welcome email:", profileError);
               }
               
               if (!existingProfile) {
-                console.log(`[NextAuth] JWT: New user profile to be created for ${user.email} (Supabase ID: ${supabaseUserId}). Attempting to send welcome email.`);
-                // Note: user_profiles table should be populated by a Supabase trigger on auth.users insert.
-                // If not, it needs to be created here or by such a trigger.
-                // For now, just sending email.
+                console.log(`[NextAuth] JWT: User profile does not exist for ${user.email} (Supabase ID: ${supabaseUserId}). This might be the first sign-in. Attempting to send welcome email.`);
                 sendWelcomeEmail(user.email, user.name).catch(emailError => {
                   console.error("[NextAuth] JWT: Failed to send welcome email:", emailError);
                 });
+              } else {
+                console.log(`[NextAuth] JWT: User profile already exists for ${user.email} (Supabase ID: ${supabaseUserId}). Not a new user for welcome email purposes.`);
               }
-            } catch (dbError) {
-              console.error("[NextAuth] JWT: Database error during new user check for welcome email:", dbError);
+            } catch (dbError: any) {
+              console.error("[NextAuth] JWT: Database error during new user check for welcome email:", dbError.message);
             }
           }
         } else {
           token.sub = ""; 
           token.id = ""; 
-          console.error(`[NextAuth] JWT CRITICAL: Could not determine a valid Supabase UUID for token.sub. User ID from provider: '${user.id}', Email: '${user.email}'`);
+          console.error(`[NextAuth] JWT CRITICAL: Could not determine a valid Supabase UUID for token.sub. User ID from provider: '${user.id}', Email: '${user.email}'. session.user.id will be empty.`);
         }
         
         token.email = user.email ?? undefined;
