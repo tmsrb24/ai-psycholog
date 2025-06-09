@@ -34,10 +34,11 @@ export async function loadAndChunkPubMedArticles(
     return [];
   }
 
-  console.log(`[PubMedLoader] Found ${pmcIds.length} article IDs. Fetching and chunking...`);
+  console.log(`[PubMedLoader] Found ${pmcIds.length} article IDs. Fetching and chunking in parallel...`);
 
-  for (const pmcId of pmcIds) {
+  const articleProcessingPromises = pmcIds.map(async (pmcId) => {
     const articleUrl = `https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${pmcId}/`;
+    const articleChunks: PubMedArticleChunk[] = [];
     try {
       const htmlResponse = await axios.get(articleUrl, { timeout: 10000 }); // 10s timeout
       const html = htmlResponse.data;
@@ -55,7 +56,7 @@ export async function loadAndChunkPubMedArticles(
         }
         
         if (abstractText) {
-            allChunks.push({
+            articleChunks.push({
                 articleId: `PMC${pmcId}`,
                 source: articleUrl,
                 chunkText: `Title: ${title}\nAbstract: ${abstractText}`,
@@ -75,7 +76,7 @@ export async function loadAndChunkPubMedArticles(
             if (pText.length < 50 || pText.toLowerCase().includes("copyright") || pText.toLowerCase().includes("figure")) {
                 continue;
             }
-            allChunks.push({
+            articleChunks.push({
               articleId: `PMC${pmcId}`,
               source: articleUrl,
               chunkText: pText,
@@ -84,13 +85,19 @@ export async function loadAndChunkPubMedArticles(
           }
         }
         console.log(`[PubMedLoader] Processed and chunked article PMC${pmcId}`);
+        return articleChunks;
       }
     } catch (error: any) {
       console.error(`[PubMedLoader] Error fetching or parsing article PMC${pmcId} from ${articleUrl}:`, error.message);
     }
-  }
-  console.log(`[PubMedLoader] Total chunks created: ${allChunks.length}`);
-  return allChunks;
+    return []; // Return empty array on error for this article
+  });
+
+  const chunkArrays = await Promise.all(articleProcessingPromises);
+  const allProcessedChunks = chunkArrays.flat().filter(chunk => chunk); // Flatten and remove any undefined/null from errored promises
+
+  console.log(`[PubMedLoader] Total chunks created: ${allProcessedChunks.length}`);
+  return allProcessedChunks;
 }
 
 // Example usage (for testing):
