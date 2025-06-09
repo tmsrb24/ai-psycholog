@@ -60,6 +60,7 @@ export default async function handler(
   const supabaseAdmin = getSupabaseAdmin();
 
   if (req.method === 'GET') {
+    console.log(`[API /api/chat GET] Request received for user ID: ${userId}, Session Token Sub: ${token.sub}`); // Log the userId
     // ... (GET logic remains largely the same, ensurePubMedRagIsInitialized() not strictly needed for GET unless GET also uses RAG)
     try {
       const { data: lastSession, error: lastSessionError } = await supabaseAdmin
