@@ -97,16 +97,21 @@ export default async function handler(
 
 
       if (lastSession) {
+        const MESSAGES_PAGE_LIMIT = 50; // Load last 50 messages
         const { data: messagesData, error: messagesError } = await supabaseAdmin
           .from('chat_messages')
           .select('role, content, timestamp, metadata')
           .eq('session_id', lastSession.id)
-          .order('timestamp', { ascending: true });
+          .order('timestamp', { ascending: false }) // Fetch newest first for limit
+          .limit(MESSAGES_PAGE_LIMIT);
 
         if (messagesError) throw messagesError;
+
+        // Messages are fetched newest first due to limit, so reverse them back to oldest first
+        const orderedMessagesData = messagesData ? messagesData.reverse() : [];
         
         const systemMessage: Message = { role: 'system', content: systemPromptContent };
-        const chatMessages: Message[] = messagesData.map(m => ({
+        const chatMessages: Message[] = orderedMessagesData.map(m => ({ // Use orderedMessagesData
           role: m.role as Message['role'],
           content: m.content,
           timestamp: new Date(m.timestamp),
