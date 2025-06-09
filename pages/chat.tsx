@@ -8,8 +8,9 @@ import {
   FaMicrophone, FaVolumeUp, FaVolumeMute, FaCog, FaHistory, 
   FaBookMedical, FaUserFriends, FaSadTear, FaRunning, FaHeart,
   FaUser, FaChartLine, FaTrophy, FaTimes, FaSpinner,
-  FaRegSmile, FaRegFrown, FaRegMeh, FaRegAngry, FaRegSurprise 
+  FaRegSmile, FaRegFrown, FaRegMeh, FaRegAngry, FaRegSurprise
 } from 'react-icons/fa';
+import { type IconType } from 'react-icons/lib'; // Correct import for IconType
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import LoadingIndicator from '../components/LoadingIndicator';
@@ -25,7 +26,7 @@ import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
 
 const UserProfile = lazy(() => import('../components/UserProfile'));
-const SentimentAnalyzer = lazy(() => import('../components/SentimentAnalyzer'));
+// const SentimentAnalyzer = lazy(() => import('../components/SentimentAnalyzer')); // Removed User Insights/Analytics
 const Gamification = lazy(() => import('../components/Gamification'));
 
 interface DiaryTag {
@@ -42,6 +43,14 @@ interface DiaryMood {
 }
 
 type PageProps = {};
+
+interface SidebarItem {
+  labelKey: string;
+  icon: IconType;
+  action: () => void;
+  active: boolean;
+  disabled?: boolean; // Make disabled optional
+}
 
 const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { t, i18n } = useTranslation(['chat', 'common']);
@@ -72,7 +81,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
       assistantGender: 'male',
     }
   });
-  const [showAnalytics, setShowAnalytics] = useState(false);
+  // const [showAnalytics, setShowAnalytics] = useState(false); // Removed User Insights/Analytics
   const [showGamification, setShowGamification] = useState(false);
   const [sessionCount, setSessionCount] = useState(0);
   const [streakDays, setStreakDays] = useState(0);
@@ -332,9 +341,9 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
     return date.toLocaleDateString(i18n.language, { day: 'numeric', month: 'long', year: 'numeric' });
   };
 
-  const sidebarItems = [
+  const sidebarItems: SidebarItem[] = [
     { labelKey: 'sidebar.profile', icon: FaUser, action: () => setShowProfile(!showProfile), active: showProfile },
-    { labelKey: 'sidebar.analysis', icon: FaChartLine, action: () => setShowAnalytics(!showAnalytics), active: showAnalytics, disabled: messages.filter((m: Message) => m.role !== 'system').length < 2 },
+    // { labelKey: 'sidebar.analysis', icon: FaChartLine, action: () => setShowAnalytics(!showAnalytics), active: showAnalytics, disabled: messages.filter((m: Message) => m.role !== 'system').length < 2 }, // Removed User Insights/Analytics
     { labelKey: 'sidebar.achievements', icon: FaTrophy, action: () => setShowGamification(!showGamification), active: showGamification },
     { labelKey: 'sidebar.settings', icon: FaCog, action: () => setShowSettingsModal(true), active: showSettingsModal }
   ];
@@ -377,11 +386,13 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                   <UserProfile onProfileChange={handleProfileChange} />
                 </div>
               )}
+              {/* Removed User Insights/Analytics
               {showAnalytics && messages.filter((m: Message) => m.role !== 'system').length >= 2 && (
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
                   <SentimentAnalyzer messages={messages} />
                 </div>
               )}
+              */}
               {showGamification && (
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
                   <Gamification 
