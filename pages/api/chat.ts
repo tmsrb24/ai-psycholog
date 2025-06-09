@@ -1,18 +1,26 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Message, ApiResponse, UserProfileData } from '../../types';
 import axios from 'axios';
-import { ragService, initializeRagWithSamples } from '../../lib/rag';
+// import { ragService, initializeRagWithSamples } from '../../lib/rag'; // Old RAG
+import { initializePubMedRAG, searchPubMedRAG } from '../../lib/ragPubMedService'; // New PubMed RAG
 import { getSupabaseAdmin } from '../../lib/supabaseClient';
 import { getToken } from "next-auth/jwt";
 import { validateAIResponse, AIResponseValidationResult } from '../../lib/responseValidation';
 
-let ragInitialized = false;
-const initializeRag = async () => {
-  if (!ragInitialized) {
-    await initializeRagWithSamples();
-    ragInitialized = true;
+// Initialize PubMed RAG - this will run once when the module is first loaded in a serverless environment,
+// or on first request to this API route. The service itself has an internal flag.
+// For Vercel, top-level await is not directly supported in API routes in Pages Router in the same way as App Router.
+// We'll use a flag and initialize on first relevant request.
+let pubMedRagInitializationEnsured = false;
+const ensurePubMedRagIsInitialized = async () => {
+  if (!pubMedRagInitializationEnsured) {
+    console.log("Attempting to initialize PubMed RAG for the first time in this instance...");
+    // Using a general query that might yield useful, diverse psychological content for the "lite" version
+    await initializePubMedRAG("psychotherapy techniques for common mental health issues", 3); 
+    pubMedRagInitializationEnsured = true; 
   }
 };
+
 
 type TopicKey = 'anxiety' | 'relationships' | 'depression' | 'stress' | 'selfEsteem' | 'general';
 type PersonalityKey = 'supportive' | 'practical' | 'analytical' | 'neutral';
@@ -52,6 +60,7 @@ export default async function handler(
   const supabaseAdmin = getSupabaseAdmin();
 
   if (req.method === 'GET') {
+    // ... (GET logic remains largely the same, ensurePubMedRagIsInitialized() not strictly needed for GET unless GET also uses RAG)
     try {
       const { data: lastSession, error: lastSessionError } = await supabaseAdmin
         .from('chat_sessions')
@@ -104,7 +113,9 @@ export default async function handler(
           isCrisis: (m.metadata as any)?.isCrisis ?? false,
         }));
 
+        // Proactive messaging based on diary (kept as is)
         let proactiveMessage: Message | null = null;
+        // ... (proactive message logic from original file) ...
         try {
           const { data: recentDiaryEntries, error: diaryError } = await supabaseAdmin
             .from('diary_entries')
@@ -137,9 +148,11 @@ export default async function handler(
         }
         
         const finalMessages = proactiveMessage ? [systemMessage, ...chatMessages, proactiveMessage] : [systemMessage, ...chatMessages];
+
         return res.status(200).json({ sessionId: lastSession.id, messages: finalMessages });
 
       } else {
+        // ... (logic for no last session, including proactive message, from original file) ...
         const systemMessage: Message = { role: 'system', content: systemPromptContent };
         let proactiveMessage: Message | null = null;
          try {
@@ -179,7 +192,7 @@ export default async function handler(
     }
   } else if (req.method === 'POST') {
     try {
-      await initializeRag();
+      await ensurePubMedRagIsInitialized(); // Ensure RAG is ready
       console.log('API route /api/chat POST called with body:', JSON.stringify(req.body, null, 2));
     
       const body = req.body as {
@@ -285,8 +298,20 @@ export default async function handler(
                 });
               });
       
-      const ragContext = await ragService.generateContext(userMessageContent, { maxDocuments: 2, similarityThreshold: 0.6 });
-      const userMessageWithContext = ragContext ? `${userMessageContent}\n\nPro tvou informaci, zde jsou některé relevantní poznámky z naší databáze znalostí, které by ti mohly pomoci lépe odpovědět (tyto informace neukazuj přímo uživateli, ale použij je k formulaci odpovědi):\n${ragContext}` : userMessageContent;
+      // New PubMed RAG integration
+      let ragContextString = "";
+      const pubmedResults = await searchPubMedRAG(userMessageContent, 2); // Get top 2 chunks
+      if (pubmedResults && pubmedResults.length > 0) {
+        ragContextString = "\n\nPro tvou informaci, zde jsou některé relevantní úryvky z odborných článků, které by ti mohly pomoci lépe odpovědět (tyto informace neukazuj přímo uživateli, ale použij je k formulaci odpovědi):\n";
+        pubmedResults.forEach(chunk => {
+          ragContextString += `Zdroj: ${chunk.source}\nÚryvek: ${chunk.chunkText}\n\n`;
+        });
+        // Trim context if too long
+        if (ragContextString.length > 3000) { // Arbitrary limit, adjust as needed
+            ragContextString = ragContextString.substring(0, 3000) + "... (kontext zkrácen)";
+        }
+      }
+      const userMessageWithContext = ragContextString ? `${userMessageContent}${ragContextString}` : userMessageContent;
       formattedMessagesForGemini.push({ role: 'user', parts: [{ text: userMessageWithContext }] });
 
 
