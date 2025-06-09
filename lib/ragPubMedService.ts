@@ -1,4 +1,4 @@
-import { pipeline, Pipeline } from '@xenova/transformers';
+import { pipeline, Pipeline, FeatureExtractionPipeline } from '@xenova/transformers';
 import { loadAndChunkPubMedArticles } from './pubmedLoader'; // Assuming pubmedLoader.ts is in the same dir or correct path
 
 interface PubMedArticleChunk {
@@ -12,7 +12,7 @@ interface StoredChunk extends PubMedArticleChunk {
   embedding: number[];
 }
 
-let embedder: Pipeline | null = null;
+let embedder: FeatureExtractionPipeline | null = null;
 let storedPubMedChunks: StoredChunk[] = [];
 let isPubMedDataInitialized = false;
 
