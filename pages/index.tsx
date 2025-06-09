@@ -49,12 +49,13 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
   };
 
   const featureCardVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30 }, // Increased initial y-offset for a more noticeable slide-up
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.5,
+        ease: "easeOut", // Added easing to match hero text items
       },
     },
   };
