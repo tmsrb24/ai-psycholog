@@ -52,7 +52,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.3, // Increased stagger for more pronounced sequential effect
+        staggerChildren: 0, // Cards within a section will animate simultaneously
       },
     },
   };
