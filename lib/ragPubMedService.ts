@@ -1,4 +1,16 @@
-import { pipeline, Pipeline, FeatureExtractionPipeline } from '@xenova/transformers';
+import { env, pipeline, Pipeline, FeatureExtractionPipeline } from '@xenova/transformers';
+
+// Programmatically set the cache directory to a writable path in serverless environments
+// This should be one of the first things executed in this module.
+if (typeof process !== 'undefined' && process.env && process.env.VERCEL_ENV) { // Check if running on Vercel
+  const cachePath = '/tmp/.xenova_transformers_cache';
+  env.cacheDir = cachePath;
+  // console.log(`[RAGPubMedService] Programmatically set Xenova cacheDir to: ${cachePath}`);
+  // Optionally, try to create the directory if it doesn't exist, though the library should handle this.
+  // However, since mkdir was the point of failure, this might be redundant if the path itself is the issue.
+  // The main goal is that the library *attempts* to create/use this path.
+}
+
 import { loadAndChunkPubMedArticles } from './pubmedLoader'; // Assuming pubmedLoader.ts is in the same dir or correct path
 
 interface PubMedArticleChunk {
