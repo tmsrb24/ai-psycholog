@@ -43,18 +43,19 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2, // Delay between children animations
+        staggerChildren: 0.3, // Increased stagger for more pronounced sequential effect
       },
     },
   };
 
   const featureCardVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 30 }, // Restoring the more noticeable slide-up
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.5,
+        ease: "easeOut", // Restoring the smoother easing
       },
     },
   };
