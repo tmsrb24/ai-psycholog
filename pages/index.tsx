@@ -38,6 +38,15 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation('homepage'); 
   const { t: tCommon } = useTranslation('common'); 
 
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" }
+    }
+  };
+
   const featureContainerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -229,6 +238,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
       <motion.section 
         className="py-12 sm:py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
+        variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -310,6 +320,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
+        variants={sectionVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.1 }}
