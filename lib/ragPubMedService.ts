@@ -68,56 +68,50 @@ export async function initializePubMedRAG(
       const chunkTexts = rawChunks.map(c => c.chunkText);
       try {
         console.log(`[RAGPubMedService] Starting batch embedding for ${chunkTexts.length} texts.`);
-        const outputs = await embedder(chunkTexts, { pooling: 'mean', normalize: true });
-        console.log(`[RAGPubMedService] Batch embedding completed.`);
+        const outputTensor = await embedder(chunkTexts, { pooling: 'mean', normalize: true });
+        console.log(`[RAGPubMedService] Batch embedding tensor received.`);
 
-        // Assuming 'outputs.data' is a flat Float32Array for all embeddings concatenated
-        // and 'outputs.dims' gives dimensions, e.g., [num_texts, embedding_dim]
-        // Or, if the structure is different, this part needs adjustment based on Xenova's actual batched output.
-        // For now, let's assume a common pattern: output.data is flat, output.dims tells us structure.
-        if (outputs.data && typeof outputs.dims === 'object' && outputs.dims.length === 2) {
-          const batchOutputData = outputs.data as Float32Array;
-          const numEmbeddingsInBatch = outputs.dims[0];
-          const embeddingDim = outputs.dims[1];
+        // Use .tolist() to convert the tensor to a nested JavaScript array.
+        // For Xenova Transformers.js, tolist() is synchronous.
+        const embeddingsBatch = outputTensor.tolist(); 
 
-          if (numEmbeddingsInBatch === rawChunks.length && batchOutputData.length === numEmbeddingsInBatch * embeddingDim) {
-            for (let i = 0; i < numEmbeddingsInBatch; i++) {
-              const embedding = Array.from(batchOutputData.slice(i * embeddingDim, (i + 1) * embeddingDim));
-              storedPubMedChunks.push({ ...rawChunks[i], embedding });
-            }
-          } else {
-            console.error('[RAGPubMedService] Mismatch in batch embedding dimensions or count. Falling back to sequential.');
-            // Fallback to sequential if batch processing assumptions are wrong or fail
-            for (const chunk of rawChunks) {
-              const output = await embedder(chunk.chunkText, { pooling: 'mean', normalize: true });
-              const embedding = Array.from(output.data as Float32Array);
-              storedPubMedChunks.push({ ...chunk, embedding });
+        if (embeddingsBatch && Array.isArray(embeddingsBatch) && embeddingsBatch.length === rawChunks.length) {
+          for (let i = 0; i < embeddingsBatch.length; i++) {
+            const embedding = embeddingsBatch[i]; 
+            if (Array.isArray(embedding)) {
+                 storedPubMedChunks.push({ ...rawChunks[i], embedding });
+            } else {
+                console.error(`[RAGPubMedService] Embedding for chunk ${i} is not an array (type: ${typeof embedding}). Falling back for this chunk or skipping.`);
+                // Optionally, attempt sequential for this specific failed chunk if critical
+                // For simplicity here, we'll log and it won't be added if not an array.
             }
           }
+          console.log(`[RAGPubMedService] Batch embeddings processed using tolist(). Stored ${storedPubMedChunks.length} embeddings.`);
         } else {
-           console.warn('[RAGPubMedService] Unexpected output structure from batch embedding. Falling back to sequential.');
-           // Fallback for unexpected structure
-           for (const chunk of rawChunks) {
-             const output = await embedder(chunk.chunkText, { pooling: 'mean', normalize: true });
-             const embedding = Array.from(output.data as Float32Array);
-             storedPubMedChunks.push({ ...chunk, embedding });
-           }
+          console.error(`[RAGPubMedService] Mismatch in batch embedding count or format after tolist() (Expected ${rawChunks.length}, Got ${embeddingsBatch?.length}). Falling back to sequential.`);
+          storedPubMedChunks = []; // Clear partially processed chunks before fallback
+          for (const chunk of rawChunks) {
+            const output = await embedder(chunk.chunkText, { pooling: 'mean', normalize: true });
+            const embedding = Array.from(output.data as Float32Array); // Original sequential method
+            storedPubMedChunks.push({ ...chunk, embedding });
+          }
+          console.log(`[RAGPubMedService] Sequential fallback completed. Stored ${storedPubMedChunks.length} embeddings.`);
         }
       } catch (batchError: any) {
-        console.error('[RAGPubMedService] Error during batch embedding, falling back to sequential:', batchError.message);
-        // Fallback to sequential on any batch processing error
+        console.error('[RAGPubMedService] Error during batch embedding (tolist approach), falling back to sequential:', batchError.message, batchError.stack);
+        storedPubMedChunks = []; // Clear partially processed chunks before fallback
         for (const chunk of rawChunks) {
-          // Ensure embedder is still valid if an error occurred
           if (embedder) {
             try {
               const output = await embedder(chunk.chunkText, { pooling: 'mean', normalize: true });
-              const embedding = Array.from(output.data as Float32Array);
+              const embedding = Array.from(output.data as Float32Array); // Original sequential method
               storedPubMedChunks.push({ ...chunk, embedding });
             } catch (seqError: any) {
               console.error(`[RAGPubMedService] Error during sequential fallback for chunk "${chunk.chunkText.substring(0,20)}...":`, seqError.message);
             }
           }
         }
+        console.log(`[RAGPubMedService] Sequential fallback after batch error completed. Stored ${storedPubMedChunks.length} embeddings.`);
       }
     }
     isPubMedDataInitialized = true;
