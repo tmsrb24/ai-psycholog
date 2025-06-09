@@ -1,3 +1,4 @@
+console.log('[API /api/warm-rag] Module loaded, attempting to set up handler.'); // New log line
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { initializePubMedRAG } from '../../lib/ragPubMedService';
 
