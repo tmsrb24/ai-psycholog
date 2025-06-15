@@ -1,16 +1,20 @@
 import axios from 'axios';
-import { JSDOM } from 'jsdom';
 
 interface PubMedArticleChunk {
   articleId: string;
   source: string;
   chunkText: string;
-  chunkOrder: number; // To maintain order if needed
+  chunkOrder: number;
 }
+
+// Helper function to strip HTML tags
+const stripHtml = (html: string): string => {
+  return html.replace(/<[^>]*>/g, '').trim();
+};
 
 export async function loadAndChunkPubMedArticles(
   query: string = "psychology", 
-  maxArticles: number = 3 // Keep low for lite version
+  maxArticles: number = 3
 ): Promise<PubMedArticleChunk[]> {
   const allChunks: PubMedArticleChunk[] = [];
   const searchUrl = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term=${encodeURIComponent(query)}&retmax=${maxArticles}&retmode=json`;
@@ -18,12 +22,7 @@ export async function loadAndChunkPubMedArticles(
   let pmcIds: string[] = [];
   try {
     const searchResponse = await axios.get(searchUrl);
-    if (searchResponse.data && searchResponse.data.esearchresult && searchResponse.data.esearchresult.idlist) {
-      pmcIds = searchResponse.data.esearchresult.idlist;
-    } else {
-      console.warn(`[PubMedLoader] No IDs found or unexpected format for query: ${query}`, searchResponse.data);
-      return [];
-    }
+    pmcIds = searchResponse.data?.esearchresult?.idlist || [];
   } catch (error: any) {
     console.error(`[PubMedLoader] Error searching PubMed for query "${query}":`, error.message);
     return [];
@@ -34,48 +33,46 @@ export async function loadAndChunkPubMedArticles(
     return [];
   }
 
-  console.log(`[PubMedLoader] Found ${pmcIds.length} article IDs. Fetching and chunking in parallel...`);
+  console.log(`[PubMedLoader] Found ${pmcIds.length} article IDs. Fetching...`);
 
   const articleProcessingPromises = pmcIds.map(async (pmcId) => {
     const articleUrl = `https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${pmcId}/`;
     const articleChunks: PubMedArticleChunk[] = [];
     try {
-      const htmlResponse = await axios.get(articleUrl, { timeout: 10000 }); // 10s timeout
+      const htmlResponse = await axios.get(articleUrl, { timeout: 10000 });
       const html = htmlResponse.data;
-      if (html) {
-        const dom = new JSDOM(html);
-        const document = dom.window.document;
-        
-        const title = document.querySelector('h1.content-title')?.textContent?.trim() || `Article PMC${pmcId}`;
+      if (!html) return [];
 
-        let abstractText = "";
-        const abstractSection = document.querySelector('div.abstract, section[data-abstract]') ; 
-        if (abstractSection) {
-            const abstractParagraphs = Array.from(abstractSection.querySelectorAll("p")) as HTMLParagraphElement[];
-            abstractText = abstractParagraphs.map(p => p.textContent?.trim()).filter(Boolean).join("\n");
-        }
-        
-        if (abstractText) {
-            articleChunks.push({
-                articleId: `PMC${pmcId}`,
-                source: articleUrl,
-                chunkText: `Title: ${title}\nAbstract: ${abstractText}`,
-                chunkOrder: 0 
-            });
-        }
-        
-        const mainContentElement = document.querySelector('div.article, div.main-content, article'); 
-        const contentElement = mainContentElement || document.body; 
+      // Extract title
+      const titleMatch = html.match(/<h1 class="content-title"[^>]*>([\s\S]*?)<\/h1>/);
+      const title = titleMatch ? stripHtml(titleMatch[1]) : `Article PMC${pmcId}`;
 
-        const paragraphs = Array.from(contentElement.querySelectorAll("p")) as HTMLParagraphElement[];
+      // Extract abstract
+      const abstractMatch = html.match(/<div class="abstract"[^>]*>([\s\S]*?)<\/div>/);
+      let abstractText = "";
+      if (abstractMatch) {
+        const pMatches = [...abstractMatch[1].matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)];
+        abstractText = pMatches.map(m => stripHtml(m[1])).join('\n');
+      }
+      
+      if (abstractText) {
+        articleChunks.push({
+            articleId: `PMC${pmcId}`,
+            source: articleUrl,
+            chunkText: `Title: ${title}\nAbstract: ${abstractText}`,
+            chunkOrder: 0 
+        });
+      }
+      
+      // Extract main content paragraphs
+      const bodyMatch = html.match(/<div class="article"[^>]*>([\s\S]*?)<\/div>/) || html.match(/<article[^>]*>([\s\S]*?)<\/article>/);
+      if (bodyMatch) {
+        const allParagraphs = [...bodyMatch[1].matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)];
         let chunkOrder = abstractText ? 1 : 0;
-
-        for (const p of paragraphs) {
-          const pText = p.textContent?.trim();
-          if (pText && (!abstractSection || !abstractSection.contains(p))) { 
-            if (pText.length < 50 || pText.toLowerCase().includes("copyright") || pText.toLowerCase().includes("figure")) {
-                continue;
-            }
+        
+        for (const pMatch of allParagraphs) {
+          const pText = stripHtml(pMatch[1]);
+          if (pText && pText.length > 50 && !pText.toLowerCase().includes("copyright") && !pText.toLowerCase().includes("figure")) {
             articleChunks.push({
               articleId: `PMC${pmcId}`,
               source: articleUrl,
@@ -84,28 +81,20 @@ export async function loadAndChunkPubMedArticles(
             });
           }
         }
-        console.log(`[PubMedLoader] Processed and chunked article PMC${pmcId}`);
-        return articleChunks;
       }
+      
+      console.log(`[PubMedLoader] Processed and chunked article PMC${pmcId}`);
+      return articleChunks;
+
     } catch (error: any) {
-      console.error(`[PubMedLoader] Error fetching or parsing article PMC${pmcId} from ${articleUrl}:`, error.message);
+      console.error(`[PubMedLoader] Error fetching or parsing article PMC${pmcId}:`, error.message);
     }
-    return []; // Return empty array on error for this article
+    return [];
   });
 
   const chunkArrays = await Promise.all(articleProcessingPromises);
-  const allProcessedChunks = chunkArrays.flat().filter(chunk => chunk); // Flatten and remove any undefined/null from errored promises
+  const allProcessedChunks = chunkArrays.flat().filter(Boolean);
 
   console.log(`[PubMedLoader] Total chunks created: ${allProcessedChunks.length}`);
   return allProcessedChunks;
 }
-
-// Example usage (for testing):
-// async function main() {
-//   const chunks = await loadAndChunkPubMedArticles("cognitive behavioral therapy", 2);
-//   chunks.forEach(chunk => {
-//     console.log(`\n--- Chunk from ${chunk.articleId} (Source: ${chunk.source}) ---`);
-//     console.log(chunk.chunkText.substring(0, 200) + "...");
-//   });
-// }
-// main();
