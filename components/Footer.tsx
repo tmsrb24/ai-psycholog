@@ -62,6 +62,16 @@ const Footer: React.FC = () => {
                   {t('navbar.contact', 'Kontakt')}
                 </Link>
               </li>
+              <li>
+                <Link href="/obchodni-podminky" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
+                  {t('footer.terms', 'Obchodní podmínky')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/reklamacni-rad" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
+                  {t('footer.complaints', 'Reklamační řád')}
+                </Link>
+              </li>
             </ul>
           </div>
           
