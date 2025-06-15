@@ -410,7 +410,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         <div className="flex-grow flex flex-col">
           {/* Message Display Area */}
           <div 
-            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]"
+            className="bg-gray-50 dark:bg-slate-800/50 rounded-xl shadow-inner p-4 sm:p-6 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[calc(100vh-22rem)]"
             ref={chatContainerRef}
           >
             {(initialDataLoading && messages.length <=1 ) ? ( 
@@ -419,19 +419,17 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                    <p className="ml-2 text-gray-500 dark:text-gray-400">{t('loadingChatHistory', 'Načítám historii chatu...')}</p>
                  </div>
             ) : messages.filter((msg: Message) => msg.role !== 'system').map((message, index, arr) => {
+              const prevMessage = arr[index - 1];
+              const isSameSpeakerAsPrevious = prevMessage ? prevMessage.role === message.role : false;
+
               let showDateSeparator = false;
               const currentMessageTimestamp = message.timestamp ? new Date(message.timestamp) : new Date(0);
               
               if (index === 0) {
                 showDateSeparator = true;
-              } else {
-                const prevMessage = arr[index - 1];
-                if (prevMessage.role !== 'system') {
-                    const prevMessageTimestamp = prevMessage.timestamp ? new Date(prevMessage.timestamp) : new Date(0);
-                    if (currentMessageTimestamp.toDateString() !== prevMessageTimestamp.toDateString()) {
-                        showDateSeparator = true;
-                    }
-                } else if (arr.length > 1 && index > 0) { 
+              } else if (prevMessage) {
+                const prevMessageTimestamp = prevMessage.timestamp ? new Date(prevMessage.timestamp) : new Date(0);
+                if (currentMessageTimestamp.toDateString() !== prevMessageTimestamp.toDateString()) {
                     showDateSeparator = true;
                 }
               }
@@ -442,7 +440,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                 <React.Fragment key={`${messageKey}-fragment`}>
                   {showDateSeparator && (
                     <div className="text-center my-4">
-                      <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                      <span className="text-xs text-gray-500 dark:text-gray-400 bg-white/60 dark:bg-slate-700/50 px-2 py-1 rounded-full">
                         {formatDateSeparator(currentMessageTimestamp)}
                       </span>
                     </div>
@@ -450,7 +448,9 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                   <ChatMessage 
                     key={messageKey}
                     message={message}
-                    isSpeaking={isSpeaking && index === arr.filter((m: Message) =>m.role !== 'system').length - 1 && message.role === 'assistant'}
+                    userAvatarUrl={session?.user?.image}
+                    isSameSpeakerAsPrevious={isSameSpeakerAsPrevious}
+                    isSpeaking={isSpeaking && index === arr.length - 1 && message.role === 'assistant'}
                     onSpeakText={speakText}
                     onStopSpeaking={stopSpeaking}
                   />

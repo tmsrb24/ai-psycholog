@@ -42,7 +42,8 @@ const ChatInput: React.FC<ChatInputProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="relative">
-      <div className="flex items-end bg-gray-100 dark:bg-gray-700/60 rounded-lg p-2.5 border-t border-gray-200 dark:border-gray-600">
+      {/* The container now has more padding, rounded corners, and a focus-within ring effect */}
+      <div className="flex items-end bg-gray-100 dark:bg-slate-700 rounded-xl p-2 border border-transparent focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all duration-200">
         <textarea
           ref={textareaRef}
           value={message}
@@ -50,16 +51,16 @@ const ChatInput: React.FC<ChatInputProps> = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={isLoading}
-          className="flex-grow resize-none max-h-32 p-2.5 focus:outline-none bg-transparent dark:text-white dark:placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:focus:border-transparent rounded-md"
+          className="flex-grow resize-none max-h-32 p-2 focus:outline-none bg-transparent dark:text-white dark:placeholder-gray-400"
           rows={1}
         />
         
         <button
           type="submit"
           disabled={!message.trim() || isLoading}
-          className={`ml-2 p-2.5 rounded-full transition-all duration-200 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
+          className={`ml-2 flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 ${
             message.trim() && !isLoading
-              ? 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 hover:scale-105 focus:scale-105'
+              ? 'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 hover:scale-105'
               : 'bg-gray-300 text-gray-500 dark:bg-gray-600 dark:text-gray-400 cursor-not-allowed'
           }`}
           title="Odeslat zprávu"

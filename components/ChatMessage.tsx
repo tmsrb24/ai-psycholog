@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { FaVolumeUp, FaVolumeMute, FaCopy, FaCheck } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import { Message } from '../types';
+import Image from 'next/image';
+import { FaUserCircle, FaVolumeUp, FaVolumeMute, FaCopy, FaCheck } from 'react-icons/fa';
 
 export interface ChatMessageProps {
   message: Message;
+  userAvatarUrl?: string | null;
+  isSameSpeakerAsPrevious: boolean;
   isSpeaking?: boolean;
   onSpeakText?: (text: string) => void;
   onStopSpeaking?: () => void;
@@ -12,47 +15,81 @@ export interface ChatMessageProps {
 
 const ChatMessage: React.FC<ChatMessageProps> = ({
   message,
+  userAvatarUrl,
+  isSameSpeakerAsPrevious,
   isSpeaking = false,
   onSpeakText,
   onStopSpeaking
 }) => {
   const isUser = message.role === 'user';
   const [copied, setCopied] = useState(false);
-  
+  const [isHovered, setIsHovered] = useState(false);
+
   const formatContent = (content: string) => {
     return content
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\*(.*?)\*/g, '<em>$1</em>')
       .replace(/\n/g, '<br />');
   };
-  
+
+  const avatarSize = 32; // consistent avatar size
+
+  const Avatar = () => {
+    if (isSameSpeakerAsPrevious) {
+      return <div style={{ width: avatarSize }} className="flex-shrink-0" />;
+    }
+    
+    const avatarSrc = isUser ? userAvatarUrl : '/images/hero-avatar.png';
+
+    return (
+      <div style={{ width: avatarSize, height: avatarSize }} className="flex-shrink-0 rounded-full overflow-hidden">
+        {avatarSrc ? (
+          <Image src={avatarSrc} alt={isUser ? "User Avatar" : "Assistant Avatar"} width={avatarSize} height={avatarSize} className="object-cover" />
+        ) : (
+          <FaUserCircle size={avatarSize} className="text-gray-400" />
+        )}
+      </div>
+    );
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }} // Slightly reduced y for a subtler entry
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3`} // Reduced mb
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'} ${isSameSpeakerAsPrevious ? 'mt-1' : 'mt-4'}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
+      {!isUser && <Avatar />}
+      
       <div 
-        className={`max-w-[80%] p-3 rounded-xl shadow ${ // Added padding and base rounding
+        className={`group relative max-w-[85%] sm:max-w-[75%] p-3 rounded-2xl shadow-sm ${
           isUser 
-            ? 'bg-blue-500 text-white rounded-bl-xl' // User: blue bg, white text, tail bottom-left (visual right)
-            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-br-xl' // Assistant: gray bg, tail bottom-right (visual left)
+            ? 'bg-blue-500 text-white rounded-br-lg'
+            : 'bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-gray-100 rounded-bl-lg'
         }`}
       >
         <div 
-          className={`prose prose-sm dark:prose-invert break-words ${isUser ? 'text-white' : ''}`} // Ensure prose text color contrasts with bubble
+          className="prose prose-sm dark:prose-invert break-words"
           dangerouslySetInnerHTML={{ __html: formatContent(message.content) }}
         />
         
-        <div className="flex items-center mt-1.5 space-x-2 justify-end"> {/* Adjusted spacing and alignment */}
+        {message.timestamp && (
+          <div className={`text-xs pt-1.5 text-right opacity-70 ${isUser ? 'text-blue-200' : 'text-gray-500 dark:text-gray-400'}`}>
+            {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </div>
+        )}
+
+        {/* Action buttons on hover */}
+        <div className={`absolute -bottom-3 ${isUser ? '-left-10' : '-right-10'} flex items-center space-x-1 transition-opacity duration-200 ${isHovered ? 'opacity-100' : 'opacity-0'}`}>
           {!isUser && onSpeakText && onStopSpeaking && (
             <button
               onClick={() => isSpeaking ? onStopSpeaking() : onSpeakText(message.content)}
-              className={`hover:opacity-75 ${isUser ? 'text-blue-100 hover:text-white' : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'}`}
-              title={isSpeaking ? 'Zastavit předčítání' : 'Přečíst zprávu nahlas'}
+              className="p-1.5 rounded-full bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500"
+              title={isSpeaking ? 'Zastavit' : 'Přečíst'}
             >
-              {isSpeaking ? <FaVolumeMute size={14} /> : <FaVolumeUp size={14} />}
+              {isSpeaking ? <FaVolumeMute size={12} /> : <FaVolumeUp size={12} />}
             </button>
           )}
           <button
@@ -61,19 +98,15 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               setCopied(true);
               setTimeout(() => setCopied(false), 2000);
             }}
-            className={`hover:opacity-75 ${isUser ? 'text-blue-100 hover:text-white' : 'text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300'}`}
-            title="Kopírovat zprávu"
+            className="p-1.5 rounded-full bg-gray-200 dark:bg-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-500"
+            title="Kopírovat"
           >
-            {copied ? <FaCheck size={14} className="text-green-400" /> : <FaCopy size={14} />}
+            {copied ? <FaCheck size={12} className="text-green-500" /> : <FaCopy size={12} />}
           </button>
         </div>
-        
-        {message.timestamp && (
-          <div className={`text-xs mt-1 text-right ${isUser ? 'text-blue-200' : 'text-gray-400 dark:text-gray-500'}`}>
-            {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </div>
-        )}
       </div>
+
+      {isUser && <Avatar />}
     </motion.div>
   );
 };
