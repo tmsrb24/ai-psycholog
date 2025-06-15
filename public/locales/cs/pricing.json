@@ -35,11 +35,21 @@
         "Všechna témata konverzace",
         "Přístup k osobnímu deníku",
         "Neomezená historie konverzací",
-        "Přizpůsobení osobnosti asistenta",
-        "RAG systém nové generace",
-        "Prioritní podpora"
+        "Přizpůsobení osobnosti asistenta"
       ],
       "buttonText": "Předplatit Premium"
+    },
+    "ultra": {
+      "name": "Ultra",
+      "price": "349 Kč",
+      "description": "Pro nejnáročnější uživatele",
+      "features": [
+        "Vše z Premium plánu",
+        "RAG systém nové generace",
+        "Prioritní podpora",
+        "Přístup k beta verzím"
+      ],
+      "buttonText": "Předplatit Ultra"
     }
   },
   "buttons": {

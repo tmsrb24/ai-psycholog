@@ -97,9 +97,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
     {
       name: t('plans.basic.name', 'Základní'),
       price: t('plans.basic.price', 'Zdarma'),
-      priceSuffix: t('plans.basic.priceSuffix', ''),
+      priceSuffix: '',
       description: t('plans.basic.description', 'Ideální pro vyzkoušení služby'),
-      borderColor: 'border-gray-400',
+      borderColor: 'from-pink-500 to-orange-500',
       features: [
         { text: t('plans.basic.features.0', '5 zpráv denně'), included: true },
         { text: t('plans.basic.features.1', 'Základní analýza nálady'), included: true },
@@ -118,7 +118,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       price: t('plans.premium.price', '249 Kč'),
       priceSuffix: tCommon('priceSuffixMonthly', '/měsíc'),
       description: t('plans.premium.description', 'Pro pravidelnou psychologickou podporu'),
-      borderColor: 'border-blue-600',
+      borderColor: 'from-purple-500 to-indigo-500',
       features: [
         { text: t('plans.premium.features.0', 'Neomezené zprávy'), included: true },
         { text: t('plans.premium.features.1', 'Pokročilá analýza nálady'), included: true },
@@ -361,75 +361,62 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
             variants={featureContainerVariants}
           >
-            <motion.div 
-              variants={featureCardVariants}
-              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
-                <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">1</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('howItWorks.steps.0.title', 'Vytvořte si účet')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('howItWorks.steps.0.text', 'Registrace zabere jen pár vteřin. Můžete začít ihned s bezplatnou verzí.')}
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={featureCardVariants}
-              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
-                <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">2</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('howItWorks.steps.1.title', 'Začněte konverzaci')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('howItWorks.steps.1.text', 'Sdílejte své myšlenky a pocity. AI Psycholog vám poskytne empatickou a podporující odpověď.')}
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={featureCardVariants}
-              className="text-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-blue-300 dark:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800/50">
-                <span className="text-2xl font-bold text-blue-600 dark:text-blue-300">3</span>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('howItWorks.steps.2.title', 'Získejte podporu')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('howItWorks.steps.2.text', 'Pravidelné konverzace vám pomohou lépe porozumět vašim emocím a najít strategie pro zvládání obtíží.')}
-              </p>
-            </motion.div>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      <motion.section 
-        className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('proactiveAssistant.title', 'Náš AI Asistent Myslí Dopředu – Proaktivní Péče o Vaši Duši')}</h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              {t('proactiveAssistant.subtitle', 'Představte si podporu, která nejen reaguje, ale aktivně vám pomáhá na vaší cestě k duševní pohodě. Náš Proaktivní AI Asistent je navržen tak, aby se učil rozumět vašim potřebám. S vaším svolením citlivě analyzuje trendy ve vašich konverzacích a deníkových zápiscích.')}
-            </p>
-          </div>
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-4xl mx-auto"
             variants={featureContainerVariants}
           >
-            <motion.div 
-              variants={featureCardVariants}
-              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
-                <FaLightbulb className="text-blue-600 dark:text-blue-300" size={32} />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('proactiveAssistant.cards.0.title', 'Personalizované Návrhy')}</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                {t('proactiveAssistant.cards.0.text', 'Relevantní témata k zamyšlení, deníkové výzvy nebo cvičení šitá na míru.')}
-              </p>
-            </motion.div>
+            {plans.map((plan) => (
+              <motion.div 
+                key={plan.name} 
+                variants={featureCardVariants}
+                className={`relative bg-white/60 dark:bg-slate-800/50 backdrop-blur-lg rounded-3xl p-8 shadow-lg border border-white/30 dark:border-slate-700 flex flex-col h-full transition-all duration-300 hover:shadow-2xl ${
+                  plan.isRecommended ? 'shadow-blue-500/20' : ''
+                }`}
+              >
+                {/* Header */}
+                <div className="flex-shrink-0">
+                  <h3 className={`text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${plan.borderColor}`}>{plan.name}</h3>
+                  <div className={`h-1 w-20 mt-2 mb-6 rounded-full bg-gradient-to-r ${plan.borderColor}`}></div>
+                  <p className="text-gray-600 dark:text-gray-400 min-h-[3rem]">{plan.description}</p>
+                </div>
+
+                {/* Price */}
+                <div className="my-8 flex-shrink-0">
+                  <span className="text-5xl font-extrabold text-gray-900 dark:text-white">{plan.price}</span>
+                  <span className="text-lg text-gray-500 dark:text-gray-400 ml-1">{plan.priceSuffix}</span>
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-4 flex-grow">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="flex-shrink-0">
+                        {feature.included ? 
+                          <FaCheck className="text-green-500 h-5 w-5" />
+                          : <FaTimes className="text-red-500 h-5 w-5" />
+                        }
+                      </div>
+                      <p className={`ml-3 text-sm ${feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400 line-through'}`}>
+                        {feature.text}
+                        {feature.tag && (
+                          <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-blue-900/50 dark:text-blue-300">
+                            {feature.tag}
+                          </span>
+                        )}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Button */}
+                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-slate-700 flex-shrink-0">
+                  <Link href={plan.buttonLink} className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-gradient-to-r ${plan.borderColor} hover:shadow-xl`}>
+                    {plan.buttonText}
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
             <motion.div 
               variants={featureCardVariants}
               className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"

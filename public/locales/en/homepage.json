@@ -111,9 +111,19 @@
         "All conversation topics",
         "Access to personal diary",
         "Unlimited conversation history",
-        "Assistant personality customization",
+        "Assistant personality customization"
+      ]
+    },
+    "ultra": {
+      "name": "Ultra",
+      "price": "€14.99",
+      "description": "For the most demanding users",
+      "buttonText": "Choose Ultra",
+      "features": [
+        "Everything from Premium plan",
         "Next-gen RAG system",
-        "Priority support"
+        "Priority support",
+        "Access to beta versions"
       ]
     }
   },
