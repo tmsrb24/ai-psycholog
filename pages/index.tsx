@@ -205,8 +205,10 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 w-full h-24" style={{ zIndex: 5 }}>
-          <Image src="/assets/hero-curve.svg" alt="Curve separator" layout="fill" objectFit="cover" />
+        <div className="absolute bottom-0 left-0 w-full" style={{ zIndex: 5, lineHeight: 0 }}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none" className="w-full h-auto" style={{ fill: 'var(--background-end)' }}>
+            <path d="M0,100 C480,0 960,0 1440,100 L1440,100 L0,100 Z" className="text-gray-50 dark:text-slate-900"></path>
+          </svg>
         </div>
       </section>
 

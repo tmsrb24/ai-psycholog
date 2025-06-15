@@ -14,7 +14,7 @@ module.exports = {
         'main-gradient-light': 'linear-gradient(135deg, #E0F2FE 0%, #A5F3FC 50%, #67E8F9 100%)', 
         'main-gradient-dark': 'linear-gradient(135deg, #082f49 0%, #0C4A6E 50%, #0E7490 100%)', 
         'hero-gradient-light': 'linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%)',
-        'hero-gradient-dark': 'linear-gradient(135deg, #0d1f2d 0%, #103f5f 100%)', // New gradient from user
+        'hero-gradient-dark': 'linear-gradient(135deg, #1a2a3a 0%, #1f4f6f 100%)', // Lighter version
         'cta-gradient-light': 'linear-gradient(135deg, #A5F3FC 0%, #67E8F9 50%, #22D3EE 100%)', 
         'cta-gradient-dark': 'linear-gradient(135deg, #0E7490 0%, #155E75 50%, #0891B2 100%)', 
       },
