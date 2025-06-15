@@ -79,7 +79,7 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
     {
       name: t('plans.basic.name', 'Základní'),
       price: t('plans.basic.price', 'Zdarma'),
-      priceSuffix: t('plans.basic.priceSuffix', ''), // Tento klíč může být i v common, pokud je stejný
+      priceSuffix: t('plans.basic.priceSuffix', ''),
       description: t('plans.basic.description', 'Ideální pro vyzkoušení služby'),
       borderColor: 'border-gray-400',
       features: [
@@ -91,9 +91,6 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
         { text: t('plans.basic.features.5', 'Přizpůsobení osobnosti asistenta'), included: false },
         { text: t('plans.basic.features.6', 'RAG systém nové generace'), included: false },
         { text: t('plans.basic.features.7', 'Prioritní podpora'), included: false },
-        { text: t('plans.basic.features.8', 'Rodinné sdílení'), included: false },
-        { text: t('plans.basic.features.9', 'Integrace s kalendářem'), included: false },
-        { text: t('plans.basic.features.10', 'Přístup k beta verzím'), included: false },
       ],
       buttonText: t('common:buttons.tryForFree', 'Vyzkoušet zdarma'),
       buttonAction: () => router.push('/chat'),
@@ -102,7 +99,7 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
     },
     {
       name: t('plans.premium.name', 'Premium'),
-      price: t('plans.premium.price', '349 Kč'),
+      price: t('plans.premium.price', '249 Kč'),
       priceSuffix: t('common:priceSuffixMonthly', '/měsíc'),
       description: t('plans.premium.description', 'Pro pravidelnou psychologickou podporu'),
       borderColor: 'border-blue-600',
@@ -114,33 +111,12 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
         { text: t('plans.premium.features.4', 'Neomezená historie konverzací'), included: true },
         { text: t('plans.premium.features.5', 'Přizpůsobení osobnosti asistenta'), included: true },
         { text: t('plans.premium.features.6', 'RAG systém nové generace'), included: true, tag: t('common:tags.new', 'NOVINKA') },
-        { text: t('plans.premium.features.7', 'Prioritní podpora'), included: false },
-        { text: t('plans.premium.features.8', 'Rodinné sdílení'), included: false },
-        { text: t('plans.premium.features.9', 'Integrace s kalendářem'), included: false },
-        { text: t('plans.premium.features.10', 'Přístup k beta verzím'), included: false },
+        { text: t('plans.premium.features.7', 'Prioritní podpora'), included: true, icon: FaStar },
       ],
       buttonText: t('plans.premium.buttonText', 'Předplatit Premium'),
       buttonAction: () => handleSubscribe('premium'),
       isRecommended: true,
       planId: 'premium'
-    },
-    {
-      name: t('plans.ultra.name', 'Ultra'),
-      price: t('plans.ultra.price', '549 Kč'),
-      priceSuffix: t('common:priceSuffixMonthly', '/měsíc'),
-      description: t('plans.ultra.description', 'Pro nejnáročnější uživatele a rodinné sdílení'),
-      borderColor: 'border-purple-600',
-      features: [
-        { text: t('plans.ultra.features.0', 'Vše z Premium plánu'), included: true, bold: true },
-        { text: t('plans.ultra.features.1', 'Prioritní podpora'), included: true, icon: FaStar },
-        { text: t('plans.ultra.features.2', 'Rodinné sdílení (až 3 členové)'), included: true, icon: FaUsers },
-        { text: t('plans.ultra.features.3', 'Integrace s kalendářem'), included: true, icon: FaCalendarAlt },
-        { text: t('plans.ultra.features.4', 'Přístup k beta verzím'), included: true, icon: FaFlask },
-      ],
-      buttonText: t('plans.ultra.buttonText', 'Předplatit Ultra'),
-      buttonAction: () => handleSubscribe('ultra'),
-      isRecommended: false,
-      planId: 'ultra'
     }
   ];
 
@@ -163,8 +139,8 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           {plans.map((plan) => (
             <div 
               key={plan.name} 

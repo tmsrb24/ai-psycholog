@@ -109,16 +109,13 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
         { text: t('plans.basic.features.5', 'Přizpůsobení osobnosti asistenta'), included: false },
         { text: t('plans.basic.features.6', 'RAG systém nové generace'), included: false },
         { text: t('plans.basic.features.7', 'Prioritní podpora'), included: false },
-        { text: t('plans.basic.features.8', 'Rodinné sdílení'), included: false },
-        { text: t('plans.basic.features.9', 'Integrace s kalendářem'), included: false },
-        { text: t('plans.basic.features.10', 'Přístup k beta verzím'), included: false },
       ],
       buttonText: tCommon('buttons.tryForFree', 'Vyzkoušet zdarma'),
       buttonLink: '/chat',
     },
     {
       name: t('plans.premium.name', 'Premium'),
-      price: t('plans.premium.price', '349 Kč'),
+      price: t('plans.premium.price', '249 Kč'),
       priceSuffix: tCommon('priceSuffixMonthly', '/měsíc'),
       description: t('plans.premium.description', 'Pro pravidelnou psychologickou podporu'),
       borderColor: 'border-blue-600',
@@ -130,30 +127,11 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
         { text: t('plans.premium.features.4', 'Neomezená historie konverzací'), included: true },
         { text: t('plans.premium.features.5', 'Přizpůsobení osobnosti asistenta'), included: true },
         { text: t('plans.premium.features.6', 'RAG systém nové generace'), included: true, tag: tCommon('tags.new', 'NOVINKA') },
-        { text: t('plans.premium.features.7', 'Prioritní podpora'), included: false },
-        { text: t('plans.premium.features.8', 'Rodinné sdílení'), included: false },
-        { text: t('plans.premium.features.9', 'Integrace s kalendářem'), included: false },
-        { text: t('plans.premium.features.10', 'Přístup k beta verzím'), included: false },
+        { text: t('plans.premium.features.7', 'Prioritní podpora'), included: true },
       ],
       buttonText: t('plans.premium.buttonText', 'Vybrat Premium'),
       buttonLink: '/pricing',
       isRecommended: true,
-    },
-    {
-      name: t('plans.ultra.name', 'Ultra'),
-      price: t('plans.ultra.price', '549 Kč'),
-      priceSuffix: tCommon('priceSuffixMonthly', '/měsíc'),
-      description: t('plans.ultra.description', 'Pro nejnáročnější uživatele a rodinné sdílení'),
-      borderColor: 'border-purple-600',
-      features: [
-        { text: t('plans.ultra.features.0', 'Vše z Premium plánu'), included: true, bold: true },
-        { text: t('plans.ultra.features.1', 'Prioritní podpora'), included: true, icon: FaStar },
-        { text: t('plans.ultra.features.2', 'Rodinné sdílení (až 3 členové)'), included: true, icon: FaUsers },
-        { text: t('plans.ultra.features.3', 'Integrace s kalendářem'), included: true, icon: FaCalendarAlt },
-        { text: t('plans.ultra.features.4', 'Přístup k beta verzím'), included: true, icon: FaFlask },
-      ],
-      buttonText: t('plans.ultra.buttonText', 'Vybrat Ultra'),
-      buttonLink: '/pricing',
     }
   ];
 
@@ -509,7 +487,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </p>
           </div>
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto"
             variants={featureContainerVariants}
           >
             {plans.map((plan) => (

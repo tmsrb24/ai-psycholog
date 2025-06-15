@@ -27,7 +27,7 @@
     },
     "premium": {
       "name": "Premium",
-      "price": "€14.99",
+      "price": "€9.99",
       "description": "For regular psychological support",
       "features": [
         "Unlimited messages",
@@ -37,25 +37,9 @@
         "Unlimited conversation history",
         "Assistant personality customization",
         "Next-gen RAG system",
-        "Priority support",
-        "Family sharing",
-        "Calendar integration",
-        "Access to beta versions"
+        "Priority support"
       ],
       "buttonText": "Subscribe to Premium"
-    },
-    "ultra": {
-      "name": "Ultra",
-      "price": "€22.99",
-      "description": "For the most demanding users and family sharing",
-      "features": [
-        "Everything from Premium plan",
-        "Priority support",
-        "Family sharing (up to 3 members)",
-        "Calendar integration",
-        "Access to beta versions"
-      ],
-      "buttonText": "Subscribe to Ultra"
     }
   },
   "buttons": {

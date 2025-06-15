@@ -1,0 +1,120 @@
+{
+  "hero": {
+    "titleLine1": "Psychologická podpora",
+    "titleLine2": "s pokročilou AI",
+    "subtitle": "Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu."
+  },
+  "features": {
+    "title": "Proč AI Psycholog?",
+    "subtitleLine1": "Malé rozhovory, které mohou změnit hodně.",
+    "subtitleLine2": "V prostoru, kde vás nikdo nesoudí a kde můžete mluvit tak, jak to právě cítíte.",
+    "subtitleLine3": "Zastavte se. Popovídejte si. Ulevte si.",
+    "cards": [
+      {
+        "title": "Okamžitá dostupnost",
+        "text": "Žádné čekání na termín. AI Psycholog je k dispozici 24/7, kdykoliv potřebujete podporu."
+      },
+      {
+        "title": "Naprostá diskrétnost",
+        "text": "Vaše konverzace jsou soukromé a bezpečné. Žádné sdílení dat s třetími stranami."
+      },
+      {
+        "title": "Sledování pokroku",
+        "text": "Analýza nálady vám pomůže sledovat váš pokrok a motivovat vás."
+      }
+    ],
+    "rag": {
+      "title": "RAG systém nové generace",
+      "text": "Náš AI asistent využívá architekturu typu Retrieval-Augmented Generation (RAG) – propojuje jazykový model s vlastní odbornou psychologickou databází. Díky tomu poskytuje přesné, kontextově přizpůsobené odpovědi v reálném čase, které vycházejí z ověřených poznatků a vaší situace."
+    }
+  },
+  "testimonials": {
+    "title": "Názory odborníků",
+    "subtitle": "Co o Psychollog.cz říkají profesionálové z oboru psychologie a psychiatrie.",
+    "uniqueServiceTitle": "Proč je naše služba unikátní?",
+    "uniqueServiceText": "Naše platforma Psychollog.cz je unikátní díky kombinaci pokročilé umělé inteligence, která čerpá z ověřených psychologických databází (PubMed Central, Open Psychology Journal, PsyArXiv), a vize spolupráce s odborníky z praxe. Tím zajišťujeme, že poskytovaná podpora je nejen okamžitě dostupná a diskrétní, ale také informačně hodnotná a založená na vědeckých poznatcích. Naším cílem je zpřístupnit kvalitní nástroje pro sebepoznání a duševní pohodu co nejširšímu okruhu lidí.",
+    "avatarAlt": "Avatar pro {{name}}"
+  },
+  "howItWorks": {
+    "title": "Jak to funguje?",
+    "subtitle": "Jednoduché kroky k získání psychologické podpory s AI Psychologem.",
+    "steps": [
+      {
+        "title": "Vytvořte si účet",
+        "text": "Registrace zabere jen pár vteřin. Můžete začít ihned s bezplatnou verzí."
+      },
+      {
+        "title": "Začněte konverzaci",
+        "text": "Sdílejte své myšlenky a pocity. AI Psycholog vám poskytne empatickou a podporující odpověď."
+      },
+      {
+        "title": "Získejte podporu",
+        "text": "Pravidelné konverzace vám pomohou lépe porozumět vašim emocím a najít strategie pro zvládání obtíží."
+      }
+    ]
+  },
+  "proactiveAssistant": {
+    "title": "Náš AI Asistent Myslí Dopředu – Proaktivní Péče o Vaši Duši",
+    "subtitle": "Představte si podporu, která nejen reaguje, ale aktivně vám pomáhá na vaší cestě k duševní pohodě. Náš Proaktivní AI Asistent je navržen tak, aby se učil rozumět vašim potřebám. S vaším svolením citlivě analyzuje trendy ve vašich konverzacích a deníkových zápiscích.",
+    "cards": [
+      {
+        "title": "Personalizované Návrhy",
+        "text": "Relevantní témata k zamyšlení, deníkové výzvy nebo cvičení šitá na míru."
+      },
+      {
+        "title": "Jemná Podpora",
+        "text": "Pokud procházíte náročnějším obdobím, asistent vám citlivě nabídne rozhovor nebo připomene osvědčené techniky."
+      },
+      {
+        "title": "Podpora Růstu",
+        "text": "Aktivně podporujeme vaši cestu k lepší pohodě relevantními nástroji a podněty k sebereflexi."
+      },
+      {
+        "title": "Vaše Soukromí",
+        "text": "Vždy máte plnou kontrolu nad sdílením informací a využíváním proaktivních návrhů."
+      }
+    ],
+    "footerText": "Tato unikátní funkce vám pomáhá nezůstat na své starosti sami a aktivně pracovat na svém well-beingu."
+  },
+  "pricingPreview": {
+    "title": "Dostupné cenové plány",
+    "subtitle": "Vyberte si plán, který nejlépe vyhovuje vašim potřebám."
+  },
+  "plans": {
+    "basic": {
+      "name": "Základní",
+      "price": "Zdarma",
+      "description": "Ideální pro vyzkoušení služby",
+      "features": [
+        "5 zpráv denně",
+        "Základní analýza nálady",
+        "Základní témata konverzace",
+        "Přístup k osobnímu deníku",
+        "Historie konverzací",
+        "Přizpůsobení osobnosti asistenta",
+        "RAG systém nové generace",
+        "Prioritní podpora"
+      ]
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "249 Kč",
+      "description": "Pro pravidelnou psychologickou podporu",
+      "buttonText": "Vybrat Premium",
+      "features": [
+        "Neomezené zprávy",
+        "Pokročilá analýza nálady",
+        "Všechna témata konverzace",
+        "Přístup k osobnímu deníku",
+        "Neomezená historie konverzací",
+        "Přizpůsobení osobnosti asistenta",
+        "RAG systém nové generace",
+        "Prioritní podpora"
+      ]
+    }
+  },
+  "cta": {
+    "title": "Začněte svou cestu k lepší psychické pohodě ještě dnes",
+    "subtitle": "Vyzkoušejte AI Psychologa zdarma a objevte, jak vám může pomoci lépe porozumět vašim emocím a zvládat každodenní výzvy."
+  }
+}

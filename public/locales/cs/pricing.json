@@ -27,7 +27,7 @@
     },
     "premium": {
       "name": "Premium",
-      "price": "349 Kč",
+      "price": "249 Kč",
       "description": "Pro pravidelnou psychologickou podporu",
       "features": [
         "Neomezené zprávy",
@@ -37,25 +37,9 @@
         "Neomezená historie konverzací",
         "Přizpůsobení osobnosti asistenta",
         "RAG systém nové generace",
-        "Prioritní podpora",
-        "Rodinné sdílení",
-        "Integrace s kalendářem",
-        "Přístup k beta verzím"
+        "Prioritní podpora"
       ],
       "buttonText": "Předplatit Premium"
-    },
-    "ultra": {
-      "name": "Ultra",
-      "price": "549 Kč",
-      "description": "Pro nejnáročnější uživatele a rodinné sdílení",
-      "features": [
-        "Vše z Premium plánu",
-        "Prioritní podpora",
-        "Rodinné sdílení (až 3 členové)",
-        "Integrace s kalendářem",
-        "Přístup k beta verzím"
-      ],
-      "buttonText": "Předplatit Ultra"
     }
   },
   "buttons": {
