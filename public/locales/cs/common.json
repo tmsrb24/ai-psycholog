@@ -112,5 +112,9 @@
   "lastName": "Příjmení",
   "phoneOptional": "Telefon (nepovinné)",
   "confirmPassword": "Potvrdit heslo",
-  "alreadyHaveAccount": "Již máte účet?"
+  "alreadyHaveAccount": "Již máte účet?",
+  "sidebar": {
+    "analysis": "Analýza",
+    "settings": "Nastavení"
+  }
 }

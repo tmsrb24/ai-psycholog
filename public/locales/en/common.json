@@ -112,5 +112,9 @@
   "lastName": "Last Name",
   "phoneOptional": "Phone (optional)",
   "confirmPassword": "Confirm Password",
-  "alreadyHaveAccount": "Already have an account?"
+  "alreadyHaveAccount": "Already have an account?",
+  "sidebar": {
+    "analysis": "Analysis",
+    "settings": "Settings"
+  }
 }

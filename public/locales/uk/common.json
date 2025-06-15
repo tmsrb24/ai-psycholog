@@ -112,5 +112,9 @@
   "lastName": "Прізвище",
   "phoneOptional": "Телефон (необов'язково)",
   "confirmPassword": "Підтвердьте пароль",
-  "alreadyHaveAccount": "Вже є обліковий запис?"
+  "alreadyHaveAccount": "Вже є обліковий запис?",
+  "sidebar": {
+    "analysis": "Аналіз",
+    "settings": "Налаштування"
+  }
 }

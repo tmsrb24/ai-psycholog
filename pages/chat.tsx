@@ -5,18 +5,12 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { 
-  FaMicrophone, FaVolumeUp, FaVolumeMute, FaCog, FaHistory, 
-  FaBookMedical, FaUserFriends, FaSadTear, FaRunning, FaHeart,
-  FaUser, FaChartLine, FaTrophy, FaTimes, FaSpinner,
-  FaRegSmile, FaRegFrown, FaRegMeh, FaRegAngry, FaRegSurprise
+  FaCog, FaChartLine, FaTimes, FaSpinner
 } from 'react-icons/fa';
-import { type IconType } from 'react-icons/lib'; // Correct import for IconType
+import { type IconType } from 'react-icons/lib';
 import ChatMessage from '../components/ChatMessage';
 import ChatInput from '../components/ChatInput';
 import LoadingIndicator from '../components/LoadingIndicator';
-// import UserProfile from '../components/UserProfile'; // Lazy loaded
-// import SentimentAnalyzer from '../components/SentimentAnalyzer'; // Lazy loaded
-// import Gamification from '../components/Gamification'; // Lazy loaded
 import CrisisNotice from '../components/CrisisNotice';
 import ChatSettingsModal from '../components/ChatSettingsModal';
 import { Message, UserProfileData } from '../types'; 
@@ -25,22 +19,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
 
-const UserProfile = lazy(() => import('../components/UserProfile'));
-// const SentimentAnalyzer = lazy(() => import('../components/SentimentAnalyzer')); // Removed User Insights/Analytics
-const Gamification = lazy(() => import('../components/Gamification'));
-
-interface DiaryTag {
-  id: string;
-  name: string; 
-  color: string;
-}
-
-interface DiaryMood {
-  id: string;
-  emoji: string;
-  name: string; 
-  icon?: React.ElementType;
-}
+const ChatAnalysis = lazy(() => import('../components/ChatAnalysis'));
 
 type PageProps = {};
 
@@ -49,7 +28,7 @@ interface SidebarItem {
   icon: IconType;
   action: () => void;
   active: boolean;
-  disabled?: boolean; // Make disabled optional
+  disabled?: boolean;
 }
 
 const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
@@ -70,22 +49,8 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [currentChatSessionId, setCurrentChatSessionId] = useState<string | null>(null);
-  const [showProfile, setShowProfile] = useState(false);
-  const [userProfileData, setUserProfileData] = useState<UserProfileData>({
-    name: t('common:userProfile.defaultName', 'Uživatel'),
-    avatar_url: null,
-    preferences: {
-      responseLength: 'medium',
-      communicationStyle: 'casual',
-      notificationFrequency: 'none',
-      assistantGender: 'male',
-    }
-  });
-  // const [showAnalytics, setShowAnalytics] = useState(false); // Removed User Insights/Analytics
-  const [showGamification, setShowGamification] = useState(false);
-  const [sessionCount, setSessionCount] = useState(0);
-  const [streakDays, setStreakDays] = useState(0);
-  const [lastSessionDate, setLastSessionDate] = useState<Date | null>(null);
+  const [showAnalysis, setShowAnalysis] = useState(false);
+  const [userProfileData, setUserProfileData] = useState<UserProfileData | null>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const { data: session, status: authStatus } = useSession();
   const router = useRouter();
@@ -106,11 +71,9 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
       setMessages([systemMessage, {role: 'assistant', content: t('loadingMessages', 'Načítám zprávy...'), timestamp: new Date()}]);
 
       try {
-        // const [profileRes, chatHistoryRes, insightsRes] = await Promise.all([
-        const [profileRes, chatHistoryRes] = await Promise.all([ // Temporarily remove insightsRes
+        const [profileRes, chatHistoryRes] = await Promise.all([
           fetch('/api/user/profile'),
           fetch('/api/chat'), 
-          // fetch('/api/user-insights') // Temporarily commented out
         ]);
 
         if (profileRes.ok) {
@@ -142,38 +105,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
           console.error(t('errors.chatHistoryLoadFailedConsole'), chatHistoryRes.statusText);
         }
         
-        let messagesToSet = baseMessages;
-        const twentyFourHoursInMs = 24 * 60 * 60 * 1000;
-        const now = new Date();
-        let addedProactiveMessage = false;
-
-        const lastUserOrAssistantMessage = [...baseMessages].reverse().find(msg => msg.role === 'user' || msg.role === 'assistant');
-        if (lastUserOrAssistantMessage && lastUserOrAssistantMessage.timestamp && (now.getTime() - new Date(lastUserOrAssistantMessage.timestamp).getTime()) > twentyFourHoursInMs) {
-          messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.welcomeBack'), timestamp: new Date() }];
-          addedProactiveMessage = true;
-        }
-        
-        // Temporarily comment out insights processing
-        // if (insightsRes.ok) {
-        //   try {
-        //     const insightsData = await insightsRes.json();
-        //     if (insightsData && insightsData.proactive_flags) {
-        //       if (insightsData.proactive_flags.suggest_mood_discussion && !addedProactiveMessage) {
-        //         messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.moodSuggestion'), timestamp: new Date() }];
-        //         addedProactiveMessage = true;
-        //       }
-        //       if (insightsData.proactive_flags.offer_stress_exercise && !addedProactiveMessage) {
-        //          messagesToSet = [...messagesToSet, { role: 'assistant', content: t('proactiveMessages.stressExerciseSuggestion'), timestamp: new Date() }];
-        //       }
-        //     }
-        //   } catch (insightsParseError) {
-        //      console.error(t('errors.userInsightsParseErrorConsole'), insightsParseError);
-        //   }
-        // } else {
-        //     console.warn(t('errors.userInsightsLoadFailedConsoleWarn'), insightsRes.statusText);
-        // }
-        
-        setMessages(messagesToSet);
+        setMessages(baseMessages);
 
       } catch (error) {
         console.error(t('errors.initialDataLoadErrorConsole'), error);
@@ -283,32 +215,13 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
       setLoading(false); 
     }
   };
-
-  const handleProfileChange = async (updatedProfile: UserProfileData) => { setUserProfileData(updatedProfile); };
-  
-  const availableMoods: DiaryMood[] = [
-    { id: 'happy', emoji: '😄', name: t('common:moods.happy'), icon: FaRegSmile },
-    { id: 'sad', emoji: '😔', name: t('common:moods.sad'), icon: FaRegFrown },
-    { id: 'neutral', emoji: '😐', name: t('common:moods.neutral'), icon: FaRegMeh },
-    { id: 'angry', emoji: '😠', name: t('common:moods.angry'), icon: FaRegAngry },
-    { id: 'surprised', emoji: '😮', name: t('common:moods.surprised'), icon: FaRegSurprise },
-  ];
-
-  const availableTags: DiaryTag[] = [
-    { id: 'work', name: t('common:tags.work'), color: 'bg-blue-500' },
-    { id: 'personal', name: t('common:tags.personal'), color: 'bg-green-500' },
-    { id: 'relationships', name: t('common:tags.relationships'), color: 'bg-pink-500' },
-    { id: 'health', name: t('common:tags.health'), color: 'bg-red-500' },
-    { id: 'ideas', name: t('common:tags.ideas'), color: 'bg-yellow-500' },
-    { id: 'other', name: t('common:tags.other'), color: 'bg-gray-500' },
-  ];
   
   const TOPICS = {
-    anxiety: { title: t('topics.anxiety'), icon: <FaSadTear /> },
-    relationships: { title: t('topics.relationships'), icon: <FaUserFriends /> },
-    depression: { title: t('topics.depression'), icon: <FaSadTear /> },
-    stress: { title: t('topics.stress'), icon: <FaRunning /> },
-    selfEsteem: { title: t('topics.selfEsteem'), icon: <FaHeart /> },
+    anxiety: { title: t('topics.anxiety') },
+    relationships: { title: t('topics.relationships') },
+    depression: { title: t('topics.depression') },
+    stress: { title: t('topics.stress') },
+    selfEsteem: { title: t('topics.selfEsteem') },
   };
   
   const PERSONALITIES = {
@@ -342,9 +255,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   };
 
   const sidebarItems: SidebarItem[] = [
-    { labelKey: 'sidebar.profile', icon: FaUser, action: () => setShowProfile(!showProfile), active: showProfile },
-    // { labelKey: 'sidebar.analysis', icon: FaChartLine, action: () => setShowAnalytics(!showAnalytics), active: showAnalytics, disabled: messages.filter((m: Message) => m.role !== 'system').length < 2 }, // Removed User Insights/Analytics
-    { labelKey: 'sidebar.achievements', icon: FaTrophy, action: () => setShowGamification(!showGamification), active: showGamification },
+    { labelKey: 'sidebar.analysis', icon: FaChartLine, action: () => setShowAnalysis(!showAnalysis), active: showAnalysis },
     { labelKey: 'sidebar.settings', icon: FaCog, action: () => setShowSettingsModal(true), active: showSettingsModal }
   ];
 
@@ -374,32 +285,16 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                                 ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                     title={t(item.labelKey)}
                   >
-                    <item.icon size={20} className={item.active ? 'text-white' : 'text-blue-500 dark:text-blue-400'} />
+                    <item.icon size={20} className="text-blue-500" />
                     <span>{t(item.labelKey)}</span>
                   </button>
                 ))}
               </div>
             </div>
             <Suspense fallback={<SidebarFallback />}>
-              {showProfile && (
+              {showAnalysis && (
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                  <UserProfile onProfileChange={handleProfileChange} />
-                </div>
-              )}
-              {/* Removed User Insights/Analytics
-              {showAnalytics && messages.filter((m: Message) => m.role !== 'system').length >= 2 && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                  <SentimentAnalyzer messages={messages} />
-                </div>
-              )}
-              */}
-              {showGamification && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                  <Gamification 
-                    sessionCount={sessionCount} 
-                    streakDays={streakDays}
-                    lastSessionDate={lastSessionDate || undefined}
-                  />
+                  <ChatAnalysis />
                 </div>
               )}
             </Suspense>
