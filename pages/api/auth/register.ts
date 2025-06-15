@@ -24,6 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     email: email,
     password: password,
     options: {
+      emailRedirectTo: `${process.env.NEXTAUTH_URL}/auth/login`, // Explicitly set redirect URL
       data: {
         first_name: firstName,
         last_name: lastName,
