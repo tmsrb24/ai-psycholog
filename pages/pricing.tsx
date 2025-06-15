@@ -146,18 +146,19 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
               }`}
             >
               {/* Header */}
-              <div className="min-h-[10rem]">
+              <div className="flex-shrink-0">
                 {plan.isRecommended && (
-                  <div className="text-right mb-2">
+                  <div className="text-right mb-2 h-5">
                     <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                       {t('common:tags.recommended', 'DOPORUČENO')}
                     </span>
                   </div>
                 )}
+                {!plan.isRecommended && <div className="h-5 mb-2"></div>}
                 <h2 className="text-2xl font-bold text-white mb-2">{plan.name}</h2>
-                <p className="text-gray-300 mb-4">{plan.description}</p>
-                <div className="text-5xl font-bold text-white mb-1">{plan.price}</div>
-                {plan.priceSuffix && <p className="text-md text-gray-400">{plan.priceSuffix}</p>}
+                <p className="text-gray-300 mb-4 min-h-[2.5rem]">{plan.description}</p>
+                <div className="text-4xl font-bold text-white mb-1">{plan.price}</div>
+                {plan.priceSuffix && <p className="text-md text-gray-400 min-h-[1.5rem]">{plan.priceSuffix}</p>}
               </div>
 
               {/* Features */}
@@ -181,32 +182,34 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
               </ul>
               
               {/* Button */}
-              <button 
-                onClick={() => plan.buttonAction()}
-                disabled={isLoading && selectedPlan === plan.planId}
-                className={`block w-full text-center mt-auto py-3 px-6 rounded-lg font-semibold transition-all duration-200 ease-in-out transform hover:scale-105 shadow-lg ${
-                  isLoading && selectedPlan === plan.planId 
-                    ? 'bg-gray-500 cursor-not-allowed' 
-                    : plan.isRecommended 
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                      : 'bg-slate-700 hover:bg-slate-600 text-gray-200'
-                }`}
-              >
-                {isLoading && selectedPlan === plan.planId ? (
-                  <span className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    {t('buttons.processing', 'Zpracování...')}
-                  </span>
-                ) : plan.buttonText}
-              </button>
-              {plan.name !== t('plans.basic.name', 'Základní') && 
-                <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-2">
-                  {t('safePaymentStripe', 'Bezpečná platba přes Stripe')}
-                </p>
-              }
+              <div className="mt-auto flex-shrink-0">
+                <button 
+                  onClick={() => plan.buttonAction()}
+                  disabled={isLoading && selectedPlan === plan.planId}
+                  className={`block w-full text-center py-3 px-6 rounded-lg font-semibold transition-all duration-200 ease-in-out transform hover:scale-105 shadow-lg ${
+                    isLoading && selectedPlan === plan.planId 
+                      ? 'bg-gray-500 cursor-not-allowed' 
+                      : plan.isRecommended 
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                        : 'bg-slate-700 hover:bg-slate-600 text-gray-200'
+                  }`}
+                >
+                  {isLoading && selectedPlan === plan.planId ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      {t('buttons.processing', 'Zpracování...')}
+                    </span>
+                  ) : plan.buttonText}
+                </button>
+                {plan.name !== t('plans.basic.name', 'Základní') && 
+                  <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-2">
+                    {t('safePaymentStripe', 'Bezpečná platba přes Stripe')}
+                  </p>
+                }
+              </div>
             </div>
           ))}
         </div>
