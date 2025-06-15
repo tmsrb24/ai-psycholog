@@ -285,7 +285,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                                 ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                     title={t(item.labelKey)}
                   >
-                    <item.icon size={20} className="text-blue-500" />
+                    <item.icon size={20} className={item.active ? 'text-white' : 'text-yellow-500 dark:text-yellow-400'} />
                     <span>{t(item.labelKey)}</span>
                   </button>
                 ))}
