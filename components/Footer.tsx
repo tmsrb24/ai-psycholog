@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { FaGithub, FaTwitter, FaEnvelope, FaLanguage } from 'react-icons/fa'; // Přidána ikona FaLanguage
+import Image from 'next/image';
+import { FaGithub, FaTwitter, FaEnvelope, FaLanguage } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
@@ -22,11 +23,16 @@ const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8"> {/* Přidán mb-8 pro oddělení od přepínače */}
           <div>
-            <div className="flex items-center mb-4">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-400 text-white py-2 px-3 rounded-lg">
-                <span className="font-bold text-xl">Psychollog.cz</span>
-              </div>
-            </div>
+            <Link href="/" className="flex items-center space-x-2 mb-4">
+              <Image
+                src="/images/hero-avatar.png"
+                alt={t('appName', 'Psychollog Logo')}
+                width={32}
+                height={32}
+                className="h-8 w-auto" 
+              />
+              <span className="font-bold text-xl text-gray-800 dark:text-white">Psychollog</span>
+            </Link>
             <p className="text-gray-700 dark:text-gray-300 text-sm">
               {t('footer.tagline', 'Moderní psychologická podpora s využitím umělé inteligence. Dostupná kdykoliv a kdekoliv.')}
             </p>
