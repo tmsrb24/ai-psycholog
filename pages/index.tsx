@@ -49,19 +49,21 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
+        staggerChildren: 0.3, // Increased stagger for a more noticeable cascade
+        delayChildren: 0.1,
       },
     },
   };
 
   const featureCardVariants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 50, scale: 0.95 }, // Start slightly lower and smaller
     visible: {
       opacity: 1,
       y: 0,
+      scale: 1,
       transition: {
-        duration: 0.5,
-        ease: "easeOut",
+        duration: 0.7, // Slightly longer duration for a smoother feel
+        ease: [0.6, 0.05, -0.01, 0.9], // A gentle, custom easing curve
       },
     },
   };
