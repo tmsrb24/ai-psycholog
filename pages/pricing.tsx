@@ -139,59 +139,64 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
           {plans.map((plan) => (
             <div 
               key={plan.name} 
-              className={`rounded-2xl p-8 flex flex-col transition-all duration-300 ${
-                plan.isRecommended 
-                  ? 'bg-slate-800/70 backdrop-blur-sm border-2 border-blue-500 shadow-2xl' 
-                  : 'bg-slate-800/50 backdrop-blur-sm border border-white/10 hover:border-white/20'
+              className={`bg-white dark:bg-slate-800 rounded-2xl shadow-lg flex flex-col h-full border ${
+                plan.isRecommended ? 'border-blue-500' : 'border-gray-200 dark:border-slate-700'
               }`}
             >
               {/* Header */}
-              <div className="flex-shrink-0">
-                {plan.isRecommended && (
-                  <div className="text-right mb-2 h-5">
+              <div className="p-6">
+                <div className="h-6 mb-2 text-right">
+                  {plan.isRecommended && (
                     <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                       {t('common:tags.recommended', 'DOPORUČENO')}
                     </span>
-                  </div>
-                )}
-                {!plan.isRecommended && <div className="h-5 mb-2"></div>}
-                <h2 className="text-2xl font-bold text-white mb-2">{plan.name}</h2>
-                <p className="text-gray-300 mb-4 min-h-[2.5rem]">{plan.description}</p>
-                <div className="text-4xl font-bold text-white mb-1">{plan.price}</div>
-                {plan.priceSuffix && <p className="text-md text-gray-400 min-h-[1.5rem]">{plan.priceSuffix}</p>}
+                  )}
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">{plan.name}</h2>
+                <p className="text-gray-500 dark:text-gray-400 mt-1 min-h-[2.5rem]">{plan.description}</p>
+              </div>
+
+              {/* Price */}
+              <div className="p-6 border-y border-gray-200 dark:border-slate-700">
+                <div className="text-4xl font-bold text-gray-900 dark:text-white">{plan.price}</div>
+                {plan.priceSuffix && <p className="text-md text-gray-500 dark:text-gray-400 mt-1">{plan.priceSuffix}</p>}
               </div>
 
               {/* Features */}
-              <ul className="space-y-3 my-8 flex-grow border-t border-white/10 pt-8">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center">
-                    {feature.included ? 
-                      (feature.icon ? <feature.icon className="text-green-400 mr-3 flex-shrink-0" /> : <FaCheck className="text-green-400 mr-3 flex-shrink-0" />)
-                      : <FaTimes className="text-red-400 mr-3 flex-shrink-0" />
-                    }
-                    <span className={feature.included ? 'text-gray-200' : 'text-gray-500 line-through'}>
-                      {feature.text}
-                      {feature.tag && (
-                        <span className="ml-2 bg-blue-500/20 text-blue-300 text-xs font-semibold px-2 py-0.5 rounded-full">
-                          {feature.tag}
-                        </span>
-                      )}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+              <div className="p-6 flex-grow">
+                <ul className="space-y-4">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-start">
+                      <div className="flex-shrink-0">
+                        {feature.included ? 
+                          (feature.icon ? <feature.icon className="text-green-500 h-5 w-5" /> : <FaCheck className="text-green-500 h-5 w-5" />)
+                          : <FaTimes className="text-red-500 h-5 w-5" />
+                        }
+                      </div>
+                      <p className={`ml-3 text-sm ${feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500 line-through'}`}>
+                        {feature.text}
+                        {feature.tag && (
+                          <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-blue-900/50 dark:text-blue-300">
+                            {feature.tag}
+                          </span>
+                        )}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
               
               {/* Button */}
-              <div className="mt-auto flex-shrink-0">
+              <div className="p-6 mt-auto">
                 <button 
                   onClick={() => plan.buttonAction()}
                   disabled={isLoading && selectedPlan === plan.planId}
-                  className={`block w-full text-center py-3 px-6 rounded-lg font-semibold transition-all duration-200 ease-in-out transform hover:scale-105 shadow-lg ${
+                  className={`block w-full text-center py-3 px-6 rounded-lg font-semibold transition-all duration-200 ease-in-out transform hover:scale-105 shadow-md ${
                     isLoading && selectedPlan === plan.planId 
-                      ? 'bg-gray-500 cursor-not-allowed' 
+                      ? 'bg-gray-400 text-gray-800 cursor-not-allowed' 
                       : plan.isRecommended 
                         ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                        : 'bg-slate-700 hover:bg-slate-600 text-gray-200'
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-800 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-gray-200'
                   }`}
                 >
                   {isLoading && selectedPlan === plan.planId ? (
