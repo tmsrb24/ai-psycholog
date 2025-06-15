@@ -1,6 +1,7 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { getSupabaseAdmin } from "../../../lib/supabaseClient"; 
+import CredentialsProvider from "next-auth/providers/credentials";
+import { getSupabaseAdmin, supabase } from "../../../lib/supabaseClient"; 
 import { sendWelcomeEmail } from "../../../lib/emailService"; 
 
 console.log("Environment variables check:");
@@ -21,6 +22,49 @@ export const authOptions: NextAuthOptions = {
           access_type: "offline",
           response_type: "code"
         }
+      }
+    }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: {  label: "Password", type: "password" }
+      },
+      async authorize(credentials, req) {
+        if (!credentials?.email || !credentials?.password) {
+          console.error("[NextAuth Credentials] Missing email or password in credentials object");
+          return null;
+        }
+        
+        console.log(`[NextAuth Credentials] Authorize attempt for email: ${credentials.email}`);
+
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: credentials.email,
+          password: credentials.password,
+        });
+
+        if (error) {
+          console.error(`[NextAuth Credentials] Supabase signInWithPassword error for ${credentials.email}:`, error.message);
+          // Vracíme null, což NextAuth interpretuje jako neúspěšné přihlášení.
+          // Můžeme také vyhodit chybu s konkrétní zprávou, která se zobrazí na frontendu.
+          // throw new Error(error.message); // Toto by přesměrovalo na chybovou stránku.
+          return null;
+        }
+
+        if (data.user) {
+          console.log(`[NextAuth Credentials] Successfully authenticated user: ${data.user.email}, ID: ${data.user.id}`);
+          // Vracíme objekt uživatele, který NextAuth použije pro vytvoření session/tokenu.
+          // Objekt musí obsahovat 'id' a další pole, která chceme v tokenu.
+          return {
+            id: data.user.id,
+            email: data.user.email,
+            name: data.user.user_metadata?.full_name || null,
+            image: data.user.user_metadata?.avatar_url || null,
+          };
+        }
+        
+        // Pokud z nějakého důvodu není ani user ani error, vrátíme null.
+        return null;
       }
     })
   ],

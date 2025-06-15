@@ -1,5 +1,3 @@
-const colors = require('tailwindcss/colors'); // Import Tailwind colors
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -27,12 +25,6 @@ module.exports = {
         'gradient-light-start': '#E0F2FE', // Světle modrá (začátek světlého gradientu)
         'gradient-light-mid': '#A5F3FC',    // Střed světlého gradientu
         'gradient-light-end': '#67E8F9',    // Světle tyrkysová (konec světlého gradientu)
-        
-        accent: {
-          DEFAULT: colors.orange[500], // #F97316
-          light: colors.orange[400],   // #FB923C
-          dark: colors.orange[600],    // #EA580C
-        },
       },
       typography: {
         DEFAULT: {
