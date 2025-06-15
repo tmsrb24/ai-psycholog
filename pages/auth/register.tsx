@@ -5,8 +5,14 @@ import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { FaGoogle, FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
 import axios from 'axios';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 
-const Register = () => {
+type PageProps = {};
+
+const Register = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const { t } = useTranslation(['common']);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
@@ -14,6 +20,9 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [complaintsAccepted, setComplaintsAccepted] = useState(false);
+
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -23,17 +32,23 @@ const Register = () => {
   const router = useRouter();
   const { callbackUrl } = router.query;
 
+  const canSubmit = termsAccepted && complaintsAccepted;
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (!canSubmit) {
+      setError(t('errors.mustAcceptTerms'));
+      return;
+    }
     setError('');
     setSuccess('');
 
     if (password !== confirmPassword) {
-      setError('Hesla se neshodují.');
+      setError(t('errors.passwordsDoNotMatch'));
       return;
     }
     if (password.length < 8) {
-      setError('Heslo musí mít alespoň 8 znaků.');
+      setError(t('errors.passwordTooShort', { min: 8 }));
       return;
     }
 
@@ -48,15 +63,11 @@ const Register = () => {
         password,
       });
       
-      setSuccess(response.data.message || 'Registrace byla úspěšná. Zkontrolujte prosím svůj e-mail pro potvrzení účtu.');
-      // Optionally redirect after a delay
-      // setTimeout(() => {
-      //   router.push('/auth/login');
-      // }, 3000);
-
+      setSuccess(response.data.message || t('register.success'));
+      
     } catch (err: any) {
       console.error("Registration error:", err);
-      const errorMessage = err.response?.data?.error || 'Během registrace došlo k chybě.';
+      const errorMessage = err.response?.data?.error || t('errors.generic');
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -64,17 +75,21 @@ const Register = () => {
   };
 
   const handleOAuthSignIn = (provider: string) => {
+    if (!canSubmit) {
+      setError(t('errors.mustAcceptTerms'));
+      return;
+    }
     setIsLoading(true);
     signIn(provider, { callbackUrl: (callbackUrl as string) || '/' });
   };
 
   return (
-    <Layout title="Registrace | AI Psycholog" description="Vytvořte si nový účet na AI Psycholog">
+    <Layout title={t('register.title')} description={t('register.description')}>
       <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Vytvořit účet</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('register.header')}</h1>
           <p className="text-xl max-w-3xl mx-auto">
-            Začněte svou cestu k duševní pohodě ještě dnes.
+            {t('register.subheader')}
           </p>
         </div>
       </div>
@@ -94,7 +109,7 @@ const Register = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="w-full">
-              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Jméno</label>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('firstName')}</label>
               <input
                 id="firstName"
                 name="firstName"
@@ -106,7 +121,7 @@ const Register = () => {
               />
             </div>
             <div className="w-full">
-              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Příjmení</label>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('lastName')}</label>
               <input
                 id="lastName"
                 name="lastName"
@@ -119,7 +134,7 @@ const Register = () => {
             </div>
           </div>
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Telefon (nepovinné)</label>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('phoneOptional')}</label>
             <input
               id="phone"
               name="phone"
@@ -130,7 +145,7 @@ const Register = () => {
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('email')}</label>
             <input
               id="email"
               name="email"
@@ -143,7 +158,7 @@ const Register = () => {
             />
           </div>
           <div className="relative">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Heslo</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('password')}</label>
             <input
               id="password"
               name="password"
@@ -159,7 +174,7 @@ const Register = () => {
             </button>
           </div>
           <div className="relative">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Potvrdit heslo</label>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('confirmPassword')}</label>
             <input
               id="confirmPassword"
               name="confirmPassword"
@@ -174,13 +189,49 @@ const Register = () => {
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
+
+          <div className="space-y-2">
+            <div className="flex items-start">
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                checked={termsAccepted}
+                onChange={(e) => setTermsAccepted(e.target.checked)}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-1"
+              />
+              <label htmlFor="terms" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                {t('register.agreeTo')}{' '}
+                <Link href="/obchodni-podminky" className="underline hover:text-blue-500">
+                  {t('register.terms')}
+                </Link>
+              </label>
+            </div>
+            <div className="flex items-start">
+              <input
+                id="complaints"
+                name="complaints"
+                type="checkbox"
+                checked={complaintsAccepted}
+                onChange={(e) => setComplaintsAccepted(e.target.checked)}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mt-1"
+              />
+              <label htmlFor="complaints" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                {t('register.agreeTo')}{' '}
+                <Link href="/reklamacni-rad" className="underline hover:text-blue-500">
+                  {t('register.complaintsPolicy')}
+                </Link>
+              </label>
+            </div>
+          </div>
+
           <div>
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              disabled={isLoading || !canSubmit}
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? 'Registrace...' : 'Vytvořit účet'}
+              {isLoading ? t('register.loading') : t('register.createAccount')}
             </button>
           </div>
         </form>
@@ -190,7 +241,7 @@ const Register = () => {
             <div className="w-full border-t border-gray-300 dark:border-gray-600" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">Nebo pokračujte s</span>
+            <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">{t('orContinueWith')}</span>
           </div>
         </div>
 
@@ -198,20 +249,20 @@ const Register = () => {
           <div>
             <button
               onClick={() => handleOAuthSignIn('google')}
-              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-              disabled={isLoading}
+              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading || !canSubmit}
             >
-              <span className="sr-only">Registrovat se přes Google</span>
+              <span className="sr-only">{t('register.withGoogle')}</span>
               <FaGoogle className="w-5 h-5" />
             </button>
           </div>
           <div>
             <button
               onClick={() => handleOAuthSignIn('apple')}
-              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-              disabled={isLoading}
+              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isLoading || !canSubmit}
             >
-              <span className="sr-only">Registrovat se přes Apple</span>
+              <span className="sr-only">{t('register.withApple')}</span>
               <FaApple className="w-5 h-5" />
             </button>
           </div>
@@ -219,9 +270,9 @@ const Register = () => {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Již máte účet?{' '}
+            {t('alreadyHaveAccount')}{' '}
             <Link href="/auth/login" className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
-              Přihlaste se
+              {t('signIn')}
             </Link>
           </p>
         </div>
@@ -229,5 +280,11 @@ const Register = () => {
     </Layout>
   );
 };
+
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'cs', ['common'])),
+  },
+});
 
 export default Register;

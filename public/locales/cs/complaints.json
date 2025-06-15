@@ -1,0 +1,49 @@
+{
+  "pageTitle": "Reklamační řád | AI Psycholog",
+  "pageDescription": "Informace o postupu při reklamaci služby AI Psycholog.",
+  "header": {
+    "title": "Reklamační řád",
+    "subtitle": "Poslední aktualizace: 15. června 2025"
+  },
+  "sections": [
+    {
+      "title": "1. Obecná ustanovení",
+      "content": [
+        "Tento reklamační řád upravuje způsob a podmínky reklamace služeb poskytovaných v rámci placeného předplatného (Premium) na platformě Psychollog.cz (dále jen „Služba“)."
+      ]
+    },
+    {
+      "title": "2. Předmět reklamace",
+      "content": [
+        "Reklamaci lze uplatnit v případě, že placená Služba neodpovídá vlastnostem a funkcím popsaným v Obchodních podmínkách a na webových stránkách Služby.",
+        "Předmětem reklamace může být zejména prokazatelná technická nedostupnost placených funkcí po významnou dobu, která nebyla způsobena Uživatelem nebo okolnostmi na jeho straně (např. výpadek internetového připojení)."
+      ]
+    },
+    {
+      "title": "3. Způsob uplatnění reklamace",
+      "content": [
+        "Uživatel je povinen uplatnit reklamaci bez zbytečného odkladu po zjištění vady, a to prostřednictvím e-mailu na adrese:",
+        "V reklamaci musí být uvedeno:",
+        "Provozovatel potvrdí přijetí reklamace e-mailem."
+      ],
+      "list": [
+        "Identifikační údaje Uživatele (e-mail použitý pro registraci).",
+        "Podrobný popis reklamované vady a časové určení, kdy k ní došlo.",
+        "Doklad o zaplacení předplatného (např. potvrzení od platební brány)."
+      ]
+    },
+    {
+      "title": "4. Lhůty a vyřízení reklamace",
+      "content": [
+        "Provozovatel se zavazuje vyřídit reklamaci nejpozději do 30 dnů od jejího přijetí.",
+        "V případě oprávněné reklamace bude Uživateli poskytnuta přiměřená kompenzace, například prodloužení předplatného o dobu nedostupnosti Služby, nebo v odůvodněných případech vrácení poměrné části uhrazeného předplatného."
+      ]
+    },
+    {
+      "title": "5. Závěrečná ustanovení",
+      "content": [
+        "Tento reklamační řád je nedílnou součástí Obchodních podmínek."
+      ]
+    }
+  ]
+}

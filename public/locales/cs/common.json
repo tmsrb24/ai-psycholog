@@ -89,6 +89,26 @@
     "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
     "invalidCredentials": "Neplatné přihlašovací údaje.",
     "passwordsDoNotMatch": "Hesla se neshodují.",
-    "passwordTooShort": "Heslo musí mít alespoň 6 znaků."
-  }
+    "passwordTooShort": "Heslo musí mít alespoň {min} znaků.",
+    "mustAcceptTerms": "Pro pokračování musíte souhlasit s obchodními podmínkami a reklamačním řádem."
+  },
+  "register": {
+    "title": "Registrace | AI Psycholog",
+    "description": "Vytvořte si nový účet na AI Psycholog",
+    "header": "Vytvořit účet",
+    "subheader": "Začněte svou cestu k duševní pohodě ještě dnes.",
+    "loading": "Registrace...",
+    "createAccount": "Vytvořit účet",
+    "withGoogle": "Registrovat se přes Google",
+    "withApple": "Registrovat se přes Apple",
+    "agreeTo": "Souhlasím s",
+    "terms": "obchodními podmínkami",
+    "complaintsPolicy": "reklamačním řádem",
+    "success": "Registrace byla úspěšná. Zkontrolujte prosím svůj e-mail pro potvrzení účtu."
+  },
+  "firstName": "Jméno",
+  "lastName": "Příjmení",
+  "phoneOptional": "Telefon (nepovinné)",
+  "confirmPassword": "Potvrdit heslo",
+  "alreadyHaveAccount": "Již máte účet?"
 }

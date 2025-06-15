@@ -1,0 +1,60 @@
+{
+  "pageTitle": "Terms and Conditions | AI Psychologist",
+  "pageDescription": "Read the terms and conditions for using the AI Psychologist service.",
+  "header": {
+    "title": "Terms and Conditions",
+    "subtitle": "Last updated: June 15, 2025"
+  },
+  "sections": [
+    {
+      "title": "1. Introduction",
+      "content": [
+        "These terms and conditions (hereinafter referred to as 'Terms') govern the relationship between the operator of the Psychollog.cz service (hereinafter referred to as 'Operator') and the users of this service (hereinafter referred to as 'User').",
+        "The AI Psychologist service (hereinafter referred to as 'Service') is an online platform providing psychological support through conversational artificial intelligence."
+      ]
+    },
+    {
+      "title": "2. Registration and User Account",
+      "content": [
+        "Full use of the Service requires User registration. The User is obliged to provide true and current information.",
+        "The User is responsible for all activities carried out through their account and is obliged to protect their login details from misuse."
+      ],
+      "list": []
+    },
+    {
+      "title": "3. Rules of Service Use",
+      "content": [
+        "The User undertakes to use the Service in accordance with the applicable laws of the Czech Republic and these Terms.",
+        "It is forbidden to use the Service to disseminate illegal, offensive, or otherwise inappropriate content."
+      ]
+    },
+    {
+      "title": "4. Payment Terms and Subscription",
+      "content": [
+        "The Service is offered in a free (Basic) and a paid (Premium) version. The scope of functions for each version is specified in the price list on the website.",
+        "Subscription payments are processed through the Stripe payment gateway. The subscription renews automatically unless the User cancels it before the end of the current subscription period."
+      ]
+    },
+    {
+      "title": "5. Liability and Limitations",
+      "content": [
+        "The AI Psychologist Service is provided as a supplementary tool for supporting mental well-being and does not replace professional psychological, psychiatric, or medical care.",
+        "The Operator is not responsible for any decisions the User makes based on information obtained from the Service.",
+        "In case of serious psychological problems, crisis situations, or thoughts of self-harm, the User is obliged to seek professional medical help immediately."
+      ]
+    },
+    {
+      "title": "6. Data Protection",
+      "content": [
+        "The processing of personal data is governed by the Privacy Policy (GDPR), which is available on a separate page."
+      ]
+    },
+    {
+      "title": "7. Final Provisions",
+      "content": [
+        "The Operator reserves the right to change these Terms at any time. The User will be informed of any changes in an appropriate manner.",
+        "These Terms become valid and effective on the day of their publication."
+      ]
+    }
+  ]
+}

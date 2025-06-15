@@ -89,6 +89,26 @@
     "generic": "Something went wrong. Please try again.",
     "invalidCredentials": "Invalid credentials.",
     "passwordsDoNotMatch": "Passwords do not match.",
-    "passwordTooShort": "Password must be at least 6 characters."
-  }
+    "passwordTooShort": "Password must be at least {min} characters.",
+    "mustAcceptTerms": "You must agree to the Terms and Conditions and Complaints Policy to continue."
+  },
+  "register": {
+    "title": "Register | AI Psychologist",
+    "description": "Create a new account at AI Psychologist",
+    "header": "Create Account",
+    "subheader": "Start your journey to mental well-being today.",
+    "loading": "Registering...",
+    "createAccount": "Create Account",
+    "withGoogle": "Sign up with Google",
+    "withApple": "Sign up with Apple",
+    "agreeTo": "I agree to the",
+    "terms": "Terms and Conditions",
+    "complaintsPolicy": "Complaints Policy",
+    "success": "Registration successful. Please check your email to confirm your account."
+  },
+  "firstName": "First Name",
+  "lastName": "Last Name",
+  "phoneOptional": "Phone (optional)",
+  "confirmPassword": "Confirm Password",
+  "alreadyHaveAccount": "Already have an account?"
 }

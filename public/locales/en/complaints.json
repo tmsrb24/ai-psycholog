@@ -1,0 +1,49 @@
+{
+  "pageTitle": "Complaints Policy | AI Psychologist",
+  "pageDescription": "Information on the procedure for complaining about the AI Psychologist service.",
+  "header": {
+    "title": "Complaints Policy",
+    "subtitle": "Last updated: June 15, 2025"
+  },
+  "sections": [
+    {
+      "title": "1. General Provisions",
+      "content": [
+        "This complaints policy governs the method and conditions for complaining about services provided under the paid subscription (Premium) on the Psychollog.cz platform (hereinafter referred to as 'Service')."
+      ]
+    },
+    {
+      "title": "2. Subject of Complaint",
+      "content": [
+        "A complaint can be filed if the paid Service does not correspond to the features and functions described in the Terms and Conditions and on the Service's website.",
+        "The subject of a complaint may particularly be the demonstrable technical unavailability of paid functions for a significant period, not caused by the User or circumstances on their part (e.g., internet connection failure)."
+      ]
+    },
+    {
+      "title": "3. How to File a Complaint",
+      "content": [
+        "The User is obliged to file a complaint without undue delay after discovering a defect, via email to the address:",
+        "The complaint must include:",
+        "The Operator will confirm receipt of the complaint by email."
+      ],
+      "list": [
+        "User's identification data (email used for registration).",
+        "A detailed description of the claimed defect and the time it occurred.",
+        "Proof of payment for the subscription (e.g., confirmation from the payment gateway)."
+      ]
+    },
+    {
+      "title": "4. Deadlines and Complaint Resolution",
+      "content": [
+        "The Operator undertakes to resolve the complaint no later than 30 days from its receipt.",
+        "In the case of a justified complaint, the User will be provided with reasonable compensation, for example, an extension of the subscription for the period of the Service's unavailability, or in justified cases, a refund of a proportionate part of the paid subscription."
+      ]
+    },
+    {
+      "title": "5. Final Provisions",
+      "content": [
+        "This complaints policy is an integral part of the Terms and Conditions."
+      ]
+    }
+  ]
+}

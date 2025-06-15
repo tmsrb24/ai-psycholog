@@ -1,0 +1,60 @@
+{
+  "pageTitle": "Obchodní podmínky | AI Psycholog",
+  "pageDescription": "Přečtěte si obchodní podmínky pro používání služby AI Psycholog.",
+  "header": {
+    "title": "Obchodní podmínky",
+    "subtitle": "Poslední aktualizace: 15. června 2025"
+  },
+  "sections": [
+    {
+      "title": "1. Úvodní ustanovení",
+      "content": [
+        "Tyto obchodní podmínky (dále jen „Podmínky“) upravují vztahy mezi provozovatelem služby Psychollog.cz (dále jen „Provozovatel“) a uživateli této služby (dále jen „Uživatel“).",
+        "Služba AI Psycholog (dále jen „Služba“) je online platforma poskytující psychologickou podporu prostřednictvím konverzační umělé inteligence."
+      ]
+    },
+    {
+      "title": "2. Registrace a uživatelský účet",
+      "content": [
+        "Pro plné využívání Služby je nutná registrace Uživatele. Uživatel je povinen uvést pravdivé a aktuální údaje.",
+        "Uživatel je odpovědný za veškeré aktivity provedené prostřednictvím jeho účtu a je povinen chránit své přihlašovací údaje před zneužitím."
+      ],
+      "list": []
+    },
+    {
+      "title": "3. Pravidla používání Služby",
+      "content": [
+        "Uživatel se zavazuje používat Službu v souladu s platnými právními předpisy České republiky a těmito Podmínkami.",
+        "Je zakázáno využívat Službu k šíření nezákonného, urážlivého, nebo jinak nevhodného obsahu."
+      ]
+    },
+    {
+      "title": "4. Platební podmínky a předplatné",
+      "content": [
+        "Služba je nabízena v bezplatné (Základní) a placené (Premium) verzi. Rozsah funkcí jednotlivých verzí je specifikován v ceníku na webových stránkách.",
+        "Platby za předplatné jsou zpracovávány prostřednictvím platební brány Stripe. Předplatné se automaticky obnovuje, pokud jej Uživatel nezruší před koncem aktuálního předplaceného období."
+      ]
+    },
+    {
+      "title": "5. Odpovědnost a omezení",
+      "content": [
+        "Služba AI Psycholog je poskytována jako doplňkový nástroj pro podporu duševní pohody a nenahrazuje profesionální psychologickou, psychiatrickou či lékařskou péči.",
+        "Provozovatel nenese odpovědnost za rozhodnutí, která Uživatel učiní na základě informací získaných ze Služby.",
+        "V případě vážných psychických potíží, krizových stavů nebo myšlenek na sebepoškození je Uživatel povinen neprodleně vyhledat odbornou lékařskou pomoc."
+      ]
+    },
+    {
+      "title": "6. Ochrana osobních údajů",
+      "content": [
+        "Zpracování osobních údajů se řídí Zásadami ochrany osobních údajů (GDPR), které jsou dostupné na samostatné stránce."
+      ]
+    },
+    {
+      "title": "7. Závěrečná ustanovení",
+      "content": [
+        "Provozovatel si vyhrazuje právo tyto Podmínky kdykoliv změnit. O změnách bude Uživatel informován vhodným způsobem.",
+        "Tyto Podmínky nabývají platnosti a účinnosti dnem jejich zveřejnění."
+      ]
+    }
+  ]
+}
