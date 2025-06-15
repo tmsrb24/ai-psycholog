@@ -9,7 +9,6 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 
-// Interface definitions (Feature, Plan, Props) remain the same...
 interface Feature {
   text: string;
   included: boolean;
@@ -30,9 +29,7 @@ interface Plan {
   isRecommended?: boolean;
 }
 
-type Props = {
-  // Přidejte další props, které vaše stránka může přijímat
-}
+type Props = {};
 
 const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation('homepage'); 
@@ -52,19 +49,19 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0, // Cards within a section will animate simultaneously
+        staggerChildren: 0.2,
       },
     },
   };
 
   const featureCardVariants = {
-    hidden: { opacity: 0, y: 30 }, // Restoring the more noticeable slide-up
+    hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut", // Restoring the smoother easing
+        ease: "easeOut",
       },
     },
   };
@@ -92,7 +89,6 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
     },
   };
 
-
   const plans: Plan[] = [
     {
       name: t('plans.basic.name', 'Základní'),
@@ -107,8 +103,6 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
         { text: t('plans.basic.features.3', 'Přístup k osobnímu deníku'), included: false },
         { text: t('plans.basic.features.4', 'Historie konverzací'), included: false },
         { text: t('plans.basic.features.5', 'Přizpůsobení osobnosti asistenta'), included: false },
-        { text: t('plans.basic.features.6', 'RAG systém nové generace'), included: false },
-        { text: t('plans.basic.features.7', 'Prioritní podpora'), included: false },
       ],
       buttonText: tCommon('buttons.tryForFree', 'Vyzkoušet zdarma'),
       buttonLink: '/chat',
@@ -155,7 +149,6 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       avatar: '/images/psychologist-avatar.png'
     }
   ];
-
 
   return (
     <Layout>
@@ -361,62 +354,18 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
             variants={featureContainerVariants}
           >
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-4xl mx-auto"
-            variants={featureContainerVariants}
-          >
-            {plans.map((plan) => (
-              <motion.div 
-                key={plan.name} 
-                variants={featureCardVariants}
-                className={`relative bg-white/60 dark:bg-slate-800/50 backdrop-blur-lg rounded-3xl p-8 shadow-lg border border-white/30 dark:border-slate-700 flex flex-col h-full transition-all duration-300 hover:shadow-2xl ${
-                  plan.isRecommended ? 'shadow-blue-500/20' : ''
-                }`}
-              >
-                {/* Header */}
-                <div className="flex-shrink-0">
-                  <h3 className={`text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${plan.borderColor}`}>{plan.name}</h3>
-                  <div className={`h-1 w-20 mt-2 mb-6 rounded-full bg-gradient-to-r ${plan.borderColor}`}></div>
-                  <p className="text-gray-600 dark:text-gray-400 min-h-[3rem]">{plan.description}</p>
-                </div>
-
-                {/* Price */}
-                <div className="my-8 flex-shrink-0">
-                  <span className="text-5xl font-extrabold text-gray-900 dark:text-white">{plan.price}</span>
-                  <span className="text-lg text-gray-500 dark:text-gray-400 ml-1">{plan.priceSuffix}</span>
-                </div>
-
-                {/* Features */}
-                <ul className="space-y-4 flex-grow">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="flex-shrink-0">
-                        {feature.included ? 
-                          <FaCheck className="text-green-500 h-5 w-5" />
-                          : <FaTimes className="text-red-500 h-5 w-5" />
-                        }
-                      </div>
-                      <p className={`ml-3 text-sm ${feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400 line-through'}`}>
-                        {feature.text}
-                        {feature.tag && (
-                          <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-blue-900/50 dark:text-blue-300">
-                            {feature.tag}
-                          </span>
-                        )}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Button */}
-                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-slate-700 flex-shrink-0">
-                  <Link href={plan.buttonLink} className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-gradient-to-r ${plan.borderColor} hover:shadow-xl`}>
-                    {plan.buttonText}
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
+            <motion.div 
+              variants={featureCardVariants}
+              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
+            >
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
+                <FaLightbulb className="text-blue-600 dark:text-blue-300" size={32} />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('proactiveAssistant.cards.0.title', 'Personalizované Návrhy')}</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm">
+                {t('proactiveAssistant.cards.0.text', 'Relevantní témata k zamyšlení, deníkové výzvy nebo cvičení šitá na míru.')}
+              </p>
+            </motion.div>
             <motion.div 
               variants={featureCardVariants}
               className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
@@ -474,50 +423,58 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </p>
           </div>
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-4xl mx-auto"
             variants={featureContainerVariants}
           >
             {plans.map((plan) => (
               <motion.div 
                 key={plan.name} 
                 variants={featureCardVariants}
-                className={`bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 border-t-4 ${plan.borderColor} flex flex-col ${plan.isRecommended ? 'lg:scale-105 ring-2 ring-offset-2 ring-blue-500 dark:ring-blue-400' : 'hover:shadow-xl hover:lg:scale-[1.02] transition-all duration-300 ease-in-out'} relative`}
+                className={`relative bg-white/60 dark:bg-slate-800/50 backdrop-blur-lg rounded-3xl p-8 shadow-lg border border-white/30 dark:border-slate-700 flex flex-col h-full transition-all duration-300 hover:shadow-2xl ${
+                  plan.isRecommended ? 'shadow-blue-500/20' : ''
+                }`}
               >
-                {plan.isRecommended && (
-                  <div className="absolute top-0 right-0 bg-blue-600 dark:bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-lg">
-                    {tCommon('tags.recommended', 'DOPORUČENO')}
-                  </div>
-                )}
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{plan.name}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6 min-h-[3em]">{plan.description}</p>
-                <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">{plan.price}</div>
-                {plan.priceSuffix && <p className="text-md text-gray-500 dark:text-gray-400 mb-6">{plan.priceSuffix}</p>}
-                <ul className="space-y-3 mb-8 flex-grow">
+                {/* Header */}
+                <div className="flex-shrink-0">
+                  <h3 className={`text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${plan.borderColor}`}>{plan.name}</h3>
+                  <div className={`h-1 w-20 mt-2 mb-6 rounded-full bg-gradient-to-r ${plan.borderColor}`}></div>
+                  <p className="text-gray-600 dark:text-gray-400 min-h-[3rem]">{plan.description}</p>
+                </div>
+
+                {/* Price */}
+                <div className="my-8 flex-shrink-0">
+                  <span className="text-5xl font-extrabold text-gray-900 dark:text-white">{plan.price}</span>
+                  <span className="text-lg text-gray-500 dark:text-gray-400 ml-1">{plan.priceSuffix}</span>
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-4 flex-grow">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-start">
-                      {feature.included ? 
-                        (feature.icon ? <feature.icon className="text-green-500 mr-2 mt-1 flex-shrink-0" /> : <FaCheck className="text-green-500 mr-2 mt-1 flex-shrink-0" />)
-                        : <FaTimes className="text-red-500 mr-2 mt-1 flex-shrink-0" />
-                      }
-                      <span className={`${feature.included ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-500 line-through'} ${feature.bold ? 'font-semibold' : ''}`}>
+                      <div className="flex-shrink-0">
+                        {feature.included ? 
+                          <FaCheck className="text-green-500 h-5 w-5" />
+                          : <FaTimes className="text-red-500 h-5 w-5" />
+                        }
+                      </div>
+                      <p className={`ml-3 text-sm ${feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400 line-through'}`}>
                         {feature.text}
                         {feature.tag && (
-                          <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-0.5 rounded-full">
+                          <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-blue-900/50 dark:text-blue-300">
                             {feature.tag}
                           </span>
                         )}
-                      </span>
+                      </p>
                     </li>
                   ))}
                 </ul>
-                <Link href={plan.buttonLink} className={`block w-full text-center mt-auto ${
-                    plan.name === t('plans.basic.name', 'Základní') ? 'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100' : 
-                    plan.borderColor === 'border-blue-600' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 
-                    'bg-purple-600 hover:bg-purple-700 text-white'
-                  } font-semibold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform shadow-md`}
-                >
-                  {plan.buttonText}
-                </Link>
+
+                {/* Button */}
+                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-slate-700 flex-shrink-0">
+                  <Link href={plan.buttonLink} className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-gradient-to-r ${plan.borderColor} hover:shadow-xl`}>
+                    {plan.buttonText}
+                  </Link>
+                </div>
               </motion.div>
             ))}
           </motion.div>

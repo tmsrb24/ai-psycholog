@@ -103,28 +103,13 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
         { text: t('plans.premium.features.3', 'Přístup k osobnímu deníku'), included: true },
         { text: t('plans.premium.features.4', 'Neomezená historie konverzací'), included: true },
         { text: t('plans.premium.features.5', 'Přizpůsobení osobnosti asistenta'), included: true },
+        { text: t('plans.premium.features.6', 'RAG systém nové generace'), included: true, tag: t('common:tags.new', 'NOVINKA') },
+        { text: t('plans.premium.features.7', 'Prioritní podpora'), included: true },
       ],
       buttonText: t('plans.premium.buttonText', 'Předplatit Premium'),
       buttonAction: () => handleSubscribe('premium'),
       isRecommended: true,
       planId: 'premium'
-    },
-    {
-      name: t('plans.ultra.name', 'Ultra'),
-      price: t('plans.ultra.price', '349 Kč'),
-      priceSuffix: t('common:priceSuffixMonthly', '/měsíc'),
-      description: t('plans.ultra.description', 'Pro nejnáročnější uživatele'),
-      borderColor: 'from-teal-400 to-cyan-400',
-      features: [
-        { text: t('plans.ultra.features.0', 'Vše z Premium plánu'), included: true },
-        { text: t('plans.ultra.features.1', 'RAG systém nové generace'), included: true, tag: t('common:tags.new', 'NOVINKA') },
-        { text: t('plans.ultra.features.2', 'Prioritní podpora'), included: true, icon: FaStar },
-        { text: t('plans.ultra.features.3', 'Přístup k beta verzím'), included: true, icon: FaFlask },
-      ],
-      buttonText: t('plans.ultra.buttonText', 'Předplatit Ultra'),
-      buttonAction: () => handleSubscribe('ultra'),
-      isRecommended: false,
-      planId: 'ultra'
     }
   ];
 
@@ -147,8 +132,8 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           {plans.map((plan) => (
             <div 
               key={plan.name} 

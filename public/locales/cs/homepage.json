@@ -109,18 +109,6 @@
         "Neomezená historie konverzací",
         "Přizpůsobení osobnosti asistenta"
       ]
-    },
-    "ultra": {
-      "name": "Ultra",
-      "price": "349 Kč",
-      "description": "Pro nejnáročnější uživatele",
-      "buttonText": "Vybrat Ultra",
-      "features": [
-        "Vše z Premium plánu",
-        "RAG systém nové generace",
-        "Prioritní podpora",
-        "Přístup k beta verzím"
-      ]
     }
   },
   "cta": {
