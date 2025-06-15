@@ -98,7 +98,7 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
 
   return (
     <Layout title={t('pageTitle', 'Můj profil | AI Psycholog')} description={t('pageDescription', 'Správa vašeho uživatelského profilu')}>
-      <section className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-12 md:py-16">
+      <section className="bg-hero-gradient-dark text-white py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('header.title', 'Můj profil')}</h1>
           <p className="text-lg md:text-xl opacity-90">

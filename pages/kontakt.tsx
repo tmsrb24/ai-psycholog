@@ -60,7 +60,7 @@ const KontaktPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
   return (
     <Layout title={t('pageTitle', 'Kontakt | AI Psycholog')} description={t('pageDescription', 'Kontaktujte nás s vašimi dotazy nebo zpětnou vazbou.')}>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-12 md:py-16">
+      <section className="bg-hero-gradient-dark text-white py-12 md:py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2 flex items-center justify-center">
             <FaComments className="mr-3" /> {t('header.title', 'Kontaktujte nás')}

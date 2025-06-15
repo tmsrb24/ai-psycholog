@@ -121,7 +121,7 @@ const GDPRPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <Layout title={t('pageTitle', 'GDPR & Zabezpečení | AI Psycholog')} description={t('pageDescription', 'Informace o zpracování osobních údajů, ochraně soukromí a zabezpečení na AI Psycholog.')}>
-      <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-16">
+      <div className="bg-hero-gradient-dark text-white py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('header.title', 'GDPR & Zabezpečení')}</h1>
           <p className="text-xl max-w-3xl mx-auto">
