@@ -205,6 +205,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </div>
           </div>
         </div>
+        <div className="absolute bottom-0 left-0 w-full h-24" style={{ zIndex: 5 }}>
+          <Image src="/assets/hero-curve.svg" alt="Curve separator" layout="fill" objectFit="cover" />
+        </div>
       </section>
 
       <motion.section 
