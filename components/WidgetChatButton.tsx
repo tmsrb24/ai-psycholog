@@ -24,7 +24,7 @@ const WidgetChatButton: React.FC<WidgetChatButtonProps> = ({ onClick, isOpen }) 
         </div>
       ) : (
         <div className="flex items-center">
-          <Image src="/images/faq.png" alt="FAQ Icon" width={24} height={24} className="mr-2" /> {t('widgetChat.askUs', 'Zeptejte se')}
+          <Image src="/images/faq.png" alt="FAQ Icon" width={32} height={32} className="mr-2" /> {t('widgetChat.askUs', 'Zeptejte se')}
         </div>
       )}
     </button>
