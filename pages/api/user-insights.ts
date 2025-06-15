@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import { supabase } from '../../../lib/supabaseClient';
-import { Message } from '../../../types';
+import { supabase } from '../../lib/supabaseClient';
+import { Message } from '../../types';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
