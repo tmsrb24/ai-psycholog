@@ -494,28 +494,39 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               <motion.div 
                 key={plan.name} 
                 variants={featureCardVariants}
-                className={`bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 border-t-4 ${plan.borderColor} flex flex-col ${plan.isRecommended ? 'lg:scale-105 ring-2 ring-offset-2 ring-blue-500 dark:ring-blue-400' : 'hover:shadow-xl hover:lg:scale-[1.02] transition-all duration-300 ease-in-out'} relative`}
+                className={`rounded-2xl p-8 flex flex-col transition-all duration-300 ${
+                  plan.isRecommended 
+                    ? 'bg-slate-800/70 backdrop-blur-sm border-2 border-blue-500 shadow-2xl' 
+                    : 'bg-slate-800/50 backdrop-blur-sm border border-white/10 hover:border-white/20'
+                }`}
               >
-                {plan.isRecommended && (
-                  <div className="absolute top-0 right-0 bg-blue-600 dark:bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-lg">
-                    {tCommon('tags.recommended', 'DOPORUČENO')}
-                  </div>
-                )}
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{plan.name}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6 min-h-[3em]">{plan.description}</p>
-                <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">{plan.price}</div>
-                {plan.priceSuffix && <p className="text-md text-gray-500 dark:text-gray-400 mb-6">{plan.priceSuffix}</p>}
-                <ul className="space-y-3 mb-8 flex-grow">
+                {/* Header */}
+                <div className="min-h-[10rem]">
+                  {plan.isRecommended && (
+                    <div className="text-right mb-2">
+                      <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        {tCommon('tags.recommended', 'DOPORUČENO')}
+                      </span>
+                    </div>
+                  )}
+                  <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
+                  <p className="text-gray-300 mb-4">{plan.description}</p>
+                  <div className="text-5xl font-bold text-white mb-1">{plan.price}</div>
+                  {plan.priceSuffix && <p className="text-md text-gray-400">{plan.priceSuffix}</p>}
+                </div>
+
+                {/* Features */}
+                <ul className="space-y-3 my-8 flex-grow border-t border-white/10 pt-8">
                   {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
+                    <li key={index} className="flex items-center">
                       {feature.included ? 
-                        (feature.icon ? <feature.icon className="text-green-500 mr-2 mt-1 flex-shrink-0" /> : <FaCheck className="text-green-500 mr-2 mt-1 flex-shrink-0" />)
-                        : <FaTimes className="text-red-500 mr-2 mt-1 flex-shrink-0" />
+                        <FaCheck className="text-green-400 mr-3 flex-shrink-0" />
+                        : <FaTimes className="text-red-400 mr-3 flex-shrink-0" />
                       }
-                      <span className={`${feature.included ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-500 line-through'} ${feature.bold ? 'font-semibold' : ''}`}>
+                      <span className={feature.included ? 'text-gray-200' : 'text-gray-500 line-through'}>
                         {feature.text}
                         {feature.tag && (
-                          <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-0.5 rounded-full">
+                          <span className="ml-2 bg-blue-500/20 text-blue-300 text-xs font-semibold px-2 py-0.5 rounded-full">
                             {feature.tag}
                           </span>
                         )}
@@ -523,11 +534,13 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                     </li>
                   ))}
                 </ul>
-                <Link href={plan.buttonLink} className={`block w-full text-center mt-auto ${
-                    plan.name === t('plans.basic.name', 'Základní') ? 'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100' : 
-                    plan.borderColor === 'border-blue-600' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 
-                    'bg-purple-600 hover:bg-purple-700 text-white'
-                  } font-semibold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform shadow-md`}
+
+                {/* Button */}
+                <Link href={plan.buttonLink} className={`block w-full text-center mt-auto py-3 px-6 rounded-lg font-semibold transition-all duration-200 ease-in-out transform hover:scale-105 shadow-lg ${
+                    plan.isRecommended 
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                      : 'bg-slate-700 hover:bg-slate-600 text-gray-200'
+                  }`}
                 >
                   {plan.buttonText}
                 </Link>
