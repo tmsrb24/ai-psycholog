@@ -487,71 +487,50 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </p>
           </div>
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-4xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch max-w-4xl mx-auto"
             variants={featureContainerVariants}
           >
             {plans.map((plan) => (
               <motion.div 
                 key={plan.name} 
                 variants={featureCardVariants}
-                className={`bg-white dark:bg-slate-800 rounded-2xl shadow-lg flex flex-col h-full border ${
-                  plan.isRecommended ? 'border-blue-500' : 'border-gray-200 dark:border-slate-700'
-                }`}
+                className={`bg-white dark:bg-gray-700 rounded-xl shadow-lg p-8 border-t-4 ${plan.borderColor} flex flex-col ${plan.isRecommended ? 'lg:scale-105 ring-2 ring-offset-2 ring-blue-500 dark:ring-blue-400' : 'hover:shadow-xl hover:lg:scale-[1.02] transition-all duration-300 ease-in-out'} relative`}
               >
-                {/* Header */}
-                <div className="p-6">
-                  <div className="h-6 mb-2 text-right">
-                    {plan.isRecommended && (
-                      <span className="bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                        {tCommon('tags.recommended', 'DOPORUČENO')}
-                      </span>
-                    )}
+                {plan.isRecommended && (
+                  <div className="absolute top-0 right-0 bg-blue-600 dark:bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-lg">
+                    {tCommon('tags.recommended', 'DOPORUČENO')}
                   </div>
-                  <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">{plan.name}</h3>
-                  <p className="text-gray-500 dark:text-gray-400 mt-1 min-h-[2.5rem]">{plan.description}</p>
-                </div>
-
-                {/* Price */}
-                <div className="p-6 border-y border-gray-200 dark:border-slate-700">
-                  <div className="text-4xl font-bold text-gray-900 dark:text-white">{plan.price}</div>
-                  {plan.priceSuffix && <p className="text-md text-gray-500 dark:text-gray-400 mt-1">{plan.priceSuffix}</p>}
-                </div>
-
-                {/* Features */}
-                <div className="p-6 flex-grow">
-                  <ul className="space-y-4">
-                    {plan.features.map((feature, index) => (
-                      <li key={index} className="flex items-start">
-                        <div className="flex-shrink-0">
-                          {feature.included ? 
-                            <FaCheck className="text-green-500 h-5 w-5" />
-                            : <FaTimes className="text-red-500 h-5 w-5" />
-                          }
-                        </div>
-                        <p className={`ml-3 text-sm ${feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500 line-through'}`}>
-                          {feature.text}
-                          {feature.tag && (
-                            <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-blue-900/50 dark:text-blue-300">
-                              {feature.tag}
-                            </span>
-                          )}
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Button */}
-                <div className="p-6 mt-auto">
-                  <Link href={plan.buttonLink} className={`block w-full text-center py-3 px-6 rounded-lg font-semibold transition-all duration-200 ease-in-out transform hover:scale-105 shadow-md ${
-                      plan.isRecommended 
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                        : 'bg-gray-100 hover:bg-gray-200 text-gray-800 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-gray-200'
-                    }`}
-                  >
-                    {plan.buttonText}
-                  </Link>
-                </div>
+                )}
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{plan.name}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-6 min-h-[3em]">{plan.description}</p>
+                <div className="text-4xl font-bold text-gray-900 dark:text-white mb-1">{plan.price}</div>
+                {plan.priceSuffix && <p className="text-md text-gray-500 dark:text-gray-400 mb-6">{plan.priceSuffix}</p>}
+                <ul className="space-y-3 mb-8 flex-grow">
+                  {plan.features.map((feature, index) => (
+                    <li key={index} className="flex items-start">
+                      {feature.included ? 
+                        (feature.icon ? <feature.icon className="text-green-500 mr-2 mt-1 flex-shrink-0" /> : <FaCheck className="text-green-500 mr-2 mt-1 flex-shrink-0" />)
+                        : <FaTimes className="text-red-500 mr-2 mt-1 flex-shrink-0" />
+                      }
+                      <span className={`${feature.included ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-500 line-through'} ${feature.bold ? 'font-semibold' : ''}`}>
+                        {feature.text}
+                        {feature.tag && (
+                          <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-0.5 rounded-full">
+                            {feature.tag}
+                          </span>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <Link href={plan.buttonLink} className={`block w-full text-center mt-auto ${
+                    plan.name === t('plans.basic.name', 'Základní') ? 'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100' : 
+                    plan.borderColor === 'border-blue-600' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 
+                    'bg-purple-600 hover:bg-purple-700 text-white'
+                  } font-semibold py-3 px-6 rounded-lg transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform shadow-md`}
+                >
+                  {plan.buttonText}
+                </Link>
               </motion.div>
             ))}
           </motion.div>

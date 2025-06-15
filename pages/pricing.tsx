@@ -22,7 +22,6 @@ interface Plan {
   price: string;
   priceSuffix: string;
   description: string;
-  borderColor: string;
   features: Feature[];
   buttonText: string;
   buttonAction: () => void;
@@ -76,7 +75,6 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
       price: t('plans.basic.price', 'Zdarma'),
       priceSuffix: t('plans.basic.priceSuffix', ''),
       description: t('plans.basic.description', 'Ideální pro vyzkoušení služby'),
-      borderColor: 'border-gray-400',
       features: [
         { text: t('plans.basic.features.0', '5 zpráv denně'), included: true },
         { text: t('plans.basic.features.1', 'Základní analýza nálady'), included: true },
@@ -97,7 +95,6 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
       price: t('plans.premium.price', '249 Kč'),
       priceSuffix: t('common:priceSuffixMonthly', '/měsíc'),
       description: t('plans.premium.description', 'Pro pravidelnou psychologickou podporu'),
-      borderColor: 'border-blue-600',
       features: [
         { text: t('plans.premium.features.0', 'Neomezené zprávy'), included: true },
         { text: t('plans.premium.features.1', 'Pokročilá analýza nálady'), included: true },
