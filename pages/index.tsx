@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/Layout';
-import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield } from 'react-icons/fa';
+import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield, FaFileMedical } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
@@ -347,7 +347,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('howItWorks.title', 'Jak to funguje?')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              {t('howItWorks.subtitle', 'Jednoduché kroky k získání psychologické podpory s AI Psychologem.')}
+              {t('howItWorks.subtitle', 'Naše odpovědi nejsou náhodné. Každá zpráva prochází třístupňovým procesem pro zajištění bezpečnosti a relevance.')}
             </p>
           </div>
           <motion.div 
@@ -356,56 +356,41 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
           >
             <motion.div 
               variants={featureCardVariants}
-              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
-                <FaLightbulb className="text-blue-600 dark:text-blue-300" size={32} />
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+                <FaFileMedical className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('proactiveAssistant.cards.0.title', 'Personalizované Návrhy')}</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                {t('proactiveAssistant.cards.0.text', 'Relevantní témata k zamyšlení, deníkové výzvy nebo cvičení šitá na míru.')}
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('howItWorks.steps.0.title', 'Kontext z ověřených zdrojů')}</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                {t('howItWorks.steps.0.text', 'Váš dotaz je automaticky obohacen o relevantní informace z odborné databáze PubMed, aby odpověď byla co nejpřesnější.')}
               </p>
             </motion.div>
             <motion.div 
               variants={featureCardVariants}
-              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
-                <FaHandHoldingHeart className="text-blue-600 dark:text-blue-300" size={32} />
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+                <FaUserShield className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('proactiveAssistant.cards.1.title', 'Jemná Podpora')}</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                {t('proactiveAssistant.cards.1.text', 'Pokud procházíte náročnějším obdobím, asistent vám citlivě nabídne rozhovor nebo připomene osvědčené techniky.')}
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('howItWorks.steps.1.title', 'Bezpečnostní neuronová síť')}</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                {t('howItWorks.steps.1.text', 'Speciální "hlídací" neuronová síť kontroluje dotaz i odpověď, aby se předešlo škodlivým nebo nebezpečným radám.')}
               </p>
             </motion.div>
             <motion.div 
               variants={featureCardVariants}
-              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
+              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
             >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
-                <FaSeedling className="text-blue-600 dark:text-blue-300" size={32} />
+              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
+                <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('proactiveAssistant.cards.2.title', 'Podpora Růstu')}</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                {t('proactiveAssistant.cards.2.text', 'Aktivně podporujeme vaši cestu k lepší pohodě relevantními nástroji a podněty k sebereflexi.')}
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={featureCardVariants}
-              className="flex flex-col items-center p-4 bg-white/30 dark:bg-slate-700/30 backdrop-blur-sm rounded-lg shadow-md transition-all duration-300 ease-in-out hover:shadow-xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full mb-4">
-                <FaUserShield className="text-blue-600 dark:text-blue-300" size={32} />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{t('proactiveAssistant.cards.3.title', 'Vaše Soukromí')}</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                {t('proactiveAssistant.cards.3.text', 'Vždy máte plnou kontrolu nad sdílením informací a využíváním proaktivních návrhů.')}
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('howItWorks.steps.2.title', 'Generování odpovědi')}</h3>
+              <p className="text-gray-600 dark:text-gray-300">
+                {t('howItWorks.steps.2.text', 'Teprve po těchto kontrolách je dotaz odeslán velkému jazykovému modelu, který vytvoří empatickou a kontextuálně vhodnou odpověď.')}
               </p>
             </motion.div>
           </motion.div>
-           <p className="text-center text-md text-gray-500 dark:text-gray-400 mt-10">
-            {t('proactiveAssistant.footerText', 'Tato unikátní funkce vám pomáhá nezůstat na své starosti sami a aktivně pracovat na svém well-beingu.')}
-          </p>
         </div>
       </motion.section>
 

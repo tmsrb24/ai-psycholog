@@ -37,19 +37,19 @@
   },
   "howItWorks": {
     "title": "Jak to funguje?",
-    "subtitle": "Jednoduché kroky k získání psychologické podpory s AI Psychologem.",
+    "subtitle": "Naše odpovědi nejsou náhodné. Každá zpráva prochází třístupňovým procesem pro zajištění bezpečnosti a relevance.",
     "steps": [
       {
-        "title": "Vytvořte si účet",
-        "text": "Registrace zabere jen pár vteřin. Můžete začít ihned s bezplatnou verzí."
+        "title": "Kontext z ověřených zdrojů",
+        "text": "Váš dotaz je automaticky obohacen o relevantní informace z odborné databáze PubMed, aby odpověď byla co nejpřesnější."
       },
       {
-        "title": "Začněte konverzaci",
-        "text": "Sdílejte své myšlenky a pocity. AI Psycholog vám poskytne empatickou a podporující odpověď."
+        "title": "Bezpečnostní neuronová síť",
+        "text": "Speciální \"hlídací\" neuronová síť kontroluje dotaz i odpověď, aby se předešlo škodlivým nebo nebezpečným radám."
       },
       {
-        "title": "Získejte podporu",
-        "text": "Pravidelné konverzace vám pomohou lépe porozumět vašim emocím a najít strategie pro zvládání obtíží."
+        "title": "Generování odpovědi",
+        "text": "Teprve po těchto kontrolách je dotaz odeslán velkému jazykovému modelu, který vytvoří empatickou a kontextuálně vhodnou odpověď."
       }
     ]
   },

@@ -37,19 +37,19 @@
   },
   "howItWorks": {
     "title": "How does it work?",
-    "subtitle": "Simple steps to get psychological support with AI Psychologist.",
+    "subtitle": "Our answers are not random. Each message goes through a three-step process to ensure safety and relevance.",
     "steps": [
       {
-        "title": "Create an account",
-        "text": "Registration takes just a few seconds. You can start immediately with the free version."
+        "title": "Context from Verified Sources",
+        "text": "Your query is automatically enriched with relevant information from the PubMed professional database to make the answer as accurate as possible."
       },
       {
-        "title": "Start a conversation",
-        "text": "Share your thoughts and feelings. AI Psychologist will provide an empathetic and supportive response."
+        "title": "Safety Neural Network",
+        "text": "A special 'guardian' neural network checks both the query and the response to prevent harmful or dangerous advice."
       },
       {
-        "title": "Get support",
-        "text": "Regular conversations will help you better understand your emotions and find strategies for coping with difficulties."
+        "title": "Response Generation",
+        "text": "Only after these checks is the query sent to a large language model, which creates an empathetic and contextually appropriate response."
       }
     ]
   },
