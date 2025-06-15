@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 import { supabase } from '../../../lib/supabaseClient';
-import formidable from 'formidable';
+const formidable = require('formidable');
 import fs from 'fs';
 
 export const config = {
@@ -22,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const form = formidable({});
 
-  form.parse(req, async (err, fields, files) => {
+  form.parse(req, async (err: any, fields: any, files: any) => {
     if (err) {
       console.error('Error parsing form:', err);
       return res.status(500).json({ error: 'Error parsing form data' });
