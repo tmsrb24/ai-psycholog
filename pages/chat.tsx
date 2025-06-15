@@ -410,7 +410,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         <div className="flex-grow flex flex-col">
           {/* Message Display Area */}
           <div 
-            className="bg-gray-50 dark:bg-slate-800/50 rounded-xl shadow-inner p-4 sm:p-6 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[calc(100vh-22rem)]"
+            className="bg-gray-50 dark:bg-slate-800/50 rounded-xl shadow-inner p-4 sm:p-6 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]"
             ref={chatContainerRef}
           >
             {(initialDataLoading && messages.length <=1 ) ? ( 

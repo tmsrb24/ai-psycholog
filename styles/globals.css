@@ -60,3 +60,33 @@
 .animate-pulse-slow {
   animation: pulse-slow 1.5s ease-in-out infinite;
 }
+
+/* Modern Scrollbar Styles */
+@layer utilities {
+  /* For Webkit-based browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(107, 114, 128, 0.5); /* gray-500 with 50% opacity */
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(75, 85, 99, 0.7); /* gray-600 with 70% opacity */
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 114, 128, 0.5) transparent; /* thumb and track color */
+  }
+}
