@@ -55,5 +55,40 @@
     "inputPlaceholder": "Napište svůj dotaz...",
     "apiError": "Omlouvám se, došlo k chybě při zpracování vašeho dotazu.",
     "genericError": "Omlouvám se, došlo k chybě."
+  },
+  "forgotPassword": {
+    "title": "Obnovení hesla",
+    "subtitle": "Zadejte svůj e-mail a my vám pošleme odkaz pro obnovu hesla.",
+    "sendLink": "Odeslat odkaz pro obnovu",
+    "link": "Zapomněli jste heslo?"
+  },
+  "resetPassword": {
+    "title": "Nastavit nové heslo",
+    "subtitle": "Zadejte své nové heslo níže.",
+    "submitButton": "Změnit heslo",
+    "success": "Vaše heslo bylo úspěšně změněno. Nyní se můžete přihlásit."
+  },
+  "login": {
+    "title": "Přihlášení | AI Psycholog",
+    "description": "Přihlaste se ke svému účtu AI Psycholog",
+    "header": "Přihlášení",
+    "subheader": "Vítejte zpět! Jsme rádi, že jste tady."
+  },
+  "email": "E-mail",
+  "password": "Heslo",
+  "newPassword": "Nové heslo",
+  "confirmNewPassword": "Potvrdit nové heslo",
+  "emailPlaceholder": "vas@email.cz",
+  "signIn": "Přihlásit se",
+  "signInWith": "Přihlásit se přes",
+  "orContinueWith": "Nebo pokračujte s",
+  "noAccount": "Nemáte účet?",
+  "registerHere": "Zaregistrujte se",
+  "backToLogin": "Zpět na přihlášení",
+  "errors": {
+    "generic": "Něco se pokazilo. Zkuste to prosím znovu.",
+    "invalidCredentials": "Neplatné přihlašovací údaje.",
+    "passwordsDoNotMatch": "Hesla se neshodují.",
+    "passwordTooShort": "Heslo musí mít alespoň 6 znaků."
   }
 }

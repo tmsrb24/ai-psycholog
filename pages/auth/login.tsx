@@ -4,8 +4,14 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '../../components/Layout';
 import { FaGoogle, FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 
-const Login = () => {
+type PageProps = {};
+
+const Login = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const { t } = useTranslation(['common']);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -21,27 +27,24 @@ const Login = () => {
 
     try {
       const result = await signIn('credentials', {
-        redirect: false, // Důležité pro manuální zpracování odpovědi
+        redirect: false,
         email: email,
         password: password,
       });
 
       if (result?.error) {
-        // Zobrazíme uživatelsky přívětivou chybu
-        setError('Neplatný e-mail nebo heslo. Zkuste to prosím znovu.');
+        setError(t('errors.invalidCredentials'));
         console.error("Sign-in error:", result.error);
         setIsLoading(false);
       } else if (result?.ok) {
-        // Přihlášení bylo úspěšné, přesměrujeme uživatele
         router.push((callbackUrl as string) || '/chat');
       } else {
-        // Ostatní případy
-        setError('Došlo k neočekávané chybě. Zkuste to prosím znovu.');
+        setError(t('errors.generic'));
         setIsLoading(false);
       }
     } catch (err) {
       console.error("Sign-in exception:", err);
-      setError('Došlo k neočekávané chybě.');
+      setError(t('errors.generic'));
       setIsLoading(false);
     }
   };
@@ -52,12 +55,12 @@ const Login = () => {
   };
 
   return (
-    <Layout title="Přihlášení | AI Psycholog" description="Přihlaste se ke svému účtu AI Psycholog">
+    <Layout title={t('login.title')} description={t('login.description')}>
       <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-500 dark:from-blue-900 dark:via-blue-800 dark:to-blue-700 text-white py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Přihlášení</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('login.header')}</h1>
           <p className="text-xl max-w-3xl mx-auto">
-            Vítejte zpět! Jsme rádi, že jste tady.
+            {t('login.subheader')}
           </p>
         </div>
       </div>
@@ -71,7 +74,7 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('email')}</label>
             <input
               id="email"
               name="email"
@@ -84,7 +87,7 @@ const Login = () => {
             />
           </div>
           <div className="relative">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Heslo</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('password')}</label>
             <input
               id="password"
               name="password"
@@ -102,7 +105,7 @@ const Login = () => {
           <div className="flex items-center justify-between">
             <div className="text-sm">
               <Link href="/auth/forgot-password" className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
-                Zapomněli jste heslo?
+                {t('forgotPassword.link')}
               </Link>
             </div>
           </div>
@@ -110,9 +113,9 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
             >
-              {isLoading ? 'Přihlašování...' : 'Přihlásit se'}
+              {isLoading ? t('loading') : t('signIn')}
             </button>
           </div>
         </form>
@@ -122,7 +125,7 @@ const Login = () => {
             <div className="w-full border-t border-gray-300 dark:border-gray-600" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">Nebo pokračujte s</span>
+            <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">{t('orContinueWith')}</span>
           </div>
         </div>
 
@@ -133,7 +136,7 @@ const Login = () => {
               className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
               disabled={isLoading}
             >
-              <span className="sr-only">Přihlásit se přes Google</span>
+              <span className="sr-only">{t('signInWith')} Google</span>
               <FaGoogle className="w-5 h-5" />
             </button>
           </div>
@@ -143,7 +146,7 @@ const Login = () => {
               className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-700 text-sm font-medium text-gray-500 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
               disabled={isLoading}
             >
-              <span className="sr-only">Přihlásit se přes Apple</span>
+              <span className="sr-only">{t('signInWith')} Apple</span>
               <FaApple className="w-5 h-5" />
             </button>
           </div>
@@ -151,9 +154,9 @@ const Login = () => {
 
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Nemáte účet?{' '}
+            {t('noAccount')}{' '}
             <Link href="/auth/register" className="font-medium text-blue-600 dark:text-blue-400 hover:underline">
-              Zaregistrujte se
+              {t('registerHere')}
             </Link>
           </p>
         </div>
@@ -161,5 +164,11 @@ const Login = () => {
     </Layout>
   );
 };
+
+export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => ({
+  props: {
+    ...(await serverSideTranslations(locale ?? 'cs', ['common'])),
+  },
+});
 
 export default Login;

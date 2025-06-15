@@ -53,7 +53,42 @@
     "title": "Need advice?",
     "welcomeMessage": "Hello! How can I help you with information about the Psychollog.cz website?",
     "inputPlaceholder": "Write your question...",
-    "apiError": "Sorry, an error occurred while processing your request.",
+    "apiError": "Sorry, there was an error processing your request.",
     "genericError": "Sorry, an error occurred."
+  },
+  "forgotPassword": {
+    "title": "Reset Password",
+    "subtitle": "Enter your email and we will send you a link to reset your password.",
+    "sendLink": "Send Reset Link",
+    "link": "Forgot your password?"
+  },
+  "resetPassword": {
+    "title": "Set New Password",
+    "subtitle": "Enter your new password below.",
+    "submitButton": "Change Password",
+    "success": "Your password has been changed successfully. You can now log in."
+  },
+  "login": {
+    "title": "Login | AI Psychologist",
+    "description": "Log in to your AI Psychologist account",
+    "header": "Sign In",
+    "subheader": "Welcome back! We're glad you're here."
+  },
+  "email": "Email",
+  "password": "Password",
+  "newPassword": "New Password",
+  "confirmNewPassword": "Confirm New Password",
+  "emailPlaceholder": "you@example.com",
+  "signIn": "Sign In",
+  "signInWith": "Sign in with",
+  "orContinueWith": "Or continue with",
+  "noAccount": "Don't have an account?",
+  "registerHere": "Sign up",
+  "backToLogin": "Back to login",
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "invalidCredentials": "Invalid credentials.",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "passwordTooShort": "Password must be at least 6 characters."
   }
 }
