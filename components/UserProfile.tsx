@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { UserProfileData } from '../types';
+import { FaUserCircle, FaCamera, FaSpinner } from 'react-icons/fa';
+import axios from 'axios';
+import Image from 'next/image';
 
 interface UserProfileProps {
   onProfileChange: (profile: UserProfileData) => void;
@@ -13,7 +16,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
   const [profile, setProfile] = useState<UserProfileData>(
     initialProfile || {
       name: 'Uživatel',
-      avatar_url: null, // Opraveno z avatar na avatar_url
+      avatar_url: null,
       preferences: {
         responseLength: 'medium',
         communicationStyle: 'casual',
@@ -21,6 +24,9 @@ const UserProfile: React.FC<UserProfileProps> = ({
       }
     }
   );
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -38,6 +44,34 @@ const UserProfile: React.FC<UserProfileProps> = ({
     }
   };
 
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      const { data } = await axios.post('/api/user/upload-avatar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      setProfile(prev => ({ ...prev, avatar_url: data.avatarUrl }));
+      onProfileChange({ ...profile, avatar_url: data.avatarUrl });
+
+    } catch (err) {
+      console.error(err);
+      setError('Nahrávání selhalo. Zkuste to prosím znovu.');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onProfileChange(profile);
@@ -45,8 +79,40 @@ const UserProfile: React.FC<UserProfileProps> = ({
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-4">
-      <h2 className="text-lg font-bold mb-3 dark:text-white">Uživatelský profil</h2>
+      <h2 className="text-lg font-bold mb-4 dark:text-white text-center">Uživatelský profil</h2>
       
+      <div className="flex flex-col items-center mb-6">
+        <div className="relative">
+          {profile.avatar_url ? (
+            <Image
+              src={profile.avatar_url}
+              alt="Avatar"
+              width={96}
+              height={96}
+              className="w-24 h-24 rounded-full object-cover"
+            />
+          ) : (
+            <FaUserCircle className="w-24 h-24 text-gray-400" />
+          )}
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="absolute -bottom-1 -right-1 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
+            title="Změnit fotku"
+            disabled={uploading}
+          >
+            {uploading ? <FaSpinner className="animate-spin" /> : <FaCamera />}
+          </button>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+            accept="image/png, image/jpeg"
+          />
+        </div>
+        {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
+      </div>
+
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -118,7 +184,7 @@ const UserProfile: React.FC<UserProfileProps> = ({
             type="submit"
             className="btn btn-primary"
           >
-            Uložit
+            Uložit změny
           </button>
         </div>
       </form>
