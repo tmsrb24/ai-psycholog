@@ -152,8 +152,8 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <Layout>
-      <section className="bg-hero-gradient-light dark:bg-hero-gradient-dark text-white py-20">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-hero-gradient-dark text-white py-20 overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row items-center">
             <motion.div 
               className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left"
@@ -169,7 +169,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               </motion.h1>
               <motion.p 
                 variants={heroTextItemVariants}
-                className="text-lg sm:text-xl mb-8"
+                className="text-lg sm:text-xl mb-8 text-white/85"
               >
                 {t('hero.subtitle', 'Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.')}
               </motion.p>
@@ -187,10 +187,10 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </motion.div>
             <div className="md:w-1/2 flex justify-center md:justify-end md:pr-8 lg:pr-0">
               <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[26rem] md:h-[26rem]">
-                <div className="absolute inset-0 bg-blue-400 dark:bg-blue-700 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0s' }}></div>
-                <div className="absolute inset-3 sm:inset-5 md:inset-6 bg-blue-300 dark:bg-blue-600 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-                <div className="absolute inset-6 sm:inset-10 md:inset-12 bg-blue-200 dark:bg-blue-500 rounded-full opacity-20 animate-pulse" style={{ animationDelay: '0.6s' }}></div>
-                <div className="absolute inset-0 flex items-center justify-center z-10 p-8 sm:p-10 md:p-12">
+                <div className="absolute inset-0 bg-blue-400/10 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
+                <div className="absolute inset-3 sm:inset-5 md:inset-6 bg-blue-300/10 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
+                <div className="absolute inset-6 sm:inset-10 md:inset-12 bg-blue-200/10 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+                <div className="absolute inset-0 flex items-center justify-center z-10 p-8 sm:p-10 md:p-12 drop-shadow-glow">
                   <Image 
                     src="/images/hero-avatar.png" 
                     alt="AI Psycholog Avatar" 
