@@ -3,7 +3,8 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '../../components/Layout';
-import { FaGoogle, FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -253,7 +254,7 @@ const Register = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               disabled={isLoading || !canSubmit}
             >
               <span className="sr-only">{t('register.withGoogle')}</span>
-              <FaGoogle className="w-5 h-5" />
+              <FcGoogle className="w-5 h-5" />
             </button>
           </div>
           <div>
@@ -263,7 +264,7 @@ const Register = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               disabled={isLoading || !canSubmit}
             >
               <span className="sr-only">{t('register.withApple')}</span>
-              <FaApple className="w-5 h-5" />
+              <FaApple className="w-5 h-5 text-black dark:text-white" />
             </button>
           </div>
         </div>

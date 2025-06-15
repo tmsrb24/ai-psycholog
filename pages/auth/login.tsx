@@ -3,7 +3,8 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '../../components/Layout';
-import { FaGoogle, FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaApple, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -137,7 +138,7 @@ const Login = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               disabled={isLoading}
             >
               <span className="sr-only">{t('signInWith')} Google</span>
-              <FaGoogle className="w-5 h-5" />
+              <FcGoogle className="w-5 h-5" />
             </button>
           </div>
           <div>
@@ -147,7 +148,7 @@ const Login = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               disabled={isLoading}
             >
               <span className="sr-only">{t('signInWith')} Apple</span>
-              <FaApple className="w-5 h-5" />
+              <FaApple className="w-5 h-5 text-black dark:text-white" />
             </button>
           </div>
         </div>
