@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'next-i18next';
-import { FaTimes, FaCommentDots } from 'react-icons/fa'; // FaQuestionCircle nahrazena FaCommentDots pro zavřený stav
+import { FaTimes } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface WidgetChatButtonProps {
   onClick: () => void;
@@ -23,7 +24,7 @@ const WidgetChatButton: React.FC<WidgetChatButtonProps> = ({ onClick, isOpen }) 
         </div>
       ) : (
         <div className="flex items-center">
-          <FaCommentDots size={22} className="mr-2" /> {t('widgetChat.askUs', 'Zeptejte se')}
+          <Image src="/images/faq.png" alt="FAQ Icon" width={24} height={24} className="mr-2" /> {t('widgetChat.askUs', 'Zeptejte se')}
         </div>
       )}
     </button>
