@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "postinstall": "echo 'Forcing clean install'"
+    "build": "npm install && next build",
+    "start": "next start"
   },
   "dependencies": {
     "@auth/core": "^0.39.1",
