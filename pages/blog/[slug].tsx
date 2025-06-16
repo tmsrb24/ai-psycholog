@@ -61,8 +61,8 @@ const ArticlePage = ({ article }: InferGetStaticPropsType<typeof getStaticProps>
             </div>
           )}
 
-          <div className="prose dark:prose-invert max-w-none whitespace-pre-wrap">
-            <ReactMarkdown>{article.content}</ReactMarkdown>
+          <div className="prose dark:prose-invert max-w-none">
+            <ReactMarkdown>{article.content.replace(/\\n/g, '<br />')}</ReactMarkdown>
           </div>
         </article>
       </div>
