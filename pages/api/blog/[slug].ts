@@ -12,27 +12,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ error: 'Invalid slug' });
   }
 
-  try {
-    const { data, error } = await supabase
-      .from('articles')
-      .select('*')
-      .eq('slug', slug)
-      .single();
+  const { data, error } = await supabase
+    .from('articles')
+    .select('*')
+    .eq('slug', slug)
+    .single();
 
-    if (error) {
-      if (error.code === 'PGRST116') { // PostgREST error for no rows found
-        return res.status(404).json({ error: 'Article not found' });
-      }
-      throw error;
-    }
-
-    if (!data) {
-      return res.status(404).json({ error: 'Article not found' });
-    }
-
-    res.status(200).json(data);
-  } catch (error: any) {
-    console.error(`Error fetching article with slug ${slug}:`, error);
-    res.status(500).json({ error: 'Failed to fetch article', details: error.message });
+  if (error) {
+    return res.status(500).json({ error: error.message });
   }
+
+  if (!data) {
+    return res.status(404).json({ error: 'Article not found' });
+  }
+
+  res.status(200).json(data);
 }

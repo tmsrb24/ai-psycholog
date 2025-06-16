@@ -22,55 +22,43 @@ type PageProps = {
 };
 
 const BlogIndexPage = ({ articles }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation('common');
 
   return (
-    <Layout title="Blog | AI Psycholog" description="Články a novinky ze světa moderní psychologie.">
-      <div className="bg-hero-gradient-dark text-white py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Blog</h1>
-          <p className="text-xl max-w-3xl mx-auto">
-            Zajímavosti a novinky ze světa moderní psychologie
-          </p>
-        </div>
-      </div>
-
+    <Layout title={t('blog.title', 'Blog')} description={t('blog.description', 'Zajímavosti a novinky ze světa moderní psychologie')}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-white">
+            {t('blog.title', 'Blog')}
+          </h1>
+          <p className="mt-4 text-xl text-gray-600 dark:text-gray-300">
+            {t('blog.description', 'Zajímavosti a novinky ze světa moderní psychologie')}
+          </p>
+        </header>
+
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {articles.map((article) => (
-            <Link key={article.id} href={`/blog/${article.slug}`} className="group block">
-              <div className="flex flex-col overflow-hidden rounded-lg shadow-lg h-full bg-white dark:bg-gray-800 transition-transform duration-300 ease-in-out group-hover:scale-105">
-                <div className="flex-shrink-0">
-                  <Image
-                    className="h-48 w-full object-cover"
-                    src={article.image_url || '/images/placeholder.png'}
-                    alt={article.title}
-                    width={400}
-                    height={200}
-                  />
-                </div>
-                <div className="flex flex-1 flex-col justify-between p-6">
-                  <div className="flex-1">
-                    <p className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
-                      {article.title}
-                    </p>
-                    <p className="mt-3 text-base text-gray-500 dark:text-gray-400">
-                      {article.excerpt}
-                    </p>
-                  </div>
-                  <div className="mt-6 flex items-center">
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                      <time dateTime={article.published_at}>
-                        {new Date(article.published_at).toLocaleDateString('cs-CZ', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                        })}
-                      </time>
-                      <span className="mx-1">&middot;</span>
-                      <span>{article.author}</span>
-                    </div>
-                  </div>
+            <Link key={article.id} href={`/blog/${article.slug}`} className="group block bg-white dark:bg-slate-800 rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-2">
+              <div className="relative h-48 w-full">
+                <Image
+                  src={article.image_url}
+                  alt={article.title}
+                  layout="fill"
+                  objectFit="cover"
+                  className="transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+              <div className="p-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                  {article.title}
+                </h2>
+                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                  {article.excerpt}
+                </p>
+                <div className="text-sm text-gray-500 dark:text-gray-500">
+                  <span>{new Date(article.published_at).toLocaleDateString('cs-CZ')}</span>
+                  <span className="mx-2">&middot;</span>
+                  <span>{article.author}</span>
                 </div>
               </div>
             </Link>
@@ -84,7 +72,7 @@ const BlogIndexPage = ({ articles }: InferGetStaticPropsType<typeof getStaticPro
 export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
   const { data: articles, error } = await supabase
     .from('articles')
-    .select('id, title, slug, excerpt, image_url, published_at, author')
+    .select('*')
     .order('published_at', { ascending: false });
 
   if (error) {
@@ -96,7 +84,7 @@ export const getStaticProps: GetStaticProps<PageProps> = async ({ locale }) => {
       articles: articles || [],
       ...(await serverSideTranslations(locale ?? 'cs', ['common'])),
     },
-    revalidate: 60, // Re-generate the page every 60 seconds
+    revalidate: 60,
   };
 };
 
