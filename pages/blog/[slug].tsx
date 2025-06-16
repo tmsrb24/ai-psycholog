@@ -5,6 +5,7 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { supabase } from '../../lib/supabaseClient';
 import ReactMarkdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
 
 type Article = {
   id: string;
@@ -61,8 +62,8 @@ const ArticlePage = ({ article }: InferGetStaticPropsType<typeof getStaticProps>
             </div>
           )}
 
-          <div className="prose dark:prose-invert lg:prose-xl max-w-none">
-            <ReactMarkdown>{article.content}</ReactMarkdown>
+          <div className="prose dark:prose-invert max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkBreaks]}>{article.content}</ReactMarkdown>
           </div>
         </article>
       </div>

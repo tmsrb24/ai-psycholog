@@ -13,6 +13,9 @@ const withPWA = require('next-pwa')({
 
 const nextConfig = {
   reactStrictMode: true,
+  images: {
+    domains: ['lh3.googleusercontent.com', 'images.unsplash.com'],
+  },
   i18n: {
     ...i18nConfig, // Rozšíření konfigurace z next-i18next.config.js
     localeDetection: false, // Vypnutí automatické detekce jazyka
