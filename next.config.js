@@ -43,7 +43,7 @@ const nextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; img-src 'self' data: lh3.googleusercontent.com avatars.githubusercontent.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; frame-ancestors 'none'; connect-src 'self' https://vitals.vercel-insights.com https://generativelanguage.googleapis.com https://*.supabase.co;",
+            value: "default-src 'self'; img-src 'self' data: lh3.googleusercontent.com avatars.githubusercontent.com images.unsplash.com; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; object-src 'none'; frame-ancestors 'none'; connect-src 'self' https://vitals.vercel-insights.com https://generativelanguage.googleapis.com https://*.supabase.co;",
             // Povoleno: Google Avatars, GitHub Avatars (pokud by se používaly)
             // Vercel Analytics/Speed Insights (va.vercel-scripts.com, vitals.vercel-insights.com)
             // Google Fonts (fonts.googleapis.com, fonts.gstatic.com)
