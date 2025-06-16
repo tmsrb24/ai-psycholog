@@ -1,0 +1,67 @@
+import { NextApiRequest, NextApiResponse } from 'next';
+import { supabase } from '../../lib/supabaseClient';
+
+const articles = [
+  {
+    "title": "5 Tipů pro Zvládání Úzkosti v Každodenním Životě",
+    "slug": "5-tipu-pro-zvladani-uzkosti",
+    "excerpt": "Úzkost je běžnou součástí moderního života, ale existují osvědčené techniky, jak ji dostat pod kontrolu. Objevte praktické tipy, které můžete zařadit do své denní rutiny.",
+    "content": "## Úvod do problematiky úzkosti\n\nÚzkost není jen pocit nervozity před zkouškou. Je to komplexní reakce našeho těla a mysli na vnímané hrozby. V tomto článku se podíváme na konkrétní kroky, jak s ní pracovat.\n\n### 1. Technika hlubokého dýchání\n\nZní to jednoduše, ale je to základ. Pomalý, hluboký dech aktivuje parasympatický nervový systém, který má na starosti zklidnění. Zkuste nádech na 4 sekundy, zadržení dechu na 4 sekundy a výdech na 6 sekund.\n\n### 2. Mindfulness a všímavost\n\nBýt tady a teď. Všímavost nás učí nehodnotit své myšlenky a pocity, jen je pozorovat. To nám dává odstup a snižuje jejich intenzitu.\n\n### 3. Pravidelný pohyb\n\nPohyb je jedním z nejúčinnějších antidepresiv a anxiolytik. Nemusíte běhat maraton, stačí 30 minut rychlé chůze denně.\n\n### 4. Omezení kofeinu a alkoholu\n\nTyto látky mohou krátkodobě ulevit, ale dlouhodobě úzkostné stavy zhoršují. Zkuste je omezit a pozorujte změnu.\n\n### 5. Mluvte o tom\n\nAť už s přítelem, partnerem, nebo AI Psychologem. Sdílení pocitů snižuje jejich tíhu a pomáhá najít nové perspektivy.",
+    "image_url": "https://images.unsplash.com/photo-1584592487914-a2928439a234?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    "title": "Jak Technologie Mění Terapii: Budoucnost Duševního Zdraví",
+    "slug": "technologie-a-terapie",
+    "excerpt": "Telemedicína, virtuální realita a umělá inteligence. To nejsou jen prázdná slova, ale reálné nástroje, které přinášejí revoluci do péče o duševní zdraví.",
+    "content": "## Nová éra v péči o duši\n\nTechnologie nám umožňují poskytovat péči dostupněji, diskrétněji a personalizovaněji než kdy dříve. AI Psycholog je příkladem tohoto trendu. Jaké jsou další?\n\n### Virtuální realita (VR) v léčbě fobií\n\nVR umožňuje pacientům bezpečně se vystavit situacím, kterých se bojí (např. létání, výšky, pavouci) a postupně si na ně zvykat v kontrolovaném prostředí.\n\n### Chatboti a AI asistenti\n\nPoskytují podporu 24/7, pomáhají se sledováním nálady a nabízejí techniky zvládání stresu. Jsou skvělým prvním krokem pro ty, kteří se zdráhají oslovit živého terapeuta.\n\n### Mobilní aplikace pro mindfulness\n\nAplikace jako Calm nebo Headspace zpřístupnily meditační techniky milionům lidí a pomáhají jim najít klid v uspěchaném světě.",
+    "image_url": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    "title": "Syndrom Vyhoření: Jak ho Rozpoznat a Jak mu Předcházet",
+    "slug": "syndrom-vyhoreni",
+    "excerpt": "Cítíte se neustále unavení, cyničtí a neefektivní? Možná se potýkáte se syndromem vyhoření. Naučte se rozpoznat jeho příznaky a hlavně – jak mu aktivně předcházet.",
+    "content": "## Co je syndrom vyhoření?\n\nNení to jen únava. Je to stav emocionálního, fyzického a mentálního vyčerpání způsobený dlouhodobým stresem. Projevuje se třemi hlavními znaky:\n\n1.  **Vyčerpání:** Pocit, že nemáte žádnou energii.\n2.  **Odcizení od práce:** Negativní a cynický postoj k práci.\n3.  **Snížená výkonnost:** Pocit, že nic nedokážete.\n\n## Prevence je klíčová\n\n- **Stanovte si hranice:** Naučte se říkat 'ne' a oddělujte práci od osobního života.\n- **Pečujte o sebe:** Dostatek spánku, kvalitní strava a pravidelný odpočinek jsou nezbytné.\n- **Hledejte smysl:** Připomeňte si, proč svou práci děláte a co vás na ní baví.\n- **Delegujte:** Nemusíte všechno dělat sami. Požádejte o pomoc.",
+    "image_url": "https://images.unsplash.com/photo-1554415707-6e8cfc93fe23?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    "title": "Síla Vděčnosti: Jak Jednoduché Cvičení Může Změnit Váš Pohled na Svět",
+    "slug": "sila-vdecnosti",
+    "excerpt": "Vědecké studie potvrzují, že pravidelné praktikování vděčnosti má prokazatelné účinky na naši psychickou pohodu. Zkuste to i vy, je to jednodušší, než si myslíte.",
+    "content": "## Proč být vděčný?\n\nNáš mozek má tendenci zaměřovat se na negativní věci (tzv. negativity bias). Vděčnost je aktivní trénink, jak tuto tendenci vyrovnat. Pomáhá nám všímat si toho dobrého, co v životě máme.\n\n## Jak na to?\n\n- **Deník vděčnosti:** Každý večer si zapište 3-5 věcí, za které jste ten den vděční. Nemusí to být nic velkého.\n- **Vyjádřete vděčnost:** Poděkujte někomu osobně, napište dopis nebo zprávu. Nejenže potěšíte druhého, ale posílíte i vlastní pocit štěstí.\n- **Všímavá vděčnost:** Během dne se na chvíli zastavte a uvědomte si něco příjemného – chuť kávy, teplo slunce, úsměv kolegy.",
+    "image_url": "https://images.unsplash.com/photo-1508026347440-517f6c354953?q=80&w=2070&auto=format&fit=crop"
+  }
+];
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  // Basic security check to prevent accidental runs
+  if (process.env.NODE_ENV === 'production') {
+      return res.status(403).json({ error: 'This endpoint is not available in production.' });
+  }
+
+  try {
+    console.log("Starting to seed articles via API...");
+
+    // Delete existing articles
+    const { error: deleteError } = await supabase.from('articles').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    if (deleteError) throw deleteError;
+    console.log("Deleted existing articles.");
+
+    // Insert new articles
+    const { data, error: insertError } = await supabase
+      .from('articles')
+      .insert(articles);
+
+    if (insertError) {
+      throw insertError;
+    }
+
+    res.status(200).json({ message: "Successfully seeded articles.", data });
+  } catch (error: any) {
+    console.error('Error seeding articles via API:', error);
+    res.status(500).json({ error: 'Failed to seed articles', details: error.message });
+  }
+}

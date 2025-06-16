@@ -5,7 +5,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "seed": "ts-node -r dotenv/config scripts/seed-articles.ts"
+    "seed": "node -r ts-node/register -r dotenv/config scripts/seed-articles.ts"
   },
   "dependencies": {
     "@auth/core": "^0.39.1",
