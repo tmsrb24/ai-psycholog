@@ -185,6 +185,17 @@ const Navbar: React.FC = () => {
             >
               {t('navbar.contact', 'Kontakt')}
             </Link>
+            <Link
+              href="/blog"
+              className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
+                isActive('/blog')
+                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
+              }`}
+              onClick={closeMenu}
+            >
+              Blog
+            </Link>
             
             {loading ? (
               <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
@@ -390,6 +401,17 @@ const Navbar: React.FC = () => {
               onClick={closeMenu}
             >
               {t('navbar.contact', 'Kontakt')}
+            </Link>
+            <Link 
+              href="/blog" 
+              className={`block px-3 py-2 rounded-md text-base ${
+                isActive('/blog') 
+                  ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white font-semibold' 
+                  : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium'
+              }`}
+              onClick={closeMenu}
+            >
+              Blog
             </Link>
             
             {!loading && !session && (
