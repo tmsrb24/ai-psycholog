@@ -14,7 +14,7 @@ const withPWA = require('next-pwa')({
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['lh3.googleusercontent.com', 'images.unsplash.com'],
+    domains: ['lh3.googleusercontent.com', 'images.unsplash.com', 'i.imgur.com'],
   },
   i18n: {
     ...i18nConfig, // Rozšíření konfigurace z next-i18next.config.js
