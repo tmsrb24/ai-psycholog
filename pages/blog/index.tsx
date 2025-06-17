@@ -41,6 +41,7 @@ const BlogIndexPage = ({ articles }: InferGetStaticPropsType<typeof getStaticPro
             <Link key={article.id} href={`/blog/${article.slug}`} className="group block bg-white dark:bg-slate-800 rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-2">
               <div className="relative h-48 w-full">
                 <Image
+                  key={article.id}
                   src={article.image_url}
                   alt={article.title}
                   layout="fill"
