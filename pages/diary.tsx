@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Layout from '../components/Layout';
+import Layout from '../components/layouts/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { FaBookMedical, FaSave, FaFilePdf, FaRegMeh, FaRegSmile, FaRegFrown, FaRegAngry, FaRegSurprise, FaSpinner, FaEdit, FaTimes, FaTrash, FaPlusCircle } from 'react-icons/fa'; // Přidána FaPlusCircle
