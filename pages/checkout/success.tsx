@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import Layout from '../../components/Layout';
+import Layout from '../../components/layouts/Layout';
 import { FaCheckCircle } from 'react-icons/fa';
 import { useSession } from 'next-auth/react';
 
