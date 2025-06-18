@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Layout from '../components/Layout';
+import Layout from '../components/layouts/Layout';
 import { FaEnvelope, FaUser, FaPaperPlane, FaComments } from 'react-icons/fa';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
