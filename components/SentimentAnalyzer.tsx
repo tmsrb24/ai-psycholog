@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Message } from '../types';
+import { Message } from '../types/chat';
 
 interface SentimentAnalyzerProps {
   messages: Message[];
