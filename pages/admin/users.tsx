@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Layout from '../../components/Layout';
+import Layout from '../../components/layouts/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 // UserProfileData zde není přímo potřeba, definujeme AdminUser explicitně
