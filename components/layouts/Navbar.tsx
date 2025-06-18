@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
 import { FaBars, FaTimes, FaUser, FaSignOutAlt, FaUserCircle, FaGlobe } from 'react-icons/fa';
-import { useTheme } from './ThemeProvider';
+import { useTheme } from '../ui/ThemeProvider';
 import { useTranslation } from 'next-i18next';
 
 const Navbar: React.FC = () => {
