@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'next-i18next';
 import { FaPaperPlane, FaSpinner } from 'react-icons/fa';
-import { Message } from '../types'; 
+import { Message } from '../../types/chat';
 
 interface WidgetChatWindowProps {
   isOpen: boolean;
