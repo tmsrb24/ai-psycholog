@@ -2,8 +2,8 @@ import React, { ReactNode, useState } from 'react';
 import Head from 'next/head';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import WidgetChatButton from './WidgetChatButton';
-import WidgetChatWindow from './WidgetChatWindow';
+import WidgetChatButton from '../chat/WidgetChatButton';
+import WidgetChatWindow from '../chat/WidgetChatWindow';
 
 interface LayoutProps {
   children: ReactNode;
