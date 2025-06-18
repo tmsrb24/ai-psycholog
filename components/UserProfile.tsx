@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserProfileData } from '../types';
+import { UserProfileData } from '../types/user';
 
 interface UserProfileProps {
   onProfileChange: (profile: UserProfileData) => void;
