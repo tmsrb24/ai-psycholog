@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaCog, FaTimes, FaChartBar } from 'react-icons/fa';
-import { Message, UserProfileData } from '../types';
+import { Message } from '../../types/chat';
+import { UserProfileData } from '../../types/user';
 
 interface ChatSettingsModalProps {
   isOpen: boolean;
