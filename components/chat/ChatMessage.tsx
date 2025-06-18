@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Message } from '../types';
+import { Message } from '../../types/chat';
 import Image from 'next/image';
 import { FaUserCircle, FaVolumeUp, FaVolumeMute, FaCopy, FaCheck } from 'react-icons/fa';
 
