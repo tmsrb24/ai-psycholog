@@ -143,7 +143,7 @@ const Footer: React.FC = () => {
 
           {/* Copyright */}
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-6">
-            {t('footer.copyright', `© ${currentYear} AI Psycholog. Všechna práva vyhrazena.`)}
+            © 2025 Psychollog.cz. Všechna práva vyhrazena.
           </p>
         </div>
       </div>
