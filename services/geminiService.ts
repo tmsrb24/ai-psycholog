@@ -89,39 +89,67 @@ const formatMessagesForGemini = async (
   return formattedMessages;
 };
 
-export const getGeminiResponseStream = async (
+export const getGeminiResponse = async (
   messages: Message[],
   topicKey: TopicKey,
   personalityKey: PersonalityKey,
   responseLength: ResponseLength | undefined,
   userProfile: UserProfileData | undefined,
   userMessageContent: string
-): Promise<NodeJS.ReadableStream> => {
+): Promise<{ content: string; estimatedReadingTime: number }> => {
   const geminiApiKey = process.env.GEMINI_API_KEY;
   if (!geminiApiKey) {
-    throw new Error("GEMINI_API_KEY is not set");
+    return {
+      content: `Dobrý den! (Simulovaná odpověď - API klíč chybí)`,
+      estimatedReadingTime: 3,
+    };
   }
 
   const systemPrompt = buildSystemPrompt(topicKey, personalityKey, responseLength, userProfile);
   const formattedMessages = await formatMessagesForGemini(messages, systemPrompt, userMessageContent);
   
-  const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:streamGenerateContent?key=${geminiApiKey}`;
+  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent';
 
-  const response = await axios({
-    method: 'post',
-    url: GEMINI_API_URL,
-    headers: { 'Content-Type': 'application/json' },
-    data: { 
-      contents: formattedMessages, 
-      generationConfig: { 
-        temperature: 0.75,
-        topK: 40, 
-        topP: 0.95, 
-        maxOutputTokens: 1024
-      } 
-    },
-    responseType: 'stream',
-  });
-
-  return response.data;
+  try {
+    const response = await axios({
+      method: 'post',
+      url: `${GEMINI_API_URL}?key=${geminiApiKey}`,
+      headers: { 'Content-Type': 'application/json' },
+      data: { 
+        contents: formattedMessages, 
+        generationConfig: { 
+          temperature: 0.75,
+          topK: 40, 
+          topP: 0.95, 
+          maxOutputTokens: 1024
+        } 
+      }
+    });
+    const geminiData = response.data;
+    if (geminiData.error) throw new Error(geminiData.error.message || 'Gemini API error');
+    
+    let responseContent = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Omlouvám se, momentálně nedokážu odpovědět.";
+    
+    const validationResult = validateAIResponse(responseContent);
+    if (!validationResult.isValid) {
+      console.warn(`AI Response Validation Failed: ${validationResult.issue}. Original: "${responseContent}". Suggestion: "${validationResult.suggestion}"`);
+      if (validationResult.issue?.includes("undesirable phrase")) {
+         responseContent = "Prosím, soustřeďme se na vaši situaci. Jak vám mohu dnes pomoci v rámci mé role psychologického asistenta?";
+      } else {
+        responseContent = validationResult.suggestion || "Omlouvám se, došlo k interní chybě. Zkuste to prosím znovu.";
+      }
+    }
+    
+    return {
+      content: responseContent,
+      estimatedReadingTime: Math.ceil(responseContent.length / 1000 * 60 / 200),
+    };
+  } catch (apiError: any) {
+    console.error('Error calling Gemini API:', apiError.response?.data || apiError.message);
+    const errorContent = `Omlouvám se, problém s AI. (Chyba: ${apiError?.message || 'Neznámá chyba'})`;
+    return {
+      content: errorContent,
+      estimatedReadingTime: 3,
+    };
+  }
 };

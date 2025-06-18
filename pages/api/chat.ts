@@ -9,7 +9,7 @@ import { getToken } from "next-auth/jwt";
 import { validateAIResponse, AIResponseValidationResult } from '../../lib/responseValidation';
 import { checkForCrisis, getCrisisResponse, saveCrisisMessage } from '../../services/crisisService';
 import { getOrCreateSession, saveUserMessage } from '../../services/sessionService';
-import { getGeminiResponseStream } from '../../services/geminiService';
+import { getGeminiResponse } from '../../services/geminiService';
 
 // Initialize PubMed RAG - this will run once when the module is first loaded in a serverless environment,
 // or on first request to this API route. The service itself has an internal flag.
@@ -247,7 +247,7 @@ export default async function handler(
         return res.status(200).json({ role: 'assistant', content: crisisResponseContent, isCrisis: true, sessionId: currentSessionId });
       }
 
-      const stream = await getGeminiResponseStream(
+      const { content, estimatedReadingTime } = await getGeminiResponse(
         messages,
         topicKey,
         personalityKey,
@@ -256,8 +256,11 @@ export default async function handler(
         userMessageContent
       );
 
-      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-      stream.pipe(res);
+      await supabaseAdmin
+        .from('chat_messages')
+        .insert({ session_id: currentSessionId, role: 'assistant', content });
+
+      return res.status(200).json({ role: 'assistant', content, estimatedReadingTime, sessionId: currentSessionId });
     } catch (postOuterError: any) {
       console.error('Error processing POST chat request:', postOuterError);
       return res.status(500).json({ 

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, lazy } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { 
   FaCog, FaChartLine, FaTimes, FaSpinner
 } from 'react-icons/fa';
@@ -175,49 +176,18 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         sessionId: currentChatSessionId,
         chatLanguage: i18n.language 
       };
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error('Failed to get stream reader');
-      }
-
-      const decoder = new TextDecoder();
-      let assistantResponse = '';
-      const assistantMessage: Message = { role: 'assistant', content: '', timestamp: new Date() };
-      setMessages(prev => [...prev, assistantMessage]);
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        
-        const chunk = decoder.decode(value, { stream: true });
-        // The stream from Gemini might return JSON chunks, we need to parse them.
-        // This is a simplified example; a robust implementation would handle partial JSON chunks.
-        try {
-            const jsonStrings = chunk.split('\n').filter(s => s.trim().startsWith('[') && s.trim().endsWith(']'));
-            jsonStrings.forEach(jsonString => {
-                const parsed = JSON.parse(jsonString);
-                const text = parsed[0]?.candidates[0]?.content?.parts[0]?.text || '';
-                assistantResponse += text;
-                setMessages(prev => {
-                    const newMsgs = [...prev];
-                    newMsgs[newMsgs.length - 1].content = assistantResponse;
-                    return newMsgs;
-                });
-            });
-        } catch (e) {
-            console.error("Error parsing stream chunk:", e, "Chunk:", chunk);
-        }
-      }
+      const res = await axios.post('/api/chat', requestData);
+      
+      if (res.data.sessionId && !currentChatSessionId) setCurrentChatSessionId(res.data.sessionId); 
+      if (res.data.estimatedReadingTime) setLoadingEstimatedTime(prev => Math.round((prev * 0.7) + (res.data.estimatedReadingTime || 5) * 0.3));
+      
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: res.data.content || t('errors.apiResponseError'),
+        timestamp: new Date(),
+        isCrisis: res.data.isCrisis
+      };
+      setMessages(prev => [...prev, assistantMessage]); 
     } catch (error) {
       console.error(t('errors.apiCallFailedConsole'), error);
       setMessages(prev => [...prev, { role: 'assistant', content: t('errors.apiCommunicationError'), timestamp: new Date() }]);
