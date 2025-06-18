@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Layout from '../components/Layout';
+import Layout from '../components/layouts/Layout';
 import { FaCheck, FaTimes, FaQuestionCircle, FaStar, FaUsers, FaCalendarAlt, FaFlask } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 import { useSession } from 'next-auth/react';
