@@ -4,7 +4,7 @@ import { getToken } from "next-auth/jwt"; // Import getToken
 // import type { Session } from "next-auth"; 
 // import { authOptions } from "../auth/[...nextauth]"; 
 import { getSupabaseAdmin } from '../../../lib/supabaseClient';
-import { UserProfileData } from '../../../types';
+import { UserProfileData } from '../../../types/user';
 
 const secret = process.env.NEXTAUTH_SECRET;
 
