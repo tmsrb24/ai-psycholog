@@ -1,11 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Message, ApiResponse, UserProfileData } from '../../types';
+import { Message, ApiResponse } from '../../types/chat';
+import { UserProfileData } from '../../types/user';
 import axios from 'axios';
 // import { ragService, initializeRagWithSamples } from '../../lib/rag'; // Old RAG
 import { initializePubMedRAG, searchPubMedRAG } from '../../lib/ragPubMedService'; // New PubMed RAG
 import { getSupabaseAdmin } from '../../lib/supabaseClient';
 import { getToken } from "next-auth/jwt";
 import { validateAIResponse, AIResponseValidationResult } from '../../lib/responseValidation';
+import { checkForCrisis, getCrisisResponse, saveCrisisMessage } from '../../services/crisisService';
+import { getOrCreateSession, saveUserMessage } from '../../services/sessionService';
+import { getGeminiResponseStream } from '../../services/geminiService';
 
 // Initialize PubMed RAG - this will run once when the module is first loaded in a serverless environment,
 // or on first request to this API route. The service itself has an internal flag.
@@ -226,143 +230,34 @@ export default async function handler(
       }
       const userMessageContent = lastUserMessage.content;
 
-      let currentSessionId = sessionId;
-      if (!currentSessionId) {
-        const sessionTitle = userMessageContent.substring(0, 70) + (userMessageContent.length > 70 ? '...' : '');
-        const sessionMetadata = { 
-          topic: topicKey, 
-          personality: personalityKey, 
-          responseLength, 
-          assistantGender: body.userProfile?.preferences?.assistantGender, 
-          assistantName: body.userProfile?.preferences?.assistantName 
-        };
-        const { data: newSession, error: sessionError } = await supabaseAdmin
-          .from('chat_sessions')
-          .insert({ user_id: userId, title: sessionTitle, metadata: sessionMetadata })
-          .select('id')
-          .single();
-        if (sessionError) throw sessionError;
-        currentSessionId = newSession.id;
-        console.log(`New chat session created: ${currentSessionId}`);
-      }
+      const currentSessionId = await getOrCreateSession(supabaseAdmin, sessionId, {
+        userId,
+        userMessageContent,
+        topicKey,
+        personalityKey,
+        responseLength,
+        userProfile: body.userProfile,
+      });
 
-      await supabaseAdmin
-        .from('chat_messages')
-        .insert({ session_id: currentSessionId, role: 'user', content: userMessageContent });
+      await saveUserMessage(supabaseAdmin, currentSessionId, userMessageContent);
 
-      const crisisKeywords = ["chci se zabít", "nechci žít", "ukončit život", "sebevražda", "zabít se"];
-      const isCrisisMessage = crisisKeywords.some(keyword => userMessageContent.toLowerCase().includes(keyword));
-
-      if (isCrisisMessage) {
-        const crisisResponseContent = "Je mi moc líto, že se takhle cítíš. Vypadá to, že procházíš opravdu těžkým obdobím. Chtěl/a bych tě ujistit, že na to nemusíš být sám/sama. Existují lidé, kteří ti chtějí a mohou pomoci. Prosím, zvaž kontaktování některé z linek důvěry, jsou tu pro tebe nonstop a anonymně: Linka bezpečí 116 111, Linka první psychické pomoci 116 123. Pokud jsi v bezprostředním ohrožení, neváhej prosím zavolat na 155 nebo 112.";
-        await supabaseAdmin
-          .from('chat_messages')
-          .insert({ session_id: currentSessionId, role: 'assistant', content: crisisResponseContent, metadata: { isCrisis: true } });
+      if (currentSessionId && checkForCrisis(userMessageContent)) {
+        const crisisResponseContent = getCrisisResponse();
+        await saveCrisisMessage(supabaseAdmin, currentSessionId, crisisResponseContent);
         return res.status(200).json({ role: 'assistant', content: crisisResponseContent, isCrisis: true, sessionId: currentSessionId });
       }
 
-      let systemPrompt = CORE_INSTRUCTIONS;
-      let specificInstructions = "";
+      const stream = await getGeminiResponseStream(
+        messages,
+        topicKey,
+        personalityKey,
+        responseLength,
+        body.userProfile,
+        userMessageContent
+      );
 
-      if (body.userProfile?.preferences?.assistantGender) {
-        specificInstructions += ` Jsi ${body.userProfile.preferences.assistantGender === 'male' ? 'muž' : 'žena'}.`;
-      }
-      if (body.userProfile?.preferences?.assistantName) {
-        specificInstructions += ` Tvé jméno je ${body.userProfile.preferences.assistantName}. Používej toto jméno, když mluvíš o sobě nebo když se tě na něj někdo zeptá.`;
-      }
-      
-      specificInstructions += ` ${PERSONALITY_PROMPTS[personalityKey]}`;
-      specificInstructions += ` ${TOPIC_PROMPTS[topicKey]}`;
-      
-      if (responseLength) {
-        specificInstructions += ` Preferuješ odpovědi, které jsou spíše ${responseLength === 'short' ? 'krátké a výstižné' : responseLength === 'medium' ? 'středně dlouhé a vyvážené' : 'delší, detailnější a propracovanější'}.`;
-      }
-      
-      systemPrompt += specificInstructions;
-      console.log("Final System Prompt for POST:", systemPrompt);
-
-      const geminiApiKey = process.env.GEMINI_API_KEY;
-      if (!geminiApiKey) {
-        const simulatedResponseContent = `Dobrý den! (Simulovaná odpověď - API klíč chybí)`;
-        await supabaseAdmin
-          .from('chat_messages')
-          .insert({ session_id: currentSessionId, role: 'assistant', content: simulatedResponseContent });
-        return res.status(200).json({ role: 'assistant', content: simulatedResponseContent, estimatedReadingTime: 3, sessionId: currentSessionId });
-      }
-
-      const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent';
-      const formattedMessagesForGemini: any[] = [];
-      formattedMessagesForGemini.push({ role: 'user', parts: [{ text: systemPrompt }] });
-      formattedMessagesForGemini.push({ role: 'model', parts: [{ text: 'Rozumím a jsem připraven/a pomoci.' }] });
-
-      const historyMessages = messages.slice(0, -1); 
-      historyMessages.filter(m => m.role === 'user' || m.role === 'assistant')
-              .forEach(msg => {
-                formattedMessagesForGemini.push({
-                  role: msg.role === 'assistant' ? 'model' : 'user',
-                  parts: [{ text: msg.content }]
-                });
-              });
-      
-      // New PubMed RAG integration
-      let ragContextString = "";
-      const pubmedResults = await searchPubMedRAG(userMessageContent, 2); // Get top 2 chunks
-      if (pubmedResults && pubmedResults.length > 0) {
-        ragContextString = "\n\nPro tvou informaci, zde jsou některé relevantní úryvky z odborných článků, které by ti mohly pomoci lépe odpovědět (tyto informace neukazuj přímo uživateli, ale použij je k formulaci odpovědi):\n";
-        pubmedResults.forEach(chunk => {
-          ragContextString += `Zdroj: ${chunk.source}\nÚryvek: ${chunk.chunkText}\n\n`;
-        });
-        // Trim context if too long
-        if (ragContextString.length > 3000) { // Arbitrary limit, adjust as needed
-            ragContextString = ragContextString.substring(0, 3000) + "... (kontext zkrácen)";
-        }
-      }
-      const userMessageWithContext = ragContextString ? `${userMessageContent}${ragContextString}` : userMessageContent;
-      formattedMessagesForGemini.push({ role: 'user', parts: [{ text: userMessageWithContext }] });
-
-
-      try {
-        const response = await axios({
-          method: 'post',
-          url: `${GEMINI_API_URL}?key=${geminiApiKey}`,
-          headers: { 'Content-Type': 'application/json' },
-          data: { 
-            contents: formattedMessagesForGemini, 
-            generationConfig: { 
-              temperature: 0.75,
-              topK: 40, 
-              topP: 0.95, 
-              maxOutputTokens: 1024
-            } 
-          }
-        });
-        const geminiData = response.data;
-        if (geminiData.error) throw new Error(geminiData.error.message || 'Gemini API error');
-        
-        let responseContent = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text || "Omlouvám se, momentálně nedokážu odpovědět.";
-        
-        const validationResult = validateAIResponse(responseContent);
-        if (!validationResult.isValid) {
-          console.warn(`AI Response Validation Failed: ${validationResult.issue}. Original: "${responseContent}". Suggestion: "${validationResult.suggestion}"`);
-          if (validationResult.issue?.includes("undesirable phrase")) {
-             responseContent = "Prosím, soustřeďme se na vaši situaci. Jak vám mohu dnes pomoci v rámci mé role psychologického asistenta?";
-          } else {
-            responseContent = validationResult.suggestion || "Omlouvám se, došlo k interní chybě. Zkuste to prosím znovu.";
-          }
-        }
-        
-        await supabaseAdmin
-          .from('chat_messages')
-          .insert({ session_id: currentSessionId, role: 'assistant', content: responseContent });
-        return res.status(200).json({ role: 'assistant', content: responseContent, estimatedReadingTime: Math.ceil(responseContent.length / 1000 * 60 / 200), sessionId: currentSessionId });
-      } catch (apiError: any) {
-        console.error('Error calling Gemini API:', apiError.response?.data || apiError.message);
-        const errorContent = `Omlouvám se, problém s AI. (Chyba: ${apiError?.message || 'Neznámá chyba'})`;
-        await supabaseAdmin
-          .from('chat_messages')
-          .insert({ session_id: currentSessionId, role: 'assistant', content: errorContent });
-        return res.status(200).json({ role: 'assistant', content: errorContent, estimatedReadingTime: 3, sessionId: currentSessionId });
-      }
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+      stream.pipe(res);
     } catch (postOuterError: any) {
       console.error('Error processing POST chat request:', postOuterError);
       return res.status(500).json({ 

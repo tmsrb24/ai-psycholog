@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from "next-auth/jwt";
 import { getSupabaseAdmin } from '../../lib/supabaseClient';
-import { Message } from '../../types'; // Předpokládáme, že Message je definován v types.ts
+import { Message } from '../../types/chat'; // Předpokládáme, že Message je definován v types.ts
 
 const secret = process.env.NEXTAUTH_SECRET;
 

@@ -1,25 +1,26 @@
 import React, { Suspense } from 'react'; 
-import Layout from '../components/Layout';
-import { useState, useEffect, useRef, lazy } from 'react'; 
+import Layout from '../components/layouts/Layout';
+import { useState, useEffect, useRef, lazy } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
+import { useQuery } from '@tanstack/react-query';
 import { 
   FaCog, FaChartLine, FaTimes, FaSpinner
 } from 'react-icons/fa';
 import { type IconType } from 'react-icons/lib';
-import ChatMessage from '../components/ChatMessage';
-import ChatInput from '../components/ChatInput';
-import LoadingIndicator from '../components/LoadingIndicator';
-import CrisisNotice from '../components/CrisisNotice';
-import ChatSettingsModal from '../components/ChatSettingsModal';
-import { Message, UserProfileData } from '../types'; 
+import ChatMessage from '../components/chat/ChatMessage';
+import ChatInput from '../components/chat/ChatInput';
+import LoadingIndicator from '../components/ui/LoadingIndicator';
+import CrisisNotice from '../components/ui/CrisisNotice';
+import ChatSettingsModal from '../components/chat/ChatSettingsModal';
+import { Message } from '../types/chat';
+import { UserProfileData } from '../types/user';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
 
-const ChatAnalysis = lazy(() => import('../components/ChatAnalysis'));
+const ChatAnalysis = lazy(() => import('../components/chat/ChatAnalysis'));
 
 type PageProps = {};
 
@@ -35,8 +36,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   const { t, i18n } = useTranslation(['chat', 'common']);
   
   const [messages, setMessages] = useState<Message[]>([]);
-  const [initialDataLoading, setInitialDataLoading] = useState(true); 
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
   const [loadingEstimatedTime, setLoadingEstimatedTime] = useState(5);
   const [selectedTopic, setSelectedTopic] = useState<'anxiety' | 'relationships' | 'depression' | 'stress' | 'selfEsteem' | null>(null);
   const [selectedPersonality, setSelectedPersonality] = useState<'supportive' | 'practical' | 'analytical' | 'mentor' | 'coach' | 'mediator' | null>(null);
@@ -55,73 +55,52 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   const { data: session, status: authStatus } = useSession();
   const router = useRouter();
 
+  const { data: profileData, isLoading: isProfileLoading } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: () => fetch('/api/user/profile').then(res => res.json()),
+    enabled: authStatus === 'authenticated',
+  });
+
+  const { data: chatHistoryData, isLoading: isHistoryLoading } = useQuery({
+    queryKey: ['chatHistory'],
+    queryFn: () => fetch('/api/chat').then(res => res.json()),
+    enabled: authStatus === 'authenticated',
+  });
+
   useEffect(() => {
-    const loadInitialData = async () => {
-      if (!(authStatus === "authenticated" && session?.user)) {
-        setInitialDataLoading(false);
-        return;
-      }
-      setInitialDataLoading(true);
-
-      let systemMessageContent = t('systemPrompt.default');
-      if (i18n.language === 'en') systemMessageContent = t('systemPrompt.en');
-      else if (i18n.language === 'uk') systemMessageContent = t('systemPrompt.uk');
-      const systemMessage: Message = { role: 'system', content: systemMessageContent };
-      
-      setMessages([systemMessage, {role: 'assistant', content: t('loadingMessages', 'Načítám zprávy...'), timestamp: new Date()}]);
-
-      try {
-        const [profileRes, chatHistoryRes] = await Promise.all([
-          fetch('/api/user/profile'),
-          fetch('/api/chat'), 
-        ]);
-
-        if (profileRes.ok) {
-          const profileData = await profileRes.json();
-          setUserProfileData(profileData);
-          if (profileData.preferences) {
-            setResponseLength(profileData.preferences.responseLength || 'medium');
-            if (profileData.preferences.assistantGender) setAssistantGender(profileData.preferences.assistantGender);
-            if (profileData.preferences.assistantName) setAssistantName(profileData.preferences.assistantName);
-          }
-        } else {
-          console.error(t('errors.profileLoadFailedConsole'), profileRes.statusText);
-        }
-
-        let baseMessages = [systemMessage];
-        if (chatHistoryRes.ok) {
-          const historyData = await chatHistoryRes.json();
-          if (historyData.sessionId && historyData.messages && historyData.messages.length > 0) {
-            setCurrentChatSessionId(historyData.sessionId);
-            baseMessages = [
-              systemMessage,
-              ...historyData.messages.map((msg: Message) => ({
-                ...msg,
-                timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
-              }))
-            ];
-          }
-        } else {
-          console.error(t('errors.chatHistoryLoadFailedConsole'), chatHistoryRes.statusText);
-        }
-        
-        setMessages(baseMessages);
-
-      } catch (error) {
-        console.error(t('errors.initialDataLoadErrorConsole'), error);
-        setMessages([systemMessage, {role: 'assistant', content: t('errors.chatHistoryLoadError'), timestamp: new Date()}]);
-      } finally {
-        setInitialDataLoading(false);
-      }
-    };
-
     if (authStatus === "unauthenticated") {
       router.push('/auth/login?callbackUrl=/chat');
-    } else if (authStatus === "authenticated") {
-      loadInitialData();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [authStatus, i18n.language]); 
+  }, [authStatus, router]);
+
+  useEffect(() => {
+    if (profileData) {
+      setUserProfileData(profileData);
+      if (profileData.preferences) {
+        setResponseLength(profileData.preferences.responseLength || 'medium');
+        if (profileData.preferences.assistantGender) setAssistantGender(profileData.preferences.assistantGender);
+        if (profileData.preferences.assistantName) setAssistantName(profileData.preferences.assistantName);
+      }
+    }
+  }, [profileData]);
+
+  useEffect(() => {
+    const systemMessage: Message = { role: 'system', content: t('systemPrompt.default') };
+    if (chatHistoryData) {
+      if (chatHistoryData.sessionId && chatHistoryData.messages) {
+        setCurrentChatSessionId(chatHistoryData.sessionId);
+        setMessages([
+          systemMessage,
+          ...chatHistoryData.messages.map((msg: Message) => ({
+            ...msg,
+            timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
+          }))
+        ]);
+      }
+    } else {
+      setMessages([systemMessage]);
+    }
+  }, [chatHistoryData, t]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -196,18 +175,49 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         sessionId: currentChatSessionId,
         chatLanguage: i18n.language 
       };
-      const res = await axios.post('/api/chat', requestData);
-      
-      if (res.data.sessionId && !currentChatSessionId) setCurrentChatSessionId(res.data.sessionId); 
-      if (res.data.estimatedReadingTime) setLoadingEstimatedTime(prev => Math.round((prev * 0.7) + (res.data.estimatedReadingTime || 5) * 0.3));
-      
-      const assistantMessage: Message = {
-        role: 'assistant',
-        content: res.data.content || t('errors.apiResponseError'),
-        timestamp: new Date(),
-        isCrisis: res.data.isCrisis
-      };
-      setMessages(prev => [...prev, assistantMessage]); 
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('Failed to get stream reader');
+      }
+
+      const decoder = new TextDecoder();
+      let assistantResponse = '';
+      const assistantMessage: Message = { role: 'assistant', content: '', timestamp: new Date() };
+      setMessages(prev => [...prev, assistantMessage]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value, { stream: true });
+        // The stream from Gemini might return JSON chunks, we need to parse them.
+        // This is a simplified example; a robust implementation would handle partial JSON chunks.
+        try {
+            const jsonStrings = chunk.split('\n').filter(s => s.trim().startsWith('[') && s.trim().endsWith(']'));
+            jsonStrings.forEach(jsonString => {
+                const parsed = JSON.parse(jsonString);
+                const text = parsed[0]?.candidates[0]?.content?.parts[0]?.text || '';
+                assistantResponse += text;
+                setMessages(prev => {
+                    const newMsgs = [...prev];
+                    newMsgs[newMsgs.length - 1].content = assistantResponse;
+                    return newMsgs;
+                });
+            });
+        } catch (e) {
+            console.error("Error parsing stream chunk:", e, "Chunk:", chunk);
+        }
+      }
     } catch (error) {
       console.error(t('errors.apiCallFailedConsole'), error);
       setMessages(prev => [...prev, { role: 'assistant', content: t('errors.apiCommunicationError'), timestamp: new Date() }]);
@@ -304,11 +314,11 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         {/* Main Chat Area */}
         <div className="flex-grow flex flex-col">
           {/* Message Display Area */}
-          <div 
+          <div
             className="bg-gray-50 dark:bg-slate-800/50 rounded-xl shadow-inner p-4 sm:p-6 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]"
             ref={chatContainerRef}
           >
-            {(initialDataLoading && messages.length <=1 ) ? ( 
+            {(isProfileLoading || isHistoryLoading) ? (
                  <div className="flex justify-center items-center h-full">
                    <FaSpinner className="animate-spin text-blue-500 text-3xl" />
                    <p className="ml-2 text-gray-500 dark:text-gray-400">{t('loadingChatHistory', 'Načítám historii chatu...')}</p>
@@ -352,9 +362,9 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                 </React.Fragment>
               );
             })}
-            {loading && !initialDataLoading && ( 
-              <LoadingIndicator 
-                isVisible={loading} 
+            {loading && (
+              <LoadingIndicator
+                isVisible={loading}
                 estimatedTime={loadingEstimatedTime}
               />
             )}

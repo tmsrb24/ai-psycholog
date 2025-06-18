@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Message, ApiResponse } from '../../types'; // Použijeme existující typy
+import { Message, ApiResponse } from '../../types/chat'; // Použijeme existující typy
 import axios from 'axios';
 import { validateAIResponse, AIResponseValidationResult } from '../../lib/responseValidation'; // Added import
 

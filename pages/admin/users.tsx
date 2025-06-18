@@ -3,7 +3,7 @@ import Layout from '../../components/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 // UserProfileData zde není přímo potřeba, definujeme AdminUser explicitně
-// import { UserProfileData } from '../../types'; 
+import { UserProfileData } from '../../types/user';
 
 interface AdminUser {
   id: string; 

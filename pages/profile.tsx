@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSession, signOut } from 'next-auth/react'; // Added signOut
 import { useRouter } from 'next/router';
-import Layout from '../components/Layout';
+import Layout from '../components/layouts/Layout';
 import Image from 'next/image';
 import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog, FaSpinner } from 'react-icons/fa'; // Added FaSpinner
 import { useTranslation } from 'next-i18next';

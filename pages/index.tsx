@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Layout from '../components/Layout';
+import Layout from '../components/layouts/Layout';
 import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield, FaFileMedical } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 import { motion } from 'framer-motion';
