@@ -290,7 +290,7 @@ export default async function handler(
         return res.status(200).json({ role: 'assistant', content: simulatedResponseContent, estimatedReadingTime: 3, sessionId: currentSessionId });
       }
 
-      const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent';
+      const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent';
       const formattedMessagesForGemini: any[] = [];
       formattedMessagesForGemini.push({ role: 'user', parts: [{ text: systemPrompt }] });
       formattedMessagesForGemini.push({ role: 'model', parts: [{ text: 'Rozumím a jsem připraven/a pomoci.' }] });
