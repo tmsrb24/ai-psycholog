@@ -11,8 +11,8 @@ module.exports = {
       //   sans: ['Inter', 'sans-serif'], 
       // },
       backgroundImage: {
-        'main-gradient-light': 'linear-gradient(135deg, #E0F2FE 0%, #A5F3FC 50%, #67E8F9 100%)', 
-        'main-gradient-dark': 'linear-gradient(135deg, #082f49 0%, #0C4A6E 50%, #0E7490 100%)', 
+        'main-gradient-light': 'linear-gradient(135deg, #E0F2FE 0%, #A5F3FC 100%)', 
+        'main-gradient-dark': 'linear-gradient(135deg, #082f49 0%, #0E7490 100%)', 
         'hero-gradient-light': 'linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%)',
         'hero-gradient-dark': 'linear-gradient(135deg, #2a3a4a 0%, #2f5f7f 100%)', // Even lighter version
         'cta-gradient-light': 'linear-gradient(135deg, #A5F3FC 0%, #67E8F9 50%, #22D3EE 100%)', 

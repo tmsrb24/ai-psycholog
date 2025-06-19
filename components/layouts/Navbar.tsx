@@ -93,10 +93,10 @@ const Navbar: React.FC = () => {
     uk: '🇺🇦',
   };
 
-  const navClasses = `sticky top-0 z-50 backdrop-blur-md transition-all duration-300 ${
+  const navClasses = `sticky top-0 z-50 backdrop-blur-lg transition-all duration-300 ${
     isScrolled 
-      ? 'bg-white/95 dark:bg-slate-900/95 shadow-lg' 
-      : 'bg-white/70 dark:bg-slate-900/70 shadow-none'
+      ? 'bg-white/80 dark:bg-slate-900/80 shadow-lg' 
+      : 'bg-white/50 dark:bg-slate-900/50 shadow-none'
   }`;
 
   return (
