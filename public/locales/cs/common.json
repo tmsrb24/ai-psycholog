@@ -116,5 +116,11 @@
   "sidebar": {
     "analysis": "Analýza",
     "settings": "Nastavení"
+  },
+  "cookieConsent": {
+    "bannerText": "Tato stránka používá cookies k vylepšení vašeho zážitku.",
+    "learnMore": "Zjistit více",
+    "acceptAll": "Přijmout vše",
+    "acceptNecessary": "Přijmout nezbytné"
   }
 }

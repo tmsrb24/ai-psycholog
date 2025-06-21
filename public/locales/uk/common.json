@@ -116,5 +116,11 @@
   "sidebar": {
     "analysis": "Аналіз",
     "settings": "Налаштування"
+  },
+  "cookieConsent": {
+    "bannerText": "Цей сайт використовує файли cookie для покращення вашого досвіду.",
+    "learnMore": "Дізнатися більше",
+    "acceptAll": "Прийняти все",
+    "acceptNecessary": "Прийняти необхідні"
   }
 }

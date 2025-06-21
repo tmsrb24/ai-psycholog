@@ -116,5 +116,11 @@
   "sidebar": {
     "analysis": "Analysis",
     "settings": "Settings"
+  },
+  "cookieConsent": {
+    "bannerText": "This site uses cookies to enhance your experience.",
+    "learnMore": "Learn more",
+    "acceptAll": "Accept all",
+    "acceptNecessary": "Accept necessary"
   }
 }

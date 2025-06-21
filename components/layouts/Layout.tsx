@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import WidgetChatButton from '../chat/WidgetChatButton';
 import WidgetChatWindow from '../chat/WidgetChatWindow';
+import CookieConsentBanner from '../ui/CookieConsentBanner';
 
 interface LayoutProps {
   children: ReactNode;
@@ -51,6 +52,7 @@ const Layout: React.FC<LayoutProps> = ({
       {/* FAQ Chat Widget */}
       <WidgetChatButton onClick={toggleWidget} isOpen={isWidgetOpen} />
       <WidgetChatWindow isOpen={isWidgetOpen} onClose={toggleWidget} />
+      <CookieConsentBanner />
     </div>
   );
 };
