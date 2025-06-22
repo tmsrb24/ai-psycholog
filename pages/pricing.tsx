@@ -149,8 +149,8 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {plans.map((plan) => (
             <div 
               key={plan.name} 
@@ -167,8 +167,8 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
 
               {/* Price */}
               <div className="my-8 flex-shrink-0">
-                <span className="text-5xl font-extrabold text-gray-900 dark:text-white">{plan.price}</span>
-                <span className="text-lg text-gray-500 dark:text-gray-400 ml-1">{plan.priceSuffix}</span>
+                <span className="text-4xl font-extrabold text-gray-900 dark:text-white">{plan.price}</span>
+                <span className="text-md text-gray-500 dark:text-gray-400 ml-1">{plan.priceSuffix}</span>
               </div>
 
               {/* Features */}
@@ -210,11 +210,6 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
                     </span>
                   ) : plan.buttonText}
                 </button>
-                {plan.name !== t('plans.basic.name', 'Základní') && 
-                  <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-2">
-                    {t('safePaymentStripe', 'Bezpečná platba přes Stripe')}
-                  </p>
-                }
               </div>
             </div>
           ))}

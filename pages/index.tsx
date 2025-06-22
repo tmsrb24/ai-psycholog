@@ -126,6 +126,21 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       buttonText: t('plans.premium.buttonText', 'Vybrat Premium'),
       buttonLink: '/pricing',
       isRecommended: true,
+    },
+    {
+      name: t('plans.company.name', 'Pro Firmy'),
+      price: t('plans.company.price', 'Na dotaz'),
+      priceSuffix: '',
+      description: t('plans.company.description', 'Podpořte duševní pohodu svých zaměstnanců'),
+      borderColor: 'from-green-500 to-teal-500',
+      features: [
+        { text: t('plans.company.features.0', 'Neomezený přístup pro zaměstnance'), included: true },
+        { text: t('plans.company.features.1', '100% Anonymita a soukromí'), included: true },
+        { text: t('plans.company.features.2', 'Snadná implementace'), included: true },
+        { text: t('plans.company.features.3', 'Přednostní podpora'), included: true },
+      ],
+      buttonText: t('plans.company.buttonText', 'Kontaktujte nás'),
+      buttonLink: '/kontakt',
     }
   ];
 
@@ -408,7 +423,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </p>
           </div>
           <motion.div 
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start max-w-4xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start max-w-7xl mx-auto"
             variants={featureContainerVariants}
           >
             {plans.map((plan) => (
@@ -428,8 +443,8 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
                 {/* Price */}
                 <div className="my-8 flex-shrink-0">
-                  <span className="text-5xl font-extrabold text-gray-900 dark:text-white">{plan.price}</span>
-                  <span className="text-lg text-gray-500 dark:text-gray-400 ml-1">{plan.priceSuffix}</span>
+                  <span className="text-4xl font-extrabold text-gray-900 dark:text-white">{plan.price}</span>
+                  <span className="text-md text-gray-500 dark:text-gray-400 ml-1">{plan.priceSuffix}</span>
                 </div>
 
                 {/* Features */}
