@@ -17,6 +17,7 @@ module.exports = {
         'hero-gradient-dark': 'linear-gradient(135deg, #2d3748 0%, #4a5568 100%)',
         'cta-gradient-light': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         'cta-gradient-dark': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        'active-nav-link': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       },
       dropShadow: {
         'glow': '0 0 20px rgba(255, 255, 255, 0.15)',

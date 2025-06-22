@@ -122,7 +122,7 @@ const Navbar: React.FC = () => {
               href="/"
               className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/')
-                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  ? 'bg-active-nav-link text-white font-semibold shadow-sm'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
@@ -133,7 +133,7 @@ const Navbar: React.FC = () => {
               href="/chat"
               className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/chat')
-                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  ? 'bg-active-nav-link text-white font-semibold shadow-sm'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
@@ -145,7 +145,7 @@ const Navbar: React.FC = () => {
               href="/diary"
               className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/diary')
-                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  ? 'bg-active-nav-link text-white font-semibold shadow-sm'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
@@ -156,7 +156,7 @@ const Navbar: React.FC = () => {
               href="/gdpr"
               className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/gdpr')
-                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  ? 'bg-active-nav-link text-white font-semibold shadow-sm'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
@@ -167,7 +167,7 @@ const Navbar: React.FC = () => {
               href="/pricing"
               className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/pricing')
-                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  ? 'bg-active-nav-link text-white font-semibold shadow-sm'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
@@ -178,7 +178,7 @@ const Navbar: React.FC = () => {
               href="/kontakt"
               className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/kontakt')
-                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  ? 'bg-active-nav-link text-white font-semibold shadow-sm'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
@@ -189,7 +189,7 @@ const Navbar: React.FC = () => {
               href="/blog"
               className={`px-3 py-2 rounded-md text-sm transition-colors duration-150 ${
                 isActive('/blog')
-                  ? 'bg-blue-500 text-white dark:bg-blue-600 dark:text-white font-semibold shadow-sm'
+                  ? 'bg-active-nav-link text-white font-semibold shadow-sm'
                   : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-slate-700 font-medium'
               }`}
               onClick={closeMenu}
