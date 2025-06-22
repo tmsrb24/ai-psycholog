@@ -11,12 +11,12 @@ module.exports = {
       //   sans: ['Inter', 'sans-serif'], 
       // },
       backgroundImage: {
-        'main-gradient-light': 'linear-gradient(135deg, #E0F2FE 0%, #A5F3FC 50%, #67E8F9 100%)', 
-        'main-gradient-dark': 'linear-gradient(135deg, #082f49 0%, #0C4A6E 50%, #0E7490 100%)', 
-        'hero-gradient-light': 'linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%)',
-        'hero-gradient-dark': 'linear-gradient(135deg, #2a3a4a 0%, #2f5f7f 100%)', // Even lighter version
-        'cta-gradient-light': 'linear-gradient(135deg, #A5F3FC 0%, #67E8F9 50%, #22D3EE 100%)', 
-        'cta-gradient-dark': 'linear-gradient(135deg, #0E7490 0%, #155E75 50%, #0891B2 100%)', 
+        'main-gradient-light': 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        'main-gradient-dark': 'linear-gradient(135deg, #2d3748 0%, #4a5568 100%)',
+        'hero-gradient-light': 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        'hero-gradient-dark': 'linear-gradient(135deg, #2d3748 0%, #4a5568 100%)',
+        'cta-gradient-light': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        'cta-gradient-dark': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       },
       dropShadow: {
         'glow': '0 0 20px rgba(255, 255, 255, 0.15)',

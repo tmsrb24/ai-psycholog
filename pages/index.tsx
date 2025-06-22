@@ -152,7 +152,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <Layout>
-      <section className="relative bg-hero-gradient-dark text-white py-20 overflow-hidden">
+      <section className="relative bg-hero-gradient-light dark:bg-hero-gradient-dark text-gray-900 dark:text-white py-20 overflow-hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row items-center">
             <motion.div 
@@ -169,7 +169,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
               </motion.h1>
               <motion.p 
                 variants={heroTextItemVariants}
-                className="text-lg sm:text-xl mb-8 text-white/85"
+                className="text-lg sm:text-xl mb-8 text-gray-700 dark:text-gray-300"
               >
                 {t('hero.subtitle', 'Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.')}
               </motion.p>
@@ -177,10 +177,10 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 variants={heroTextItemVariants}
                 className="flex flex-col sm:flex-row gap-4"
               >
-                <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform">
+                <Link href="/chat" className="btn btn-primary font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform">
                   {tCommon('buttons.tryForFree', 'Vyzkoušet zdarma')}
                 </Link>
-                <Link href="/pricing" className="btn bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform">
+                <Link href="/pricing" className="btn btn-secondary font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform">
                   {tCommon('buttons.pricing', 'Ceník')}
                 </Link>
               </motion.div>
@@ -456,7 +456,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
                 {/* Button */}
                 <div className="mt-8 pt-8 border-t border-gray-200 dark:border-slate-700 flex-shrink-0">
-                  <Link href={plan.buttonLink} className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-gradient-to-r ${plan.borderColor} hover:shadow-xl`}>
+                  <Link href={plan.buttonLink} className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-cta-gradient-light dark:bg-cta-gradient-dark hover:shadow-xl`}>
                     {plan.buttonText}
                   </Link>
                 </div>
@@ -478,7 +478,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
           <p className="text-xl mb-8 max-w-3xl mx-auto">
             {t('cta.subtitle', 'Vyzkoušejte AI Psychologa zdarma a objevte, jak vám může pomoci lépe porozumět vašim emocím a zvládat každodenní výzvy.')}
           </p>
-          <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform text-lg">
+          <Link href="/chat" className="btn btn-primary font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform text-lg">
             {tCommon('buttons.startForFree', 'Začít zdarma')}
           </Link>
         </div>
