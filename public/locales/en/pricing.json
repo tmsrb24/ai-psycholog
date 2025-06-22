@@ -38,6 +38,18 @@
         "Assistant personality customization"
       ],
       "buttonText": "Subscribe to Premium"
+    },
+    "company": {
+      "name": "For Companies",
+      "price": "On request",
+      "description": "Support the mental well-being of your employees",
+      "features": [
+        "Unlimited access for employees",
+        "100% Anonymity and privacy",
+        "Easy implementation",
+        "Priority support"
+      ],
+      "buttonText": "Contact us"
     }
   },
   "buttons": {

@@ -110,6 +110,23 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
       buttonAction: () => handleSubscribe('premium'),
       isRecommended: true,
       planId: 'premium'
+    },
+    {
+      name: t('plans.company.name', 'Pro Firmy'),
+      price: t('plans.company.price', 'Na dotaz'),
+      priceSuffix: '',
+      description: t('plans.company.description', 'Podpořte duševní pohodu svých zaměstnanců'),
+      borderColor: 'from-green-500 to-teal-500',
+      features: [
+        { text: t('plans.company.features.0', 'Neomezený přístup pro zaměstnance'), included: true },
+        { text: t('plans.company.features.1', '100% Anonymita a soukromí'), included: true },
+        { text: t('plans.company.features.2', 'Snadná implementace'), included: true },
+        { text: t('plans.company.features.3', 'Přednostní podpora'), included: true },
+      ],
+      buttonText: t('plans.company.buttonText', 'Kontaktujte nás'),
+      buttonAction: () => router.push('/kontakt'),
+      isRecommended: false,
+      planId: 'company'
     }
   ];
 
@@ -133,7 +150,7 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
           {plans.map((plan) => (
             <div 
               key={plan.name} 
