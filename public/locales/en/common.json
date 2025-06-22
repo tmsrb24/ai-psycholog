@@ -117,8 +117,18 @@
     "analysis": "Analysis",
     "settings": "Settings"
   },
-  "sidebar": {
-    "analysis": "Analysis",
-    "settings": "Settings"
+  "cookieConsent": {
+    "bannerText": "This site uses cookies to enhance your experience.",
+    "learnMore": "Learn more",
+    "settings": "Settings",
+    "acceptAll": "Accept all",
+    "acceptNecessary": "Accept necessary",
+    "settingsTitle": "Cookie Settings",
+    "necessaryCookies": "Necessary Cookies",
+    "necessaryDescription": "These cookies are required for the basic functionality of the website and cannot be disabled.",
+    "analyticsCookies": "Analytics Cookies",
+    "analyticsDescription": "These cookies help us analyze traffic and improve the website.",
+    "saveSettings": "Save Settings",
+    "cancel": "Cancel"
   }
 }

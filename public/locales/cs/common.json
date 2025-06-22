@@ -117,8 +117,18 @@
     "analysis": "Analýza",
     "settings": "Nastavení"
   },
-  "sidebar": {
-    "analysis": "Analýza",
-    "settings": "Nastavení"
+  "cookieConsent": {
+    "bannerText": "Tato stránka používá cookies k vylepšení vašeho zážitku.",
+    "learnMore": "Zjistit více",
+    "settings": "Nastavení",
+    "acceptAll": "Přijmout vše",
+    "acceptNecessary": "Přijmout nezbytné",
+    "settingsTitle": "Nastavení cookies",
+    "necessaryCookies": "Nezbytné cookies",
+    "necessaryDescription": "Tyto cookies jsou nutné pro základní fungování webu a nelze je vypnout.",
+    "analyticsCookies": "Analytické cookies",
+    "analyticsDescription": "Tyto cookies nám pomáhají analyzovat návštěvnost a vylepšovat web.",
+    "saveSettings": "Uložit nastavení",
+    "cancel": "Zrušit"
   }
 }
