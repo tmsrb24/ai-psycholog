@@ -9,7 +9,6 @@
 @layer base {
   body {
     @apply bg-main-gradient-light dark:bg-main-gradient-dark text-gray-900 dark:text-gray-200 transition-colors duration-200 min-h-screen font-sans;
-    background-attachment: fixed;
   }
   html {
     font-family: 'Inter', sans-serif;
@@ -26,7 +25,7 @@
   
   /* Příklady, jak mohly být tlačítka definována - upravit podle skutečného původního stavu */
   .btn-primary {
-    @apply bg-cta-gradient-light dark:bg-cta-gradient-dark text-white;
+    @apply bg-blue-600 hover:bg-blue-700 text-white;
   }
   
   .btn-secondary {
