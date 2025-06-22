@@ -9,7 +9,6 @@ import { appWithTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import Head from 'next/head'; // Přidán import Head
 import { Inter } from 'next/font/google';
-import { useEffect, useState } from 'react';
 
 const inter = Inter({
   subsets: ['latin', 'latin-ext'], // Přidána podpora pro latinku-rozšířenou (české znaky)
@@ -20,15 +19,22 @@ const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps: { session: initialSession, ...pageProps } }: AppProps) {
   const router = useRouter();
-  const [hasAnalyticsConsent, setHasAnalyticsConsent] = useState(false);
+  // const { data: session, status } = useSession({ required: false }); 
+  // const { i18n } = useTranslation(); 
 
-  useEffect(() => {
-    const consent = localStorage.getItem('cookie_consent');
-    if (consent) {
-      const { analytics } = JSON.parse(consent);
-      setHasAnalyticsConsent(analytics);
-    }
-  }, []);
+  // useEffect(() => { 
+  //   // Pokud by se tato logika vrátila, musela by získat session jinak, nebo být vnořena hlouběji
+  //   if (status === "authenticated" && session?.user) {
+  //     const userPreferredLang = (session.user as any)?.preferences?.uiLanguage;
+  //     if (userPreferredLang && router.locales?.includes(userPreferredLang) && router.locale !== userPreferredLang) {
+  //       if (router.isReady) {
+  //         console.log(`_app.tsx: Setting UI language to user preference: ${userPreferredLang}`);
+  //         i18n.changeLanguage(userPreferredLang);
+  //         router.push(router.pathname, router.asPath, { locale: userPreferredLang });
+  //       }
+  //     }
+  //   }
+  // }, [status, session, router, i18n]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -41,12 +47,8 @@ function MyApp({ Component, pageProps: { session: initialSession, ...pageProps }
           <main className={inter.className}>
             <Component {...pageProps} key={router.asPath} />
           </main>
-          {hasAnalyticsConsent && (
-            <>
-              <Analytics />
-              <SpeedInsights />
-            </>
-          )}
+          <Analytics />
+          <SpeedInsights />
         </ThemeProvider>
       </SessionProvider>
     </QueryClientProvider>

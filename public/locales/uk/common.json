@@ -116,19 +116,5 @@
   "sidebar": {
     "analysis": "Аналіз",
     "settings": "Налаштування"
-  },
-  "cookieConsent": {
-    "bannerText": "Цей сайт використовує файли cookie для покращення вашого досвіду.",
-    "learnMore": "Дізнатися більше",
-    "settings": "Налаштування",
-    "acceptAll": "Прийняти все",
-    "acceptNecessary": "Прийняти необхідні",
-    "settingsTitle": "Налаштування файлів cookie",
-    "necessaryCookies": "Необхідні файли cookie",
-    "necessaryDescription": "Ці файли cookie необхідні для базової функціональності веб-сайту і не можуть бути відключені.",
-    "analyticsCookies": "Аналітичні файли cookie",
-    "analyticsDescription": "Ці файли cookie допомагають нам аналізувати трафік та покращувати веб-сайт.",
-    "saveSettings": "Зберегти налаштування",
-    "cancel": "Скасувати"
   }
 }
