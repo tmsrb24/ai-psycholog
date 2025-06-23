@@ -12,11 +12,11 @@ interface InsightData {
 }
 
 const StatCard = ({ icon, label, value, children }: { icon: React.ReactNode, label: string, value?: string | number, children?: React.ReactNode }) => (
-  <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex items-center">
-    <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/50 mr-4">
+  <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg text-center">
+    <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/50 inline-block mb-2">
       {icon}
     </div>
-    <div className="flex-1">
+    <div>
       <p className="text-sm text-gray-600 dark:text-gray-400">{label}</p>
       {value && <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>}
       {children}
