@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaChartBar, FaFileAlt, FaHashtag, FaBrain, FaRegClock, FaSpinner } from 'react-icons/fa';
+import { FaChartBar, FaFileAlt, FaHashtag, FaBrain, FaRegClock, FaSpinner, FaSmile, FaMeh, FaFrown } from 'react-icons/fa';
 
 interface InsightData {
   messageCount: number;
@@ -8,6 +8,7 @@ interface InsightData {
   sessionCount: number;
   averageSessionLength: number;
   commonTopics: { topic: string; count: number }[];
+  averageSentiment: number;
 }
 
 const StatCard = ({ icon, label, value }: { icon: React.ReactNode, label: string, value: string | number }) => (
@@ -66,9 +67,15 @@ const ChatAnalysis: React.FC = () => {
     );
   }
 
+  const getSentimentIcon = (score: number) => {
+    if (score > 0.5) return <FaSmile className="text-green-500" />;
+    if (score < -0.5) return <FaFrown className="text-red-500" />;
+    return <FaMeh className="text-yellow-500" />;
+  }
+
   return (
-    <div className="space-y-4 p-2">
-      <div className="grid grid-cols-2 gap-2">
+    <div className="space-y-6 p-4">
+      <div className="grid grid-cols-2 gap-4">
         <StatCard 
           icon={<FaHashtag className="text-blue-500" />} 
           label="Počet zpráv" 
@@ -89,6 +96,19 @@ const ChatAnalysis: React.FC = () => {
           label="Prům. délka" 
           value={`${data.averageSessionLength} zpráv`} 
         />
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+          Průměrný sentiment
+        </h3>
+        <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex items-center">
+          <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/50 mr-4">
+            {getSentimentIcon(data.averageSentiment)}
+          </div>
+          <div>
+            <p className="text-2xl font-bold text-gray-900 dark:text-white">{data.averageSentiment.toFixed(2)}</p>
+          </div>
+        </div>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2 flex items-center">

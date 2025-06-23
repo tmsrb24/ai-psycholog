@@ -42,12 +42,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       { topic: 'Vztahy', count: 3 },
     ];
 
+    const sentiment = new (require('sentiment'))();
+    const sentimentScores = messages.map(msg => sentiment.analyze(msg.content).score);
+    const averageSentiment = sentimentScores.reduce((a, b) => a + b, 0) / sentimentScores.length;
+
     res.status(200).json({
       messageCount,
       wordCount,
       sessionCount,
       averageSessionLength,
       commonTopics,
+      averageSentiment,
     });
   } catch (error) {
     console.error('Error fetching user analysis:', error);
