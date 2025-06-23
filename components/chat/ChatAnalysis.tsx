@@ -11,14 +11,15 @@ interface InsightData {
   averageSentiment: number;
 }
 
-const StatCard = ({ icon, label, value }: { icon: React.ReactNode, label: string, value: string | number }) => (
+const StatCard = ({ icon, label, value, children }: { icon: React.ReactNode, label: string, value?: string | number, children?: React.ReactNode }) => (
   <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex items-center">
     <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/50 mr-4">
       {icon}
     </div>
-    <div>
+    <div className="flex-1">
       <p className="text-sm text-gray-600 dark:text-gray-400">{label}</p>
-      <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+      {value && <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>}
+      {children}
     </div>
   </div>
 );
@@ -93,9 +94,10 @@ const ChatAnalysis: React.FC = () => {
         />
         <StatCard 
           icon={getSentimentIcon(data.averageSentiment)} 
-          label="Prům. sentiment" 
-          value={data.averageSentiment.toFixed(2)} 
-        />
+          label="Prům. sentiment"
+        >
+          <p className="text-2xl font-bold text-gray-900 dark:text-white">{data.averageSentiment.toFixed(2)}</p>
+        </StatCard>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2 flex items-center">

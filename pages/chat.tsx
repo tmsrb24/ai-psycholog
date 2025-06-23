@@ -69,6 +69,12 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   });
 
   useEffect(() => {
+    if (authStatus === "authenticated") {
+      axios.post('/api/user/track-session');
+    }
+  }, [authStatus]);
+
+  useEffect(() => {
     if (authStatus === "unauthenticated") {
       router.push('/auth/login?callbackUrl=/chat');
     }

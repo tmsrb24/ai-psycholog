@@ -29,10 +29,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .in('session_id', sessionIds);
 
     if (messagesError) throw messagesError;
+    
+    const { data: user, error: userError } = await supabaseAdmin
+      .from('user_profiles')
+      .select('session_count')
+      .eq('id', userId)
+      .single();
+
+    if (userError) throw userError;
 
     const messageCount = messages.length;
     const wordCount = messages.reduce((acc: number, msg: { content: string }) => acc + msg.content.split(' ').length, 0);
-    const sessionCount = sessions.length;
+    const sessionCount = user.session_count;
     const averageSessionLength = sessionCount > 0 ? Math.round(messageCount / sessionCount) : 0;
 
     // This is a placeholder for a more sophisticated topic analysis
@@ -44,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const sentiment = new (require('sentiment'))();
     const sentimentScores = messages.map(msg => sentiment.analyze(msg.content).score);
-    const averageSentiment = sentimentScores.reduce((a, b) => a + b, 0) / sentimentScores.length;
+    const averageSentiment = sentimentScores.length > 0 ? sentimentScores.reduce((a, b) => a + b, 0) / sentimentScores.length : 0;
 
     res.status(200).json({
       messageCount,
