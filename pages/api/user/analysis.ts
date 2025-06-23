@@ -14,19 +14,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const supabaseAdmin = getSupabaseAdmin();
 
   try {
+    const { data: sessions, error: sessionsError } = await supabaseAdmin
+      .from('chat_sessions')
+      .select('id')
+      .eq('user_id', userId);
+
+    if (sessionsError) throw sessionsError;
+
+    const sessionIds = sessions.map(s => s.id);
+
     const { data: messages, error: messagesError } = await supabaseAdmin
       .from('chat_messages')
       .select('content, timestamp')
-      .eq('user_id', userId);
+      .in('session_id', sessionIds);
 
     if (messagesError) throw messagesError;
-
-    const { data: sessions, error: sessionsError } = await supabaseAdmin
-        .from('chat_sessions')
-        .select('id')
-        .eq('user_id', userId);
-
-    if (sessionsError) throw sessionsError;
 
     const messageCount = messages.length;
     const wordCount = messages.reduce((acc: number, msg: { content: string }) => acc + msg.content.split(' ').length, 0);
