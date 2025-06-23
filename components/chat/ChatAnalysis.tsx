@@ -67,8 +67,8 @@ const ChatAnalysis: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 p-1">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-4 p-2">
+      <div className="grid grid-cols-2 gap-2">
         <StatCard 
           icon={<FaHashtag className="text-blue-500" />} 
           label="Počet zpráv" 
@@ -91,18 +91,18 @@ const ChatAnalysis: React.FC = () => {
         />
       </div>
       <div>
-        <h3 className="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2 flex items-center">
+        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2 flex items-center">
             <FaBrain className="mr-2 text-purple-500"/>
             Nejčastější témata
         </h3>
         {data.commonTopics.length > 0 ? (
-            <ul className="space-y-2">
+            <div className="flex flex-wrap gap-2">
             {data.commonTopics.map(topic => (
-                <li key={topic.topic} className="text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 p-2 rounded-md">
-                {topic.topic} ({topic.count} zmínky)
-                </li>
+                <div key={topic.topic} className="text-xs text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                {topic.topic} ({topic.count})
+                </div>
             ))}
-            </ul>
+            </div>
         ) : (
             <p className="text-sm text-gray-500 dark:text-gray-400">Zatím nebyly identifikovány žádné hlavní témata.</p>
         )}
