@@ -74,8 +74,8 @@ const ChatAnalysis: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6 p-4">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="space-y-4 p-2">
+      <div className="grid grid-cols-2 gap-2">
         <StatCard 
           icon={<FaHashtag className="text-blue-500" />} 
           label="Počet zpráv" 
@@ -92,23 +92,10 @@ const ChatAnalysis: React.FC = () => {
           value={data.sessionCount} 
         />
         <StatCard 
-          icon={<FaChartBar className="text-red-500" />} 
-          label="Prům. délka" 
-          value={`${data.averageSessionLength} zpráv`} 
+          icon={getSentimentIcon(data.averageSentiment)} 
+          label="Prům. sentiment" 
+          value={data.averageSentiment.toFixed(2)} 
         />
-      </div>
-      <div>
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
-          Průměrný sentiment
-        </h3>
-        <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg flex items-center">
-          <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/50 mr-4">
-            {getSentimentIcon(data.averageSentiment)}
-          </div>
-          <div>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{data.averageSentiment.toFixed(2)}</p>
-          </div>
-        </div>
       </div>
       <div>
         <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2 flex items-center">
