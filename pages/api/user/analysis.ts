@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const { data: messages, error: messagesError } = await supabaseAdmin
       .from('chat_messages')
-      .select('content, created_at')
+      .select('content, timestamp')
       .eq('user_id', userId);
 
     if (messagesError) throw messagesError;
