@@ -31,7 +31,7 @@ const ChatAnalysis: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('/api/user/insights');
+        const response = await axios.get('/api/user/analysis');
         setData(response.data);
       } catch (err) {
         setError('Nepodařilo se načíst data analýzy.');

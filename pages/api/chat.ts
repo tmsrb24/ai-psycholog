@@ -47,6 +47,29 @@ const PERSONALITY_PROMPTS: Record<PersonalityKey, string> = {
 
 const CORE_INSTRUCTIONS = "Jsi AI Psycholog, špičkový český psychologický asistent. Tvým hlavním úkolem je poskytovat textovou psychologickou podporu, vést uživatele k zamyšlení a pomáhat jim lépe porozumět jejich pocitům a situacím. Vžij se plně do této role. Tvůj celkový tón musí být vždy přátelský a lidský, ale zároveň si udržuj profesionální úroveň. Odpovídej klidně, empaticky a výhradně česky. Nikdy nediagnostikuj ani nepředepisuj léčbu. Udržuj konverzaci relevantní k psychologickým tématům, osobnímu rozvoji a zvládání životních situací. Za žádných okolností neodhaluj, že jsi umělá inteligence, jazykový model nebo program. Nemluv o svém tréninku, programování ani o společnosti, která tě vytvořila. Striktně se drž své role psychologického asistenta.";
 
+function constructSystemPrompt(metadata: any): string {
+  let systemPromptContent = CORE_INSTRUCTIONS;
+  if (metadata) {
+    const meta = metadata as any;
+    let specificInstructions = "";
+    if (meta.assistantGender) specificInstructions += ` Jsi ${meta.assistantGender === 'male' ? 'muž' : 'žena'}.`;
+    if (meta.assistantName) {
+      specificInstructions += ` Tvé jméno je ${meta.assistantName}. Používej toto jméno, když mluvíš o sobě nebo když se tě na něj někdo zeptá.`;
+    }
+    
+    const personalityKey = meta.personality as PersonalityKey;
+    specificInstructions += ` ${PERSONALITY_PROMPTS[personalityKey] || PERSONALITY_PROMPTS['neutral']}`;
+
+    const topicKey = meta.topic as TopicKey;
+    specificInstructions += ` ${TOPIC_PROMPTS[topicKey] || TOPIC_PROMPTS['general']}`;
+    
+    if (meta.responseLength) specificInstructions += ` Preferuješ odpovědi, které jsou spíše ${meta.responseLength === 'short' ? 'krátké a výstižné' : meta.responseLength === 'medium' ? 'středně dlouhé a vyvážené' : 'delší, detailnější a propracovanější'}.`;
+    
+    systemPromptContent = CORE_INSTRUCTIONS + specificInstructions;
+  }
+  return systemPromptContent;
+}
+
 type ChatHistoryResponse = { sessionId: string | null; messages: Message[] } | { error: string };
 
 export default async function handler(
@@ -79,26 +102,7 @@ export default async function handler(
         throw lastSessionError;
       }
       
-      let systemPromptContent = CORE_INSTRUCTIONS; 
-
-      if (lastSession?.metadata) {
-        const meta = lastSession.metadata as any;
-        let specificInstructions = "";
-        if (meta.assistantGender) specificInstructions += ` Jsi ${meta.assistantGender === 'male' ? 'muž' : 'žena'}.`;
-        if (meta.assistantName) {
-          specificInstructions += ` Tvé jméno je ${meta.assistantName}. Používej toto jméno, když mluvíš o sobě nebo když se tě na něj někdo zeptá.`;
-        }
-        
-        const personalityKey = meta.personality as PersonalityKey;
-        specificInstructions += ` ${PERSONALITY_PROMPTS[personalityKey] || PERSONALITY_PROMPTS['neutral']}`;
-
-        const topicKey = meta.topic as TopicKey;
-        specificInstructions += ` ${TOPIC_PROMPTS[topicKey] || TOPIC_PROMPTS['general']}`;
-        
-        if (meta.responseLength) specificInstructions += ` Preferuješ odpovědi, které jsou spíše ${meta.responseLength === 'short' ? 'krátké a výstižné' : meta.responseLength === 'medium' ? 'středně dlouhé a vyvážené' : 'delší, detailnější a propracovanější'}.`;
-        
-        systemPromptContent = CORE_INSTRUCTIONS + specificInstructions;
-      }
+      const systemPromptContent = constructSystemPrompt(lastSession?.metadata);
 
 
       if (lastSession) {
@@ -246,6 +250,14 @@ export default async function handler(
         await saveCrisisMessage(supabaseAdmin, currentSessionId, crisisResponseContent);
         return res.status(200).json({ role: 'assistant', content: crisisResponseContent, isCrisis: true, sessionId: currentSessionId });
       }
+
+      const { data: session, error: sessionError } = await supabaseAdmin
+        .from('chat_sessions')
+        .select('metadata')
+        .eq('id', currentSessionId)
+        .single();
+
+      if (sessionError) throw sessionError;
 
       const { content, estimatedReadingTime } = await getGeminiResponse(
         messages,
