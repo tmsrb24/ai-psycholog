@@ -4,6 +4,6 @@
       "path": "/api/warm-rag?secret=${CRON_SECRET}",
       "schedule": "0 5 * * *"
     },
-    { "path": "/api/crons/weekly-summary", "schedule": "0 8 * * MON" }
+    { "path": "/api/crons/weekly-summary", "schedule": "0 8 * * 1" }
   ]
 }
