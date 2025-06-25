@@ -3,11 +3,8 @@ import { useSession, signOut } from 'next-auth/react'; // Added signOut
 import { useRouter } from 'next/router';
 import Layout from '../components/layouts/Layout';
 import Image from 'next/image';
-import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog, FaSpinner, FaChartLine } from 'react-icons/fa'; // Added FaSpinner
+import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog, FaSpinner } from 'react-icons/fa'; // Added FaSpinner
 import { useTranslation } from 'next-i18next';
-import { MoodChart } from '../components/mood/MoodChart';
-import { MoodCheck } from '../components/mood/MoodCheck';
-import { useQuery } from '@tanstack/react-query';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
@@ -25,12 +22,6 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false); // New state for delete
   const [message, setMessage] = useState({ type: '', text: '' });
-
-  const { data: moodData, refetch: refetchMoodData } = useQuery({
-    queryKey: ['moodData'],
-    queryFn: () => fetch('/api/mood?range=30').then(res => res.json()),
-    enabled: status === 'authenticated',
-  });
 
   useEffect(() => {
     if (!loading && !session) {
@@ -234,22 +225,6 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
-          <div className="p-6 md:p-8">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
-              <FaChartLine className="mr-3 text-blue-500" />
-              {t('mood.title', 'Nálada')}
-            </h2>
-            <div className="mb-6">
-              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
-              <MoodCheck todayScore={moodData?.find((d: any) => new Date(d.log_date).toDateString() === new Date().toDateString())?.score} refetch={refetchMoodData} />
-            </div>
-            <div className="aspect-[2/1]">
-              <MoodChart data={moodData || []} />
-            </div>
           </div>
         </div>
 
