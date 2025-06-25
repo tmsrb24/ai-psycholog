@@ -14,6 +14,7 @@ import ChatInput from '../components/chat/ChatInput';
 import LoadingIndicator from '../components/ui/LoadingIndicator';
 import CrisisNotice from '../components/ui/CrisisNotice';
 import ChatSettingsModal from '../components/chat/ChatSettingsModal';
+import { MoodCheck } from '../components/mood/MoodCheck';
 import { Message } from '../types/chat';
 import { UserProfileData } from '../types/user';
 import { useTranslation } from 'next-i18next';
@@ -65,6 +66,12 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   const { data: chatHistoryData, isLoading: isHistoryLoading } = useQuery({
     queryKey: ['chatHistory'],
     queryFn: () => fetch('/api/chat').then(res => res.json()),
+    enabled: authStatus === 'authenticated',
+  });
+
+  const { data: moodData, refetch: refetchMoodData } = useQuery({
+    queryKey: ['moodData'],
+    queryFn: () => fetch('/api/mood?range=1').then(res => res.json()),
     enabled: authStatus === 'authenticated',
   });
 
@@ -346,6 +353,13 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
             )}
           </div>
           
+          {moodData && moodData.length === 0 && (
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mb-4">
+              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
+              <MoodCheck todayScore={undefined} refetch={refetchMoodData} />
+            </div>
+          )}
+
           <ChatInput 
             onSendMessage={sendMessage}
             isLoading={loading} 
