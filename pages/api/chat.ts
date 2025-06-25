@@ -259,6 +259,16 @@ export default async function handler(
 
       if (sessionError) throw sessionError;
 
+      console.log('---GEMINI REQUEST---');
+      console.log(JSON.stringify({
+        messages,
+        topicKey,
+        personalityKey,
+        responseLength,
+        userProfile: body.userProfile,
+        userMessageContent
+      }, null, 2));
+
       const { content, estimatedReadingTime } = await getGeminiResponse(
         messages,
         topicKey,
@@ -267,6 +277,9 @@ export default async function handler(
         body.userProfile,
         userMessageContent
       );
+
+      console.log('---GEMINI RESPONSE---');
+      console.log(JSON.stringify({ content, estimatedReadingTime }, null, 2));
 
       await supabaseAdmin
         .from('chat_messages')
