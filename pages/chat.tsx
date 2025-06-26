@@ -263,28 +263,95 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   
   return (
     <Layout title={t('pageTitle')} description={t('pageDescription')}>
-      <div className="max-w-7xl mx-auto p-4 flex flex-col md:flex-row min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)]">
-        {/* Sidebar */}
-        <div className="w-full md:w-72 md:mr-6 mb-4 md:mb-0 flex-shrink-0">
-          <div className="space-y-4">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-              <div className="grid grid-cols-2 gap-3">
-                {sidebarItems.map(item => (
-                  <button 
-                    key={item.labelKey}
-                    onClick={item.action}
-                    disabled={item.disabled}
-                    className={`p-3 rounded-lg text-sm font-medium flex flex-col items-center justify-center space-y-1 transition-all duration-150 ease-in-out
-                                ${item.active ? 'bg-blue-500 text-white shadow-md scale-105' : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200'}
-                                ${item.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
-                    title={t(item.labelKey)}
-                  >
-                    <item.icon size={20} className={item.active ? 'text-white' : 'text-yellow-500 dark:text-yellow-400'} />
-                    <span>{t(item.labelKey)}</span>
-                  </button>
-                ))}
-              </div>
+      <div className="drawer lg:drawer-open">
+        <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content flex flex-col items-center justify-center">
+          {/* Main Chat Area */}
+          <div className="flex-grow flex flex-col w-full">
+            {/* Message Display Area */}
+            <div
+              className="bg-gray-50 dark:bg-slate-800/50 p-4 sm:p-6 flex-grow overflow-y-auto mb-4 max-h-[80vh]"
+              ref={chatContainerRef}
+            >
+              {(isProfileLoading || isHistoryLoading) ? (
+                   <div className="flex justify-center items-center h-full">
+                     <FaSpinner className="animate-spin text-blue-500 text-3xl" />
+                     <p className="ml-2 text-gray-500 dark:text-gray-400">{t('loadingChatHistory', 'Načítám historii chatu...')}</p>
+                   </div>
+              ) : messages.filter((msg: Message) => msg.role !== 'system').map((message, index, arr) => {
+                const prevMessage = arr[index - 1];
+                const isSameSpeakerAsPrevious = prevMessage ? prevMessage.role === message.role : false;
+
+                let showDateSeparator = false;
+                const currentMessageTimestamp = message.timestamp ? new Date(message.timestamp) : new Date(0);
+                
+                if (index === 0) {
+                  showDateSeparator = true;
+                } else if (prevMessage) {
+                  const prevMessageTimestamp = prevMessage.timestamp ? new Date(prevMessage.timestamp) : new Date(0);
+                  if (currentMessageTimestamp.toDateString() !== prevMessageTimestamp.toDateString()) {
+                      showDateSeparator = true;
+                  }
+                }
+                
+                const messageKey = message.id || index.toString();
+
+                return (
+                  <React.Fragment key={`${messageKey}-fragment`}>
+                    {showDateSeparator && (
+                      <div className="text-center my-4">
+                        <span className="text-xs text-gray-500 dark:text-gray-400 bg-white/60 dark:bg-slate-700/50 px-2 py-1 rounded-full">
+                          {formatDateSeparator(currentMessageTimestamp)}
+                        </span>
+                      </div>
+                    )}
+                    <ChatMessage 
+                      key={messageKey}
+                      message={message}
+                      userAvatarUrl={session?.user?.image}
+                      isSameSpeakerAsPrevious={isSameSpeakerAsPrevious}
+                      isSpeaking={isSpeaking && index === arr.length - 1 && message.role === 'assistant'}
+                      onSpeakText={speakText}
+                      onStopSpeaking={stopSpeaking}
+                    />
+                  </React.Fragment>
+                );
+              })}
+              {loading && (
+                <LoadingIndicator
+                  isVisible={loading}
+                  estimatedTime={loadingEstimatedTime}
+                />
+              )}
             </div>
+            
+            {moodData && moodData.length === 0 && (
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mb-4">
+                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
+                <MoodCheck todayScore={undefined} refetch={refetchMoodData} />
+              </div>
+            )}
+
+            <ChatInput 
+              onSendMessage={sendMessage}
+              isLoading={loading} 
+              placeholder={t('chatInputPlaceholder', 'Napište zprávu...')}
+            />
+            
+            <CrisisNotice />
+          </div>
+        </div> 
+        <div className="drawer-side">
+          <label htmlFor="my-drawer-2" className="drawer-overlay"></label> 
+          <ul className="menu p-4 w-80 bg-base-100 text-base-content">
+            {sidebarItems.map(item => (
+              <li key={item.labelKey}>
+                <a onClick={item.action} className={item.active ? 'active' : ''}>
+                  <item.icon />
+                  {t(item.labelKey)}
+                </a>
+              </li>
+            ))}
             <Suspense fallback={<SidebarFallback />}>
               {showAnalysis && (
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
@@ -299,104 +366,9 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mt-4 aspect-[2/1]">
               <MoodChart data={moodData || []} />
             </div>
-          </div>
-        </div>
-        
-        {/* Main Chat Area */}
-        <div className="flex-grow flex flex-col">
-          {/* Message Display Area */}
-          <div
-            className="bg-gray-50 dark:bg-slate-800/50 rounded-xl shadow-inner p-4 sm:p-6 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]"
-            ref={chatContainerRef}
-          >
-            {(isProfileLoading || isHistoryLoading) ? (
-                 <div className="flex justify-center items-center h-full">
-                   <FaSpinner className="animate-spin text-blue-500 text-3xl" />
-                   <p className="ml-2 text-gray-500 dark:text-gray-400">{t('loadingChatHistory', 'Načítám historii chatu...')}</p>
-                 </div>
-            ) : messages.filter((msg: Message) => msg.role !== 'system').map((message, index, arr) => {
-              const prevMessage = arr[index - 1];
-              const isSameSpeakerAsPrevious = prevMessage ? prevMessage.role === message.role : false;
-
-              let showDateSeparator = false;
-              const currentMessageTimestamp = message.timestamp ? new Date(message.timestamp) : new Date(0);
-              
-              if (index === 0) {
-                showDateSeparator = true;
-              } else if (prevMessage) {
-                const prevMessageTimestamp = prevMessage.timestamp ? new Date(prevMessage.timestamp) : new Date(0);
-                if (currentMessageTimestamp.toDateString() !== prevMessageTimestamp.toDateString()) {
-                    showDateSeparator = true;
-                }
-              }
-              
-              const messageKey = message.id || index.toString();
-
-              return (
-                <React.Fragment key={`${messageKey}-fragment`}>
-                  {showDateSeparator && (
-                    <div className="text-center my-4">
-                      <span className="text-xs text-gray-500 dark:text-gray-400 bg-white/60 dark:bg-slate-700/50 px-2 py-1 rounded-full">
-                        {formatDateSeparator(currentMessageTimestamp)}
-                      </span>
-                    </div>
-                  )}
-                  <ChatMessage 
-                    key={messageKey}
-                    message={message}
-                    userAvatarUrl={session?.user?.image}
-                    isSameSpeakerAsPrevious={isSameSpeakerAsPrevious}
-                    isSpeaking={isSpeaking && index === arr.length - 1 && message.role === 'assistant'}
-                    onSpeakText={speakText}
-                    onStopSpeaking={stopSpeaking}
-                  />
-                </React.Fragment>
-              );
-            })}
-            {loading && (
-              <LoadingIndicator
-                isVisible={loading}
-                estimatedTime={loadingEstimatedTime}
-              />
-            )}
-          </div>
-          
-          {moodData && moodData.length === 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mb-4">
-              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
-              <MoodCheck todayScore={undefined} refetch={refetchMoodData} />
-            </div>
-          )}
-
-          <ChatInput 
-            onSendMessage={sendMessage}
-            isLoading={loading} 
-            placeholder={t('chatInputPlaceholder', 'Napište zprávu...')}
-          />
-          
-          <CrisisNotice />
+          </ul>
         </div>
       </div>
-
-      <ChatSettingsModal
-        isOpen={showSettingsModal}
-        onClose={() => setShowSettingsModal(false)}
-        selectedTopic={selectedTopic}
-        setSelectedTopic={setSelectedTopic}
-        TOPICS={TOPICS} 
-        selectedPersonality={selectedPersonality}
-        setSelectedPersonality={setSelectedPersonality}
-        PERSONALITIES={PERSONALITIES} 
-        responseLength={responseLength}
-        setResponseLength={setResponseLength}
-        assistantGender={assistantGender}
-        setAssistantGender={setAssistantGender}
-        assistantName={assistantName}
-        setAssistantName={setAssistantName}
-        saveHistory={saveHistory}
-        setSaveHistory={setSaveHistory}
-        onResetSettings={handleResetSettings}
-      />
     </Layout>
   );
 };
