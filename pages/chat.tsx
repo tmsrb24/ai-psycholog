@@ -267,16 +267,15 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col items-center justify-center">
           {/* Main Chat Area */}
-          <div className="flex-grow flex flex-col w-full">
+          <div className="flex-grow flex flex-col w-full p-4">
             {/* Message Display Area */}
             <div
-              className="bg-gray-50 dark:bg-slate-800/50 p-4 sm:p-6 flex-grow overflow-y-auto mb-4 max-h-[80vh]"
+              className="bg-base-200 p-4 sm:p-6 flex-grow overflow-y-auto mb-4 rounded-box"
               ref={chatContainerRef}
             >
               {(isProfileLoading || isHistoryLoading) ? (
                    <div className="flex justify-center items-center h-full">
-                     <FaSpinner className="animate-spin text-blue-500 text-3xl" />
-                     <p className="ml-2 text-gray-500 dark:text-gray-400">{t('loadingChatHistory', 'Načítám historii chatu...')}</p>
+                     <span className="loading loading-spinner loading-lg"></span>
                    </div>
               ) : messages.filter((msg: Message) => msg.role !== 'system').map((message, index, arr) => {
                 const prevMessage = arr[index - 1];
@@ -300,7 +299,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                   <React.Fragment key={`${messageKey}-fragment`}>
                     {showDateSeparator && (
                       <div className="text-center my-4">
-                        <span className="text-xs text-gray-500 dark:text-gray-400 bg-white/60 dark:bg-slate-700/50 px-2 py-1 rounded-full">
+                        <span className="badge badge-ghost">
                           {formatDateSeparator(currentMessageTimestamp)}
                         </span>
                       </div>
@@ -326,8 +325,8 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
             </div>
             
             {moodData && moodData.length === 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mb-4">
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
+              <div className="card bg-base-100 shadow-xl p-4 mb-4">
+                <h3 className="card-title">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
                 <MoodCheck todayScore={undefined} refetch={refetchMoodData} />
               </div>
             )}
@@ -354,16 +353,16 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
             ))}
             <Suspense fallback={<SidebarFallback />}>
               {showAnalysis && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                <div className="card bg-base-100 shadow-xl p-4">
                   <ChatAnalysis />
                 </div>
               )}
             </Suspense>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mt-4">
-              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
+            <div className="card bg-base-100 shadow-xl p-4 mt-4">
+              <h3 className="card-title">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
               <MoodCheck todayScore={moodData?.find((d: any) => new Date(d.log_date).toDateString() === new Date().toDateString())?.score} refetch={refetchMoodData} />
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mt-4 aspect-[2/1]">
+            <div className="card bg-base-100 shadow-xl p-4 mt-4 aspect-[2/1]">
               <MoodChart data={moodData || []} />
             </div>
           </ul>
