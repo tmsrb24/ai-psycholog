@@ -63,7 +63,7 @@
 
 .hero-animated-gradient {
   background-size: 200% 200%;
-  animation: gradient-animation 10s ease infinite;
+  animation: gradient-animation 5s ease infinite;
 }
 
 @keyframes gradient-animation {
