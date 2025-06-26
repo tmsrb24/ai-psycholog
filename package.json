@@ -8,10 +8,8 @@
     "seed": "node -r ts-node/register -r dotenv/config scripts/seed-articles.ts"
   },
   "dependencies": {
-    "@auth/core": "^0.39.1",
+    "@auth/core": "^0.34.2",
     "@sendgrid/mail": "^8.1.5",
-    "@sentry/nextjs": "^9.19.0",
-    "@stripe/stripe-js": "^7.3.0",
     "@supabase/supabase-js": "^2.49.6",
     "@tanstack/react-query": "^5.51.1",
     "@types/bcryptjs": "^3.0.0",
@@ -36,8 +34,7 @@
     "react-icons": "^5.5.0",
     "react-markdown": "^8.0.7",
     "resend": "^4.5.1",
-    "sentiment": "^5.0.2",
-    "stripe": "^18.1.0"
+    "sentiment": "^5.0.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.9",
