@@ -21,6 +21,8 @@
     "axios": "^1.6.7",
     "bcryptjs": "^3.0.2",
     "chart.js": "^4.5.0",
+    "flowbite": "^3.1.2",
+    "flowbite-react": "^0.11.8",
     "framer-motion": "^10.16.4",
     "html2canvas": "^1.4.1",
     "i18next": "^25.2.1",
@@ -47,8 +49,6 @@
     "@types/sentiment": "^5.0.1",
     "autoprefixer": "^10.4.14",
     "daisyui": "^5.0.43",
-    "flowbite": "^3.1.2",
-    "flowbite-react": "^0.11.8",
     "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "typescript": "^5.0.0"
