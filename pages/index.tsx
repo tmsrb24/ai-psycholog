@@ -8,7 +8,6 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
-import { Card } from 'flowbite-react';
 
 interface Feature {
   text: string;
@@ -227,23 +226,27 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </div>
             <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
                 {plans.map((plan) => (
-                  <Card key={plan.name}>
-                    <h3 className="mb-4 text-2xl font-semibold">{plan.name}</h3>
-                    <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">{plan.description}</p>
-                    <div className="flex justify-center items-baseline my-8">
-                        <span className="mr-2 text-5xl font-extrabold">{plan.price}</span>
-                        <span className="text-gray-500 dark:text-gray-400">{plan.priceSuffix}</span>
+                  <div key={plan.name} className={`card shadow-xl ${plan.isRecommended ? 'border-2 border-primary' : 'border border-gray-200 dark:border-gray-700'}`}>
+                    <div className="card-body">
+                      <h3 className="card-title text-2xl font-semibold">{plan.name}</h3>
+                      <p className="text-gray-500 sm:text-lg dark:text-gray-400">{plan.description}</p>
+                      <div className="flex justify-center items-baseline my-8">
+                          <span className="mr-2 text-5xl font-extrabold">{plan.price}</span>
+                          <span className="text-gray-500 dark:text-gray-400">{plan.priceSuffix}</span>
+                      </div>
+                      <ul role="list" className="mb-8 space-y-4 text-left">
+                        {plan.features.map((feature, index) => (
+                          <li key={index} className="flex items-center space-x-3">
+                            <svg className={`flex-shrink-0 w-5 h-5 ${feature.included ? 'text-green-500' : 'text-gray-400'} dark:${feature.included ? 'text-green-400' : 'text-gray-500'}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path></svg>
+                            <span>{feature.text}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="card-actions">
+                        <Link href={plan.buttonLink} className="btn btn-primary w-full">{plan.buttonText}</Link>
+                      </div>
                     </div>
-                    <ul role="list" className="mb-8 space-y-4 text-left">
-                      {plan.features.map((feature, index) => (
-                        <li key={index} className="flex items-center space-x-3">
-                          <svg className={`flex-shrink-0 w-5 h-5 ${feature.included ? 'text-green-500' : 'text-gray-400'} dark:${feature.included ? 'text-green-400' : 'text-gray-500'}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-                          <span>{feature.text}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link href={plan.buttonLink} className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">{plan.buttonText}</Link>
-                  </Card>
+                  </div>
                 ))}
             </div>
         </div>
