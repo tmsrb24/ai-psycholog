@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
+import { Card } from 'flowbite-react';
 
 interface Feature {
   text: string;
@@ -167,337 +168,96 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <Layout>
-      <section className="relative bg-hero-gradient-dark text-white py-20 overflow-hidden">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col md:flex-row items-center">
-            <motion.div 
-              className="md:w-1/2 mb-10 md:mb-0 text-center md:text-left"
-              variants={heroTextContainerVariants}
-              initial="hidden"
-              animate="visible"
-            >
-              <motion.h1 
-                variants={heroTextItemVariants}
-                className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-bold mb-4"
-              >
-                {t('hero.titleLine1', 'Psychologická podpora')} {t('hero.titleLine2', 's pokročilou AI')}
-              </motion.h1>
-              <motion.p 
-                variants={heroTextItemVariants}
-                className="text-lg sm:text-xl mb-8 text-white/85"
-              >
-                {t('hero.subtitle', 'Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.')}
-              </motion.p>
-              <motion.div 
-                variants={heroTextItemVariants}
-                className="flex flex-col sm:flex-row gap-4"
-              >
-                <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform">
-                  {tCommon('buttons.tryForFree', 'Vyzkoušet zdarma')}
+      <section className="bg-white dark:bg-gray-900">
+        <div className="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
+            <div className="mr-auto place-self-center lg:col-span-7">
+                <h1 className="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">{t('hero.titleLine1', 'Psychologická podpora')} {t('hero.titleLine2', 's pokročilou AI')}</h1>
+                <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">{t('hero.subtitle', 'Dostupná kdykoliv a kdekoliv. Získejte okamžitou podporu pro vaši psychickou pohodu.')}</p>
+                <Link href="/chat" className="inline-flex items-center justify-center px-5 py-3 mr-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                    {tCommon('buttons.tryForFree', 'Vyzkoušet zdarma')}
+                    <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                 </Link>
-                <Link href="/pricing" className="btn bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3 px-6 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform">
-                  {tCommon('buttons.pricing', 'Ceník')}
-                </Link>
-              </motion.div>
-            </motion.div>
-            <div className="md:w-1/2 flex justify-center md:justify-end md:pr-8 lg:pr-0">
-              <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[26rem] md:h-[26rem]">
-                <div className="absolute inset-0 bg-blue-400/10 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
-                <div className="absolute inset-3 sm:inset-5 md:inset-6 bg-blue-300/10 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-                <div className="absolute inset-6 sm:inset-10 md:inset-12 bg-blue-200/10 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
-                <div className="absolute inset-0 flex items-center justify-center z-10 p-8 sm:p-10 md:p-12 drop-shadow-glow">
-                  <Image 
-                    src="/images/hero-avatar.png" 
-                    alt="AI Psycholog Avatar" 
-                    width={280} 
-                    height={280} 
-                    className="object-contain w-full h-full" 
-                    priority 
-                    sizes="(max-width: 640px) 256px, (max-width: 768px) 320px, 416px"
-                  />
-                </div>
-              </div>
+                <Link href="/pricing" className="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                    {tCommon('buttons.pricing', 'Ceník')}
+                </Link> 
             </div>
-          </div>
+            <div className="hidden lg:mt-0 lg:col-span-5 lg:flex">
+                <Image src="/images/hero-avatar.png" alt="mockup" width={500} height={500} />
+            </div>                
         </div>
       </section>
 
-      <motion.section 
-        className="py-12 sm:py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4">{t('features.title', 'Proč AI Psycholog?')}</h2>
-            <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              {t('features.subtitleLine1', 'Malé rozhovory, které mohou změnit hodně.')}<br />
-              {t('features.subtitleLine2', 'V prostoru, kde vás nikdo nesoudí a kde můžete mluvit tak, jak to právě cítíte.')}<br />
-              {t('features.subtitleLine3', 'Zastavte se. Popovídejte si. Ulevte si.')}
-            </p>
-          </div>
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            variants={featureContainerVariants}
-          >
-            <motion.div 
-              variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
-                <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('features.cards.0.title', 'Okamžitá dostupnost')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('features.cards.0.text', 'Žádné čekání na termín. AI Psycholog je k dispozici 24/7, kdykoliv potřebujete podporu.')}
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
-                <FaLock className="text-blue-600 dark:text-blue-300" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('features.cards.1.title', 'Naprostá diskrétnost')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('features.cards.1.text', 'Vaše konverzace jsou soukromé a bezpečné. Žádné sdílení dat s třetími stranami.')}
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
-                <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('features.cards.2.title', 'Sledování pokroku')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('features.cards.2.text', 'Analýza nálady vám pomůže sledovat váš pokrok a motivovat vás.')}
-              </p>
-            </motion.div>
-          </motion.div>
-          <div className="mt-8">
-            <motion.div 
-              variants={featureCardVariants} 
-              initial="hidden" 
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-md rounded-lg shadow-xl p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-blue-500 dark:border-blue-400 hover:scale-105 transform"
-            >
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mr-4">
-                  <FaRobot className="text-blue-600 dark:text-blue-300" size={24} />
+      <section className="bg-white dark:bg-gray-900">
+        <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+            <div className="max-w-screen-md mb-8 lg:mb-16">
+                <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">{t('features.title', 'Proč AI Psycholog?')}</h2>
+                <p className="text-gray-500 sm:text-xl dark:text-gray-400">{t('features.subtitleLine1', 'Malé rozhovory, které mohou změnit hodně.')}</p>
+            </div>
+            <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
+                <div>
+                    <div className="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                        <FaComments className="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300" />
+                    </div>
+                    <h3 className="mb-2 text-xl font-bold dark:text-white">{t('features.cards.0.title', 'Okamžitá dostupnost')}</h3>
+                    <p className="text-gray-500 dark:text-gray-400">{t('features.cards.0.text', 'Žádné čekání na termín. AI Psycholog je k dispozici 24/7, kdykoliv potřebujete podporu.')}</p>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{t('features.rag.title', 'RAG systém nové generace')}</h3>
-                <div className="ml-3 inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-1 rounded-full">
-                  {tCommon('tags.new', 'NOVINKA')}
+                <div>
+                    <div className="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                        <FaLock className="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300" />
+                    </div>
+                    <h3 className="mb-2 text-xl font-bold dark:text-white">{t('features.cards.1.title', 'Naprostá diskrétnost')}</h3>
+                    <p className="text-gray-500 dark:text-gray-400">{t('features.cards.1.text', 'Vaše konverzace jsou soukromé a bezpečné. Žádné sdílení dat s třetími stranami.')}</p>
                 </div>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('features.rag.text', 'Náš AI asistent využívá architekturu typu Retrieval-Augmented Generation (RAG) – propojuje jazykový model s vlastní odbornou psychologickou databází. Díky tomu poskytuje přesné, kontextově přizpůsobené odpovědi v reálném čase, které vycházejí z ověřených poznatků a vaší situace.')}
-              </p>
-            </motion.div>
-          </div>
+                <div>
+                    <div className="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                        <FaChartLine className="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300" />
+                    </div>
+                    <h3 className="mb-2 text-xl font-bold dark:text-white">{t('features.cards.2.title', 'Sledování pokroku')}</h3>
+                    <p className="text-gray-500 dark:text-gray-400">{t('features.cards.2.text', 'Analýza nálady vám pomůže sledovat váš pokrok a motivovat vás.')}</p>
+                </div>
+            </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section 
-        className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('testimonials.title', 'Názory odborníků')}</h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              {t('testimonials.subtitle', 'Co o Psychollog.cz říkají profesionálové z oboru psychologie a psychiatrie.')}
-            </p>
-          </div>
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            variants={featureContainerVariants}
-          >
-            {testimonials.map((testimonial, index) => (
-              <motion.div 
-                key={index} 
-                variants={featureCardVariants}
-                className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-              >
-                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-600">
-                  <Image 
-                    src={testimonial.avatar} 
-                    alt={t('testimonials.avatarAlt', { name: testimonial.name })} 
-                    layout="fill" 
-                    objectFit="cover" 
-                    className="rounded-full"
-                  />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">{testimonial.name}</h3>
-                <p className="text-sm text-blue-600 dark:text-blue-400 mb-3">{testimonial.specialization}</p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm italic">"{testimonial.quote}"</p>
-              </motion.div>
-            ))}
-          </motion.div>
-          <div className="mt-12 text-center">
-            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">{t('testimonials.uniqueServiceTitle', 'Proč je naše služba unikátní?')}</h3>
-            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-4xl mx-auto">
-            {t('testimonials.uniqueServiceText', 'Naše platforma Psychollog.cz je unikátní díky kombinaci pokročilé umělé inteligence, která čerpá z ověřených psychologických databází (PubMed Central, Open Psychology Journal, PsyArXiv), a vize spolupráce s odborníky z praxe. Tím zajišťujeme, že poskytovaná podpora je nejen okamžitě dostupná a diskrétní, ale také informačně hodnotná a založená na vědeckých poznatcích. Naším cílem je zpřístupnit kvalitní nástroje pro sebepoznání a duševní pohodu co nejširšímu okruhu lidí.')}
-            </p>
-          </div>
+      <section className="bg-white dark:bg-gray-900">
+        <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+            <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
+                <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">{t('pricingPreview.title', 'Dostupné cenové plány')}</h2>
+                <p className="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">{t('pricingPreview.subtitle', 'Vyberte si plán, který nejlépe vyhovuje vašim potřebám.')}</p>
+            </div>
+            <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
+                {plans.map((plan) => (
+                  <Card key={plan.name}>
+                    <h3 className="mb-4 text-2xl font-semibold">{plan.name}</h3>
+                    <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">{plan.description}</p>
+                    <div className="flex justify-center items-baseline my-8">
+                        <span className="mr-2 text-5xl font-extrabold">{plan.price}</span>
+                        <span className="text-gray-500 dark:text-gray-400">{plan.priceSuffix}</span>
+                    </div>
+                    <ul role="list" className="mb-8 space-y-4 text-left">
+                      {plan.features.map((feature, index) => (
+                        <li key={index} className="flex items-center space-x-3">
+                          <svg className={`flex-shrink-0 w-5 h-5 ${feature.included ? 'text-green-500' : 'text-gray-400'} dark:${feature.included ? 'text-green-400' : 'text-gray-500'}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                          <span>{feature.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link href={plan.buttonLink} className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900">{plan.buttonText}</Link>
+                  </Card>
+                ))}
+            </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section 
-        className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('howItWorks.title', 'Jak to funguje?')}</h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              {t('howItWorks.subtitle', 'Naše odpovědi nejsou náhodné. Každá zpráva prochází třístupňovým procesem pro zajištění bezpečnosti a relevance.')}
-            </p>
-          </div>
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            variants={featureContainerVariants}
-          >
-            <motion.div 
-              variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
-                <FaFileMedical className="text-blue-600 dark:text-blue-300" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('howItWorks.steps.0.title', 'Kontext z ověřených zdrojů')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('howItWorks.steps.0.text', 'Váš dotaz je automaticky obohacen o relevantní informace z odborné databáze PubMed, aby odpověď byla co nejpřesnější.')}
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
-                <FaUserShield className="text-blue-600 dark:text-blue-300" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('howItWorks.steps.1.title', 'Bezpečnostní neuronová síť')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('howItWorks.steps.1.text', 'Speciální "hlídací" neuronová síť kontroluje dotaz i odpověď, aby se předešlo škodlivým nebo nebezpečným radám.')}
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
-                <FaComments className="text-blue-600 dark:text-blue-300" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('howItWorks.steps.2.title', 'Generování odpovědi')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('howItWorks.steps.2.text', 'Teprve po těchto kontrolách je dotaz odeslán velkému jazykovému modelu, který vytvoří empatickou a kontextuálně vhodnou odpověď.')}
-              </p>
-            </motion.div>
-          </motion.div>
+      <section className="bg-white dark:bg-gray-900">
+        <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+            <div className="mx-auto max-w-screen-sm text-center">
+                <h2 className="mb-4 text-4xl tracking-tight font-extrabold leading-tight text-gray-900 dark:text-white">{t('cta.title', 'Začněte svou cestu k lepší psychické pohodě ještě dnes')}</h2>
+                <p className="mb-6 font-light text-gray-500 dark:text-gray-400 md:text-lg">{t('cta.subtitle', 'Vyzkoušejte AI Psychologa zdarma a objevte, jak vám může pomoci lépe porozumět vašim emocím a zvládat každodenní výzvy.')}</p>
+                <Link href="/chat" className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">{tCommon('buttons.startForFree', 'Začít zdarma')}</Link>
+            </div>
         </div>
-      </motion.section>
-
-      <motion.section 
-        className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('pricingPreview.title', 'Dostupné cenové plány')}</h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              {t('pricingPreview.subtitle', 'Vyberte si plán, který nejlépe vyhovuje vašim potřebám.')}
-            </p>
-          </div>
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start max-w-7xl mx-auto"
-            variants={featureContainerVariants}
-          >
-            {plans.map((plan) => (
-              <motion.div 
-                key={plan.name} 
-                variants={featureCardVariants}
-                className={`relative bg-white/60 dark:bg-slate-800/50 backdrop-blur-lg rounded-3xl p-8 shadow-lg border border-white/30 dark:border-slate-700 flex flex-col h-full transition-all duration-300 hover:shadow-2xl ${
-                  plan.isRecommended ? 'shadow-blue-500/20' : ''
-                }`}
-              >
-                {/* Header */}
-                <div className="flex-shrink-0">
-                  <h3 className={`text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${plan.borderColor}`}>{plan.name}</h3>
-                  <div className={`h-1 w-20 mt-2 mb-6 rounded-full bg-gradient-to-r ${plan.borderColor}`}></div>
-                  <p className="text-gray-600 dark:text-gray-400 min-h-[3rem]">{plan.description}</p>
-                </div>
-
-                {/* Price */}
-                <div className="my-8 flex-shrink-0">
-                  <span className="text-4xl font-extrabold text-gray-900 dark:text-white">{plan.price}</span>
-                  <span className="text-md text-gray-500 dark:text-gray-400 ml-1">{plan.priceSuffix}</span>
-                </div>
-
-                {/* Features */}
-                <ul className="space-y-4 flex-grow">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <div className="flex-shrink-0">
-                        {feature.included ? 
-                          <FaCheck className="text-green-500 h-5 w-5" />
-                          : <FaTimes className="text-red-500 h-5 w-5" />
-                        }
-                      </div>
-                      <p className={`ml-3 text-sm ${feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400 line-through'}`}>
-                        {feature.text}
-                        {feature.tag && (
-                          <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-blue-900/50 dark:text-blue-300">
-                            {feature.tag}
-                          </span>
-                        )}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Button */}
-                <div className="mt-8 pt-8 border-t border-gray-200 dark:border-slate-700 flex-shrink-0">
-                  <Link href={plan.buttonLink} className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-gradient-to-r ${plan.borderColor} hover:shadow-xl`}>
-                    {plan.buttonText}
-                  </Link>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </motion.section>
-
-      <motion.section 
-        className="py-16 bg-cta-gradient-light dark:bg-cta-gradient-dark text-white"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">{t('cta.title', 'Začněte svou cestu k lepší psychické pohodě ještě dnes')}</h2>
-          <p className="text-xl mb-8 max-w-3xl mx-auto">
-            {t('cta.subtitle', 'Vyzkoušejte AI Psychologa zdarma a objevte, jak vám může pomoci lépe porozumět vašim emocím a zvládat každodenní výzvy.')}
-          </p>
-          <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform text-lg">
-            {tCommon('buttons.startForFree', 'Začít zdarma')}
-          </Link>
-        </div>
-      </motion.section>
+      </section>
     </Layout>
   );
 };
