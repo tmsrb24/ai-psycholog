@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
+import { Card } from 'flowbite-react';
 
 interface Feature {
   text: string;
@@ -140,114 +141,68 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
 
   return (
     <Layout title={t('pageTitle', 'Ceník | AI Psycholog')} description={t('pageDescription', 'Cenové plány pro AI Psychologa - psychologickou podporu s umělou inteligencí.')}>
-      <div className="bg-hero-gradient-dark text-white py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('header.title', 'Cenové plány')}</h1>
-          <p className="text-xl max-w-3xl mx-auto">
-            {t('header.subtitle', 'Vyberte si plán, který nejlépe vyhovuje vašim potřebám.')}
-          </p>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {plans.map((plan) => (
-            <div 
-              key={plan.name} 
-              className={`relative bg-white/60 dark:bg-slate-800/50 backdrop-blur-lg rounded-3xl p-8 shadow-lg border border-white/30 dark:border-slate-700 flex flex-col h-full transition-all duration-300 hover:shadow-2xl ${
-                plan.isRecommended ? 'shadow-blue-500/20' : ''
-              }`}
-            >
-              {/* Header */}
-              <div className="flex-shrink-0">
-                <h3 className={`text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r ${plan.borderColor}`}>{plan.name}</h3>
-                <div className={`h-1 w-20 mt-2 mb-6 rounded-full bg-gradient-to-r ${plan.borderColor}`}></div>
-                <p className="text-gray-600 dark:text-gray-400 min-h-[3rem]">{plan.description}</p>
-              </div>
-
-              {/* Price */}
-              <div className="my-8 flex-shrink-0">
-                <span className="text-4xl font-extrabold text-gray-900 dark:text-white">{plan.price}</span>
-                <span className="text-md text-gray-500 dark:text-gray-400 ml-1">{plan.priceSuffix}</span>
-              </div>
-
-              {/* Features */}
-              <ul className="space-y-4 flex-grow">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-start">
-                    <div className="flex-shrink-0">
-                      {feature.included ? 
-                        <FaCheck className="text-green-500 h-5 w-5" />
-                        : <FaTimes className="text-red-500 h-5 w-5" />
-                      }
+      <section className="bg-white dark:bg-gray-900">
+        <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+            <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
+                <h2 className="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">{t('header.title', 'Cenové plány')}</h2>
+                <p className="mb-5 font-light text-gray-500 sm:text-xl dark:text-gray-400">{t('header.subtitle', 'Vyberte si plán, který nejlépe vyhovuje vašim potřebám.')}</p>
+            </div>
+            <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
+                {plans.map((plan) => (
+                  <Card key={plan.name}>
+                    <h3 className="mb-4 text-2xl font-semibold">{plan.name}</h3>
+                    <p className="font-light text-gray-500 sm:text-lg dark:text-gray-400">{plan.description}</p>
+                    <div className="flex justify-center items-baseline my-8">
+                        <span className="mr-2 text-5xl font-extrabold">{plan.price}</span>
+                        <span className="text-gray-500 dark:text-gray-400">{plan.priceSuffix}</span>
                     </div>
-                    <p className={`ml-3 text-sm ${feature.included ? 'text-gray-700 dark:text-gray-300' : 'text-gray-500 dark:text-gray-400 line-through'}`}>
-                      {feature.text}
-                      {feature.tag && (
-                        <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-0.5 rounded-full dark:bg-blue-900/50 dark:text-blue-300">
-                          {feature.tag}
-                        </span>
-                      )}
-                    </p>
-                  </li>
+                    <ul role="list" className="mb-8 space-y-4 text-left">
+                      {plan.features.map((feature, index) => (
+                        <li key={index} className="flex items-center space-x-3">
+                          <svg className={`flex-shrink-0 w-5 h-5 ${feature.included ? 'text-green-500' : 'text-gray-400'} dark:${feature.included ? 'text-green-400' : 'text-gray-500'}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                          <span>{feature.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <button 
+                      onClick={() => plan.buttonAction()}
+                      disabled={isLoading && selectedPlan === plan.planId}
+                      className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:ring-primary-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:text-white  dark:focus:ring-primary-900"
+                    >
+                      {isLoading && selectedPlan === plan.planId ? t('buttons.processing', 'Zpracování...') : plan.buttonText}
+                    </button>
+                  </Card>
                 ))}
-              </ul>
-              
-              {/* Button */}
-              <div className="mt-8 pt-8 border-t border-gray-200 dark:border-slate-700 flex-shrink-0">
-                <button 
-                  onClick={() => plan.buttonAction()}
-                  disabled={isLoading && selectedPlan === plan.planId}
-                  className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-gradient-to-r ${plan.borderColor} hover:shadow-xl`}
-                >
-                  {isLoading && selectedPlan === plan.planId ? (
-                    <span className="flex items-center justify-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      {t('buttons.processing', 'Zpracování...')}
-                    </span>
-                  ) : plan.buttonText}
-                </button>
+            </div>
+        </div>
+      </section>
+
+      <section className="bg-white dark:bg-gray-900">
+        <div className="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+            <div className="mx-auto max-w-screen-md text-center">
+                <h2 className="mb-4 text-3xl tracking-tight font-extrabold text-gray-900 dark:text-white">{t('faqTitle', 'Často kladené otázky')}</h2>
+            </div>
+            <div className="mx-auto max-w-screen-md">
+              <div id="accordion-flush" data-accordion="collapse" data-active-classes="bg-white dark:bg-gray-900 text-gray-900 dark:text-white" data-inactive-classes="text-gray-500 dark:text-gray-400">
+                {faqItems.map((faq, index) => (
+                  <div key={index}>
+                    <h2 id={`accordion-flush-heading-${index}`}>
+                      <button type="button" className="flex items-center justify-between w-full py-5 font-medium text-left text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400" data-accordion-target={`#accordion-flush-body-${index}`} aria-expanded="false" aria-controls={`accordion-flush-body-${index}`}>
+                        <span>{t(faq.qKey, faq.qDefault)}</span>
+                        <svg data-accordion-icon className="w-6 h-6 shrink-0" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                      </button>
+                    </h2>
+                    <div id={`accordion-flush-body-${index}`} className="hidden" aria-labelledby={`accordion-flush-heading-${index}`}>
+                      <div className="py-5 border-b border-gray-200 dark:border-gray-700">
+                        <p className="mb-2 text-gray-500 dark:text-gray-400">{t(faq.aKey, faq.aDefault)}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
         </div>
-
-        {/* FAQ Section */}
-        <div className="mt-20">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-10 text-center">{t('faqTitle', 'Často kladené otázky')}</h2>
-          <div className="grid md:grid-cols-2 gap-x-8 gap-y-10">
-            {faqItems.map((faq, index) => (
-              <div key={index} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
-                  <FaQuestionCircle className="text-blue-500 dark:text-blue-400 mr-3 flex-shrink-0" />
-                  {t(faq.qKey, faq.qDefault)}
-                  {faq.tagKey && (
-                    <span className="ml-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs font-semibold px-2 py-0.5 rounded-full">
-                      {t(faq.tagKey, faq.tagDefault)}
-                    </span>
-                  )}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">{t(faq.aKey, faq.aDefault)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-gray-50 dark:bg-gray-900 py-16">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('cta.title', 'Stále si nejste jisti?')}</h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-            {t('cta.subtitle', 'Vyzkoušejte AI Psychologa zdarma a rozhodněte se později. Žádná platební karta není vyžadována.')}
-          </p>
-          <Link href="/chat" className="btn bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-colors text-lg">
-            {t('common:buttons.startForFree', 'Začít zdarma')}
-          </Link>
-        </div>
-      </div>
+      </section>
     </Layout>
   );
 };
