@@ -167,7 +167,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
   return (
     <Layout>
-      <section className="relative bg-hero-gradient-dark text-white py-20 overflow-hidden">
+      <section className="relative bg-hero-gradient-dark text-white py-20 overflow-hidden hero-animated-gradient">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row items-center">
             <motion.div 
