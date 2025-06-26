@@ -202,9 +202,9 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
             </motion.div>
             <div className="md:w-1/2 flex justify-center md:justify-end md:pr-8 lg:pr-0">
               <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-[26rem] md:h-[26rem]">
-                <div className="absolute inset-0 bg-blue-400/10 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
-                <div className="absolute inset-3 sm:inset-5 md:inset-6 bg-blue-300/10 rounded-full animate-pulse" style={{ animationDelay: '0.3s' }}></div>
-                <div className="absolute inset-6 sm:inset-10 md:inset-12 bg-blue-200/10 rounded-full animate-pulse" style={{ animationDelay: '0.6s' }}></div>
+                <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-pulse-fade" style={{ animationDelay: '0s' }}></div>
+                <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-pulse-fade" style={{ animationDelay: '1s' }}></div>
+                <div className="absolute inset-0 rounded-full border-2 border-white/20 animate-pulse-fade" style={{ animationDelay: '2s' }}></div>
                 <div className="absolute inset-0 flex items-center justify-center z-10 p-8 sm:p-10 md:p-12 drop-shadow-glow">
                   <Image 
                     src="/images/hero-avatar.png" 

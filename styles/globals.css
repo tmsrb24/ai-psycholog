@@ -61,6 +61,24 @@
   animation: pulse-slow 1.5s ease-in-out infinite;
 }
 
+@keyframes pulse-fade {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+.animate-pulse-fade {
+  animation: pulse-fade 3s infinite;
+}
+
 .hero-animated-gradient {
   background-size: 200% 200%;
   animation: gradient-animation 5s ease infinite;
