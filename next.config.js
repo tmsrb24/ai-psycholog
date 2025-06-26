@@ -79,34 +79,4 @@ const nextConfig = {
   // Options for the Sentry webpack plugin are passed in the second argument to withSentryConfig.
 }
 
-// Import Sentry webpack plugin
-const { withSentryConfig } = require("@sentry/nextjs");
-
-// Obalení konfigurace nejprve withPWA, pak withSentryConfig
-module.exports = withPWA(withSentryConfig(
-  nextConfig,
-  {
-    // For all available options, see:
-    // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
-
-    // Upload source maps to Sentry
-    widenClientFileUpload: true,
-
-    // Transpiles SDK to be compatible with IE11 (increases bundle size)
-    transpileClientSDK: false,
-
-    // Routes browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers (increases server load)
-    tunnelRoute: "/monitoring",
-
-    // Hides source maps from generated client bundles
-    hideSourceMaps: true,
-
-    // Automatically tree-shake Sentry logger statements to reduce bundle size
-    disableLogger: true,
-
-    // Enables automatic instrumentation of Vercel Cron Monitors.
-    // See the following for more information:
-    // https://docs.sentry.io/ zowelplatforms/javascript/guides/nextjs/configuration/ Optionen/ #automatic-instrumentation-of-vercel-cron-monitors
-    automaticVercelMonitors: true,
-  }
-)); // Přidána chybějící uzavírací závorka pro withPWA
+module.exports = withPWA(nextConfig);
