@@ -1,46 +1,54 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type Theme = 'dark'; // Pouze dark theme
+export type Theme = 'light' | 'dark';
 
 interface ThemeContextType {
   theme: Theme;
-  // toggleTheme již není potřeba
+  toggleTheme: () => void;
 }
 
-const ثابتTheme: Theme = 'dark'; // Konstanta pro tmavý motiv
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-const ThemeContext = createContext<ThemeContextType>({
-  theme: ثابتTheme,
-});
-
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+};
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  // Stav pro téma již není potřeba, vždy bude 'dark'
-  // const [theme, setThemeState] = useState<Theme>(ثابتTheme);
+  const [theme, setTheme] = useState<Theme>('dark'); // Default to dark
 
   useEffect(() => {
-    // Vždy aplikovat třídu 'dark' na root element
-    const root = document.documentElement;
-    root.classList.add('dark');
-    // Odstranit 'light', pokud by tam z nějakého důvodu byla
-    root.classList.remove('light'); 
-    // localStorage již není potřeba pro ukládání tématu
-    // localStorage.setItem('theme', 'dark'); 
-  }, []); // Spustí se jen jednou po mountnutí
+    const storedTheme = localStorage.getItem('theme') as Theme | null;
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (storedTheme) {
+      setTheme(storedTheme);
+    } else if (prefersDark) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  }, []);
 
-  // toggleTheme funkce již není potřeba
-  // const toggleTheme = () => {
-  //   setThemeState((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-  // };
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark');
+    root.classList.add(theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
 
   return (
-    // Hodnota kontextu nyní poskytuje pouze 'dark' téma a žádnou funkci pro přepnutí
-    <ThemeContext.Provider value={{ theme: ثابتTheme }}>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

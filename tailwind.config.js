@@ -7,27 +7,25 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
-      // fontFamily: { // Odstraněno, řeší next/font
-      //   sans: ['Inter', 'sans-serif'], 
-      // },
-      backgroundImage: {
-        'main-gradient-light': 'linear-gradient(135deg, #E0F2FE 0%, #A5F3FC 50%, #67E8F9 100%)', 
-        'main-gradient-dark': 'linear-gradient(135deg, #082f49 0%, #0C4A6E 50%, #0E7490 100%)', 
-        'hero-gradient-light': 'linear-gradient(135deg, #A5F3FC 0%, #67E8F9 50%, #22D3EE 100%)',
-        'hero-gradient-dark': 'linear-gradient(135deg, #0C4A6E 0%, #22D3EE 100%)',
-        'cta-gradient-light': 'linear-gradient(135deg, #A5F3FC 0%, #67E8F9 50%, #22D3EE 100%)', 
-        'cta-gradient-dark': 'linear-gradient(135deg, #0E7490 0%, #155E75 50%, #0891B2 100%)', 
-      },
-      dropShadow: {
-        'glow': '0 0 20px rgba(255, 255, 255, 0.15)',
+      fontFamily: {
+        sans: ['"Nunito Sans"', 'sans-serif'],
       },
       colors: {
-        'gradient-dark-start': '#082f49', // Tmavší modrá (začátek tmavého gradientu body)
-        'gradient-dark-mid': '#0E7490',   // Střed tmavého gradientu
-        'gradient-dark-end': '#155E75',   // Tmavě tyrkysová (konec tmavého gradientu)
-        'gradient-light-start': '#E0F2FE', // Světle modrá (začátek světlého gradientu)
-        'gradient-light-mid': '#A5F3FC',    // Střed světlého gradientu
-        'gradient-light-end': '#67E8F9',    // Světle tyrkysová (konec světlého gradientu)
+        background: {
+          light: '#F8F9FA',
+          dark: '#1A202C',
+        },
+        text: {
+          light: '#212529',
+          dark: '#E2E8F0',
+        },
+        primary: {
+          light: '#208B8A', // Muted Teal
+          dark: '#4FD1C5',  // Soft Teal
+        },
+        accent: {
+          DEFAULT: '#F2A68A', // Gentle Peach
+        },
       },
       typography: {
         DEFAULT: {
