@@ -1,54 +1,46 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export type Theme = 'light' | 'dark';
+export type Theme = 'dark'; // Pouze dark theme
 
 interface ThemeContextType {
   theme: Theme;
-  toggleTheme: () => void;
+  // toggleTheme již není potřeba
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const ثابتTheme: Theme = 'dark'; // Konstanta pro tmavý motiv
 
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-};
+const ThemeContext = createContext<ThemeContextType>({
+  theme: ثابتTheme,
+});
+
+export const useTheme = () => useContext(ThemeContext);
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('dark'); // Default to dark
+  // Stav pro téma již není potřeba, vždy bude 'dark'
+  // const [theme, setThemeState] = useState<Theme>(ثابتTheme);
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem('theme') as Theme | null;
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (storedTheme) {
-      setTheme(storedTheme);
-    } else if (prefersDark) {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
-  }, []);
-
-  useEffect(() => {
+    // Vždy aplikovat třídu 'dark' na root element
     const root = document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
+    root.classList.add('dark');
+    // Odstranit 'light', pokud by tam z nějakého důvodu byla
+    root.classList.remove('light'); 
+    // localStorage již není potřeba pro ukládání tématu
+    // localStorage.setItem('theme', 'dark'); 
+  }, []); // Spustí se jen jednou po mountnutí
 
-  const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-  };
+  // toggleTheme funkce již není potřeba
+  // const toggleTheme = () => {
+  //   setThemeState((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  // };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    // Hodnota kontextu nyní poskytuje pouze 'dark' téma a žádnou funkci pro přepnutí
+    <ThemeContext.Provider value={{ theme: ثابتTheme }}>
       {children}
     </ThemeContext.Provider>
   );

@@ -1,42 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Původní jednoduché styly, pokud nějaké byly nad rámec Tailwindu */
+/* Například, pokud byl nějaký globální font nebo základní styl pro body */
 @layer base {
   body {
-    @apply bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark transition-colors duration-300 min-h-screen font-sans;
+    @apply bg-main-gradient-light dark:bg-main-gradient-dark text-gray-900 dark:text-gray-200 transition-colors duration-200 min-h-screen font-sans;
   }
   html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Inter', sans-serif;
+    /* Vrácena výchozí velikost fontu (prohlížeč obvykle 16px) */
+    -webkit-font-smoothing: antialiased; 
+    -moz-osx-font-smoothing: grayscale; 
   }
 }
 
 @layer components {
   .btn {
-    @apply px-4 py-2 rounded-lg font-semibold transition-all duration-200 ease-in-out;
+    @apply px-4 py-2 rounded-md font-medium transition-colors;
   }
-
+  
+  /* Příklady, jak mohly být tlačítka definována - upravit podle skutečného původního stavu */
   .btn-primary {
-    @apply bg-primary-light dark:bg-primary-dark text-white hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light dark:focus:ring-primary-dark;
+    @apply bg-blue-600 hover:bg-blue-700 text-white;
   }
-
+  
   .btn-secondary {
-    @apply bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 border border-transparent;
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-100 border border-gray-300 dark:border-gray-600;
   }
   
   .input {
-    @apply px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark bg-white dark:bg-gray-800 text-text-light dark:text-text-dark;
+    @apply px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100;
   }
 
   .user-message {
-    @apply bg-primary-light/10 text-text-light dark:bg-primary-dark/20 dark:text-text-dark p-3 rounded-lg;
+    @apply bg-blue-100 text-blue-900 p-3 rounded-lg dark:bg-blue-900 dark:text-blue-100;
   }
-
+  
   .assistant-message {
-    @apply bg-gray-100 text-text-light dark:bg-gray-700/50 dark:text-text-dark p-3 rounded-lg;
+    @apply bg-gray-100 text-gray-900 p-3 rounded-lg dark:bg-gray-800 dark:text-gray-100;
   }
 }
 
