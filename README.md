@@ -1,4 +1,4 @@
-#  Psychollog.cz - AI Psycholog
+#  Psychollog.cz 
 
 <div align="center">
   <img src="public/images/hero-avatar.png" alt="Psychollog.cz Logo" width="120" height="120">
@@ -9,14 +9,7 @@
     <strong>Dostupná kdykoliv a kdekoliv • Bezpečná a diskrétní • Založená na vědeckých poznatcích</strong>
   </p>
   
-  <p>
-    <a href="https://www.psychollog.cz">🌐 Live Demo</a> •
-    <a href="#funkce">✨ Funkce</a> •
-    <a href="#instalace">🚀 Instalace</a> •
-    <a href="#api-dokumentace">📚 API</a> •
-    <a href="#přispívání">🤝 Přispívání</a>
-  </p>
-  
+
   <p>
     <img src="https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js" alt="Next.js">
     <img src="https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript" alt="TypeScript">
