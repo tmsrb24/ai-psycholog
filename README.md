@@ -19,56 +19,6 @@
   </p>
 </div>
 
----
-
-##  O projektu
-
-**Psychollog.cz** je pokročilá webová aplikace pro psychologickou podporu, která kombinuje moderní technologie s ověřenými psychologickými přístupy. Projekt využívá umělou inteligenci k poskytování okamžité, diskrétní a vědecky podložené podpory pro duševní pohodu.
-
-###  Hlavní cíl
-
-> Zpřístupnit kvalitní nástroje pro sebepoznání a duševní pohodu co nejširšímu okruhu lidí pomocí inovativních AI technologií.
-
-###  Klíčové vlastnosti
-
-- **RAG systém** - Propojuje AI s odbornou psychologickou databází
-- **Proaktivní podpora** - AI asistent aktivně nabízí relevantní témata a cvičení
-- **Bezpečnostní systém** - Trojstupňový proces validace odpovědí
-- **Krizová intervence** - Automatická detekce a reakce na krizové situace
-- **Multijazyčnost** - Podpora češtiny, angličtiny a ukrajinštiny
-
----
-
-##  Funkce
-
-###  AI Asistent
-- **Inteligentní chatbot** s pokročilým porozuměním češtiny
-- **Personalizace** - Volba pohlaví, jména a stylu komunikace
-- **Tematické zaměření** - Úzkost, deprese, vztahy, stres, sebevědomí
-- **Osobnostní styly** - Podporující, praktický, analytický, mentor
-- **Flexibilní délka odpovědí** - Krátké, střední, dlouhé
-
-###  Analýza a tracking
-- **Analýza nálady** v reálném čase
-- **Sledování pokroku** s grafickými přehledy
-- **Osobní deník** s možností exportu
-- **Gamifikace** - Odznaky, série dnů, statistiky
-
-###  Bezpečnost a soukromí
-- **End-to-end šifrování** konverzací
-- **Anonymní použití** - Žádné sdílení dat s třetími stranami
-- **Krizová detekce** - Automatické rozpoznání nebezpečných situací
-- **Linka důvěry** - Přímé propojení s linkami pomoci
-
-###  Uživatelské rozhraní
-- **Moderní design** s animacemi (Framer Motion)
-- **Tmavý/světlý režim** podle preference
-- **Responzivní design** - Optimalizované pro všechna zařízení
-- **PWA podpora** - Instalace jako nativní aplikace
-- **Hlasový výstup** - Text-to-Speech v češtině
-
----
-
 ##  Technologie
 
 ### Frontend
