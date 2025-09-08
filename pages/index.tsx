@@ -149,19 +149,19 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       name: 'Dr. Eva Novotná, PhD.',
       specialization: 'Kognitivně-behaviorální terapie (KBT)',
       quote: "Psychollog.cz představuje inovativní most k dostupnější duševní péči. Oceňuji jeho schopnost poskytnout okamžitou, daty podloženou podporu, která může být skvělým prvním krokem nebo doplňkem tradiční terapie.",
-      avatar: '/images/psychologist-avatar.png' 
+      icon: FaUserMd
     },
     {
       name: 'Mgr. Petr Dvořák',
       specialization: 'Rodinná a párová terapie',
       quote: "V dnešní uspěchané době je klíčové mít nástroje, které pomáhají lidem reflektovat a pracovat na svých vztazích. Psychollog.cz nabízí diskrétní prostor pro první seznámení s psychologickými koncepty.",
-      avatar: '/images/psychologist-avatar.png'
+      icon: FaUsers
     },
     {
       name: 'MUDr. Jana Svobodová',
       specialization: 'Psychiatrie a psychosomatika',
       quote: "Propojení moderních technologií s ověřenými psychologickými přístupy, jaké vidíme u Psychollog.cz, má velký potenciál v destigmatizaci péče o duševní zdraví a v poskytování včasné intervence.",
-      avatar: '/images/psychologist-avatar.png'
+      icon: FaLightbulb
     }
   ];
 
@@ -328,14 +328,8 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
                 variants={featureCardVariants}
                 className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
               >
-                <div className="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden relative bg-gray-200 dark:bg-gray-600">
-                  <Image 
-                    src={testimonial.avatar} 
-                    alt={t('testimonials.avatarAlt', { name: testimonial.name })} 
-                    layout="fill" 
-                    objectFit="cover" 
-                    className="rounded-full"
-                  />
+                <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center bg-blue-100 dark:bg-slate-600">
+                  <testimonial.icon className="text-blue-600 dark:text-blue-300" size={48} />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">{testimonial.name}</h3>
                 <p className="text-sm text-blue-600 dark:text-blue-400 mb-3">{testimonial.specialization}</p>
