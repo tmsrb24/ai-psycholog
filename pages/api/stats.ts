@@ -10,16 +10,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const supabaseAdmin = getSupabaseAdmin();
 
-    // Get user count
+    // Get user count from user_profiles as a reliable proxy
     const { count: userCount, error: userError } = await supabaseAdmin
-      .from('users')
+      .from('user_profiles')
       .select('*', { count: 'exact', head: true });
 
     if (userError) throw userError;
 
-    // Get message count
+    // Get message count from the correct table
     const { count: messageCount, error: messageError } = await supabaseAdmin
-      .from('messages')
+      .from('chat_messages')
       .select('*', { count: 'exact', head: true });
 
     if (messageError) throw messageError;
