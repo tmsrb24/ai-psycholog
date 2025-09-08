@@ -145,6 +145,12 @@ const Footer: React.FC = () => {
           <p className="text-sm text-gray-600 dark:text-gray-400 mt-6">
             © 2025 Psychollog.cz. Všechna práva vyhrazena.
           </p>
+          {/* Operator Info */}
+          <div className="text-xs text-gray-500 dark:text-gray-500 mt-4">
+            <p>Provozovatel služby: Kristýna Srbová, IČO: 07113480</p>
+            <p>Sídlo: Pod lysinami 555/32, 147 00, Praha 4 - Hodkovičky</p>
+            <p>Zapsaná u živnostenského úřadu ÚMČ Praha 4</p>
+          </div>
         </div>
       </div>
     </footer>
