@@ -80,6 +80,10 @@
     "title": "Dostupné cenové plány",
     "subtitle": "Vyberte si plán, který nejlépe vyhovuje vašim potřebám."
   },
+  "keyNumbers": {
+    "users": "Registrovaní uživatelé",
+    "messages": "Vyměněných zpráv"
+  },
   "plans": {
     "basic": {
       "name": "Základní",

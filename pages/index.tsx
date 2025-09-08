@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/layouts/Layout';
+import KeyNumbers from '../components/KeyNumbers';
 import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield, FaFileMedical, FaBrain } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 import { motion } from 'framer-motion';
@@ -303,6 +304,8 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
           </div>
         </div>
       </motion.section>
+
+      <KeyNumbers />
 
       <motion.section 
         className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"

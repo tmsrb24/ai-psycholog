@@ -80,6 +80,10 @@
     "title": "Available Pricing Plans",
     "subtitle": "Choose the plan that best suits your needs."
   },
+  "keyNumbers": {
+    "users": "Registered Users",
+    "messages": "Messages Exchanged"
+  },
   "plans": {
     "basic": {
       "name": "Basic",
