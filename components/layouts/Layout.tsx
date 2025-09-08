@@ -10,12 +10,16 @@ interface LayoutProps {
   children: ReactNode;
   title?: string;
   description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
 }
 
 const Layout: React.FC<LayoutProps> = ({ 
   children, 
   title = 'AI Psycholog - Psychologická podpora s umělou inteligencí',
-  description = 'Moderní psychologická podpora s využitím umělé inteligence. Dostupná kdykoliv a kdekoliv.'
+  description = 'Moderní psychologická podpora s využitím umělé inteligence. Dostupná kdykoliv a kdekoliv.',
+  ogImage = 'https://www.psychollog.cz/images/og-image.png', // Default OG image
+  canonicalUrl = 'https://www.psychollog.cz'
 }) => {
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
 
@@ -28,7 +32,24 @@ const Layout: React.FC<LayoutProps> = ({
       <Head>
         <title>{title}</title>
         <meta name="description" content={description} />
+        <meta name="keywords" content="AI psycholog, psychologická podpora, duševní zdraví, terapie, online psycholog, chatbot" />
+        <meta name="author" content="Psychollog.cz" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="canonical" href={canonicalUrl} />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={ogImage} />
+
+        {/* Twitter */}
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content={canonicalUrl} />
+        <meta property="twitter:title" content={title} />
+        <meta property="twitter:description" content={description} />
+        <meta property="twitter:image" content={ogImage} />
         
         {/* Favicon links */}
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -39,6 +60,37 @@ const Layout: React.FC<LayoutProps> = ({
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#2563EB" /> {/* Tailwind blue-600 */}
         <link rel="icon" href="/favicon.ico" /> {/* Fallback favicon */}
+
+        {/* Structured Data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "url": "https://www.psychollog.cz/",
+            "name": "AI Psycholog",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://www.psychollog.cz/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          }) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "AI Psycholog",
+            "url": "https://www.psychollog.cz/",
+            "logo": "https://www.psychollog.cz/images/hero-avatar.png",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "info@psychollog.cz",
+              "contactType": "Customer Service"
+            }
+          }) }}
+        />
       </Head>
       
       <Navbar />
