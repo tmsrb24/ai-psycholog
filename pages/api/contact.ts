@@ -49,15 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       subject: emailSubjectToAdmin,
       text: emailTextToAdmin,
       html: emailHtmlToAdmin,
-      // Důležité: Nastavení Reply-To na email odesílatele, aby odpověď šla jemu
-      // SendGrid toto podporuje přes objekt `replyTo` v msg.
-      // V naší funkci sendEmail to zatím není, museli bychom ji rozšířit,
-      // nebo přidat email odesílatele do těla a From nastavit na ověřenou adresu.
-      // Prozatím bude From: formular@psychollog.cz a email odesílatele v těle.
-      // Funkce sendEmail v lib/emailService.ts používá FROM_EMAIL pro pole "from".
-      // Je potřeba, aby FROM_EMAIL_CONTACT_FORM byla ověřená doména/adresa v SendGrid.
-      // A FROM_EMAIL v emailService.ts by měl být také z ověřené domény.
-      // Pro jednoduchost teď použijeme FROM_EMAIL z emailService.ts.
+      replyTo: email,
     });
 
     if (emailSent) {

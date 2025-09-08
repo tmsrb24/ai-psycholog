@@ -14,6 +14,7 @@ interface EmailOptions {
   subject: string;
   text: string;
   html: string;
+  replyTo?: string;
 }
 
 export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
@@ -23,11 +24,15 @@ export const sendEmail = async (options: EmailOptions): Promise<boolean> => {
   }
 
   const msg = {
-    ...options,
+    to: options.to,
     from: {
-      name: 'AI Psychollog', // Jméno odesílatele
-      email: FROM_EMAIL,    // Ověřená emailová adresa odesílatele
-    }
+      name: 'AI Psychollog',
+      email: FROM_EMAIL,
+    },
+    subject: options.subject,
+    text: options.text,
+    html: options.html,
+    replyTo: options.replyTo,
   };
 
   try {
