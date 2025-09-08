@@ -236,7 +236,7 @@ export default async function handler(
 
         if (currentCount >= 3) {
           return res.status(429).json({ 
-            error: 'Překročili jste denní limit 3 zpráv pro bezplatný plán. Pokud chcete pokračovat, bude brzy k dispozici upgrade na Premium plán.',
+            error: 'Dosáhli jste denního limitu 3 zpráv v bezplatném plánu. Pro neomezený přístup bude brzy možné přejít na Premium plán.',
             code: 'MESSAGE_LIMIT_EXCEEDED' 
           });
         }
