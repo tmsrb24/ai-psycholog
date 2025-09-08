@@ -113,6 +113,18 @@
         "Unlimited conversation history",
         "Assistant personality customization"
       ]
+    },
+    "company": {
+      "name": "For Companies",
+      "price": "On request",
+      "description": "Support the mental well-being of your employees",
+      "buttonText": "Contact us",
+      "features": [
+        "Unlimited access for employees",
+        "100% Anonymity and privacy",
+        "Easy implementation",
+        "Priority support"
+      ]
     }
   },
   "cta": {
