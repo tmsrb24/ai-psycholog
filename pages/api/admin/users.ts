@@ -36,14 +36,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // V reálné aplikaci by se zde použil Supabase klient inicializovaný se service_role klíčem,
       // pokud by RLS bránilo v přístupu.
       const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
-      const { data: profiles, error } = await supabaseAdmin
+      
+      // Krok 1: Načtení všech profilů
+      const { data: profiles, error: profilesError } = await supabaseAdmin
         .from('user_profiles')
-        .select('id, email, name, created_at, avatar_url, role, subscriptions(plan_id)')
+        .select('id, email, name, created_at, avatar_url, role')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      
-      res.status(200).json(profiles);
+      if (profilesError) throw profilesError;
+
+      // Krok 2: Načtení všech předplatných
+      const { data: subscriptions, error: subscriptionsError } = await supabaseAdmin
+        .from('subscriptions')
+        .select('user_id, plan_id');
+
+      if (subscriptionsError) throw subscriptionsError;
+
+      // Krok 3: Ruční spojení dat
+      const subscriptionsMap = new Map(subscriptions.map(sub => [sub.user_id, sub.plan_id]));
+
+      const usersWithSubscriptions = profiles.map(profile => {
+        const plan = subscriptionsMap.get(profile.id) || 'free';
+        return {
+          ...profile,
+          // Frontend očekává pole, i když bude obsahovat jen jeden prvek nebo bude prázdné
+          subscriptions: plan !== 'free' ? [{ plan_id: plan }] : [],
+        };
+      });
+
+      res.status(200).json(usersWithSubscriptions);
     } catch (error: any) {
       console.error('Supabase GET /admin/users error:', error);
       res.status(500).json({ error: error.message || 'Chyba při načítání uživatelských profilů.' });
