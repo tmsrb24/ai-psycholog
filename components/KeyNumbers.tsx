@@ -1,10 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useInView, motion, animate } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
+import { FaUsers, FaComments } from 'react-icons/fa';
+import type { IconType } from 'react-icons';
 
 interface Stat {
   label: string;
   value: number;
+  icon: IconType;
 }
 
 const KeyNumbers: React.FC = () => {
@@ -13,8 +16,8 @@ const KeyNumbers: React.FC = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const stats: Stat[] = [
-    { label: t('keyNumbers.users', 'Registrovaní uživatelé'), value: 72 },
-    { label: t('keyNumbers.messages', 'Vyměněných zpráv'), value: 15000 },
+    { label: t('keyNumbers.users', 'Registrovaní uživatelé'), value: 72, icon: FaUsers },
+    { label: t('keyNumbers.messages', 'Vyměněných zpráv'), value: 3678, icon: FaComments },
   ];
 
   const StatCounter = ({ to }: { to: number }) => {
@@ -45,10 +48,11 @@ const KeyNumbers: React.FC = () => {
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
           {stats.map((stat) => (
-            <div key={stat.label}>
+            <div key={stat.label} className="flex flex-col items-center">
+              <stat.icon className="text-blue-500 dark:text-blue-400 text-4xl mb-3" />
               <h3 className="text-5xl font-extrabold text-gray-900 dark:text-white">
                 <StatCounter to={stat.value} />
               </h3>
