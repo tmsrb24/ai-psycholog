@@ -478,14 +478,14 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('safePayment', 'Bezpečné a rychlé online platby')}</p>
-            <div className="flex justify-center items-center space-x-6 flex-wrap gap-y-4">
-              <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={120} height={60} className="opacity-90" />
-              <Image src="/images/logos/visa full.png" alt="Visa Logo" width={90} height={60} className="opacity-90" />
-              <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={90} height={60} className="opacity-90" />
-              <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={90} height={60} className="opacity-90" />
-              <Image src="/images/logos/master.png" alt="Mastercard SecureCode Logo" width={90} height={60} className="opacity-90" />
-              <Image src="/images/logos/visa.png" alt="Visa Electron Logo" width={90} height={60} className="opacity-90" />
-              <Image src="/images/logos/visak.png" alt="Visa Secure Logo" width={90} height={60} className="opacity-90" />
+            <div className="flex justify-center items-center space-x-4 flex-wrap">
+              <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={80} height={40} className="opacity-70" />
+              <Image src="/images/logos/visa.png" alt="Visa Logo" width={60} height={40} className="opacity-70" />
+              <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={60} height={40} className="opacity-70" />
+              <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={60} height={40} className="opacity-70" />
+              <Image src="/images/logos/master.png" alt="Mastercard Logo" width={60} height={40} className="opacity-70" />
+              <Image src="/images/logos/visak.png" alt="Visa Logo" width={60} height={40} className="opacity-70" />
+              <Image src="/images/logos/visakuz.png" alt="Visa Logo" width={60} height={40} className="opacity-70" />
             </div>
           </div>
 
