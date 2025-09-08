@@ -27,11 +27,6 @@ const TermsAndConditionsPage = (_props: InferGetStaticPropsType<typeof getStatic
         
         <h2>{t('sections.1.title')}</h2>
         <p>{t('sections.1.content.0')}</p>
-        <ul>
-          <li>{t('sections.1.list.0')}</li>
-          <li>{t('sections.1.list.1')}</li>
-          <li>{t('sections.1.list.2')}</li>
-        </ul>
         <p>{t('sections.1.content.1')}</p>
 
         <h2>{t('sections.2.title')}</h2>
@@ -49,14 +44,9 @@ const TermsAndConditionsPage = (_props: InferGetStaticPropsType<typeof getStatic
 
         <h2>{t('sections.5.title')}</h2>
         <p>{t('sections.5.content.0')}</p>
-        <p>{t('sections.5.content.1')}</p>
 
         <h2>{t('sections.6.title')}</h2>
         <p>{t('sections.6.content.0')}</p>
-
-        <h2>{t('sections.7.title')}</h2>
-        <p>{t('sections.7.content.0')}</p>
-        <p>{t('sections.7.content.1')}</p>
       </div>
     </Layout>
   );
