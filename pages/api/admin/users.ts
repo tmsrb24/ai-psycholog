@@ -5,25 +5,28 @@ import { getToken } from "next-auth/jwt"; // Import getToken
 // import { authOptions } from "../auth/[...nextauth]"; 
 import { getSupabaseAdmin } from '../../../lib/supabaseClient';
 
-// Předpokládáme, že ADMIN_EMAIL je nastaven v .env.local a na Vercelu
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 const secret = process.env.NEXTAUTH_SECRET;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = await getToken({ req, secret });
-  console.log("API /api/admin/users - token object:", JSON.stringify(token, null, 2));
+  const supabaseAdmin = getSupabaseAdmin();
 
-  if (!token || !token.email) { // Pro admina potřebujeme email pro ověření
-    console.error("API /api/admin/users - Unauthorized access or missing email in token. Token:", JSON.stringify(token, null, 2));
-    return res.status(401).json({ error: 'Nejste přihlášeni nebo chybí email v tokenu.' });
+  if (!token || !token.sub) {
+    return res.status(401).json({ error: 'Nejste přihlášeni.' });
   }
-  
-  const userEmail: string = String(token.email);
 
-  if (userEmail !== ADMIN_EMAIL) {
+  // Ověření role administrátora
+  const { data: userProfile, error: profileError } = await supabaseAdmin
+    .from('user_profiles')
+    .select('role')
+    .eq('id', token.sub)
+    .single();
+
+  if (profileError || !userProfile || userProfile.role !== 'admin') {
     return res.status(403).json({ error: 'Nemáte oprávnění k přístupu k této stránce.' });
   }
 
+  // Pokud je uživatel admin, pokračujeme
   if (req.method === 'GET') {
     try {
       // Pro administrátorský přístup můžeme použít service_role klíč, pokud je potřeba obejít RLS,

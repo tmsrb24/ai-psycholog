@@ -11,6 +11,7 @@ interface AdminUser {
   name: string | null;
   avatar_url: string | null;
   created_at: string;
+  role: string;
 }
 
 const AdminUsersPage: React.FC = () => {
@@ -19,6 +20,42 @@ const AdminUsersPage: React.FC = () => {
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const handleRoleChange = async (userId: string, newRole: string) => {
+    try {
+      const response = await fetch(`/api/admin/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: newRole }),
+      });
+      if (response.ok) {
+        setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
+      } else {
+        const data = await response.json();
+        alert(`Chyba při změně role: ${data.error}`);
+      }
+    } catch (err) {
+      alert('Došlo k chybě při komunikaci se serverem.');
+    }
+  };
+
+  const handleDelete = async (userId: string) => {
+    if (window.confirm('Opravdu si přejete smazat tohoto uživatele? Tato akce je nevratná.')) {
+      try {
+        const response = await fetch(`/api/admin/users/${userId}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          setUsers(users.filter(u => u.id !== userId));
+        } else {
+          const data = await response.json();
+          alert(`Chyba při mazání uživatele: ${data.error}`);
+        }
+      } catch (err) {
+        alert('Došlo k chybě při komunikaci se serverem.');
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -90,7 +127,9 @@ const AdminUsersPage: React.FC = () => {
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Jméno</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Registrován</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Akce</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -108,7 +147,20 @@ const AdminUsersPage: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{user.name || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{user.email}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300 truncate max-w-xs">{user.id}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                      <select
+                        value={user.role}
+                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      >
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{new Date(user.created_at).toLocaleDateString('cs-CZ')}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button onClick={() => handleDelete(user.id)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Smazat</button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
