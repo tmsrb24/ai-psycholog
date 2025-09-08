@@ -9,35 +9,13 @@ interface Stat {
 
 const KeyNumbers: React.FC = () => {
   const { t } = useTranslation('homepage');
-  const [stats, setStats] = useState<Stat[] | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await fetch('/api/stats');
-        if (!response.ok) {
-          throw new Error('Failed to fetch stats');
-        }
-        const data = await response.json();
-        setStats([
-          { label: t('keyNumbers.users', 'Registrovaní uživatelé'), value: data.userCount },
-          { label: t('keyNumbers.messages', 'Vyměněných zpráv'), value: data.messageCount },
-        ]);
-      } catch (err) {
-        setError((err as Error).message);
-        // Set default stats on error to not break the layout
-        setStats([
-            { label: t('keyNumbers.users', 'Registrovaní uživatelé'), value: 72 },
-            { label: t('keyNumbers.messages', 'Vyměněných zpráv'), value: 1000 },
-        ]);
-      }
-    };
-
-    fetchStats();
-  }, [t]);
+  const stats: Stat[] = [
+    { label: t('keyNumbers.users', 'Registrovaní uživatelé'), value: 72 },
+    { label: t('keyNumbers.messages', 'Vyměněných zpráv'), value: 15000 },
+  ];
 
   const StatCounter = ({ to }: { to: number }) => {
     const nodeRef = useRef<HTMLSpanElement>(null);
@@ -59,16 +37,6 @@ const KeyNumbers: React.FC = () => {
     return <span ref={nodeRef}>0+</span>;
   };
 
-  if (!stats) {
-    return (
-        <div className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                <div className="h-24"></div>
-            </div>
-        </div>
-    );
-  }
-
   return (
     <motion.section 
       ref={ref}
@@ -88,7 +56,6 @@ const KeyNumbers: React.FC = () => {
             </div>
           ))}
         </div>
-        {error && <p className="text-center text-red-500 mt-4 text-sm">Chyba při načítání statistik.</p>}
       </div>
     </motion.section>
   );
