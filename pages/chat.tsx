@@ -203,8 +203,14 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
       setMessages(prev => [...prev, assistantMessage]); 
     } catch (error: any) {
       console.error(t('errors.apiCallFailedConsole'), error);
-      if (axios.isAxiosError(error) && error.response && error.response.data && error.response.data.code === 'MESSAGE_LIMIT_EXCEEDED') {
-        setMessages(prev => [...prev, { role: 'assistant', content: error.response.data.error, timestamp: new Date() }]);
+      if (axios.isAxiosError(error) && error.response) {
+        const errorCode = error.response.data?.code;
+        const errorMessage = error.response.data?.error;
+        if (errorCode === 'MESSAGE_LIMIT_EXCEEDED') {
+          setMessages(prev => [...prev, { role: 'assistant', content: errorMessage, timestamp: new Date() }]);
+        } else {
+          setMessages(prev => [...prev, { role: 'assistant', content: t('errors.apiCommunicationError'), timestamp: new Date() }]);
+        }
       } else {
         setMessages(prev => [...prev, { role: 'assistant', content: t('errors.apiCommunicationError'), timestamp: new Date() }]);
       }
