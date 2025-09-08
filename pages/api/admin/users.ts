@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
       const { data: profiles, error } = await supabaseAdmin
         .from('user_profiles')
-        .select('id, email, name, created_at, avatar_url') // Vybereme jen potřebné sloupce
+        .select('id, email, name, created_at, avatar_url, role, subscriptions(plan_id)')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

@@ -6,12 +6,13 @@ import { useRouter } from 'next/router';
 import { UserProfileData } from '../../types/user';
 
 interface AdminUser {
-  id: string; 
+  id: string;
   email: string;
   name: string | null;
   avatar_url: string | null;
   created_at: string;
   role: string;
+  subscriptions: { plan_id: string }[] | null;
 }
 
 const AdminUsersPage: React.FC = () => {
@@ -128,12 +129,15 @@ const AdminUsersPage: React.FC = () => {
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Plán</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Registrován</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Akce</th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                {users.map((user) => (
+                {users.map((user) => {
+                  const plan = user.subscriptions && user.subscriptions.length > 0 ? user.subscriptions[0].plan_id : 'free';
+                  return (
                   <tr key={user.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {user.avatar_url ? (
@@ -157,12 +161,20 @@ const AdminUsersPage: React.FC = () => {
                         <option value="admin">Admin</option>
                       </select>
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        plan === 'premium' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {plan}
+                      </span>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">{new Date(user.created_at).toLocaleDateString('cs-CZ')}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button onClick={() => handleDelete(user.id)} className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">Smazat</button>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
