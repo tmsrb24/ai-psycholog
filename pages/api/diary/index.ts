@@ -17,10 +17,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const userId: string = String(token.sub); // token.sub by mělo být ID uživatele
+  const supabaseAdmin = getSupabaseAdmin();
+
+  // --- Kontrola předplatného ---
+  try {
+    const { data: subscription, error: subscriptionError } = await supabaseAdmin
+      .from('subscriptions')
+      .select('plan_id, status')
+      .eq('user_id', userId)
+      .in('status', ['active', 'trialing']) // Povolíme i zkušební verze
+      .single();
+
+    if (subscriptionError || !subscription) {
+      // Chyba nebo žádné aktivní předplatné
+      return res.status(403).json({ error: 'Přístup k deníku je povolen pouze pro uživatele s Premium plánem.' });
+    }
+
+    // Zde bychom mohli dále kontrolovat i plan_id, pokud by existovalo více placených úrovní
+    // Prozatím stačí, že existuje jakékoliv aktivní předplatné.
+
+  } catch (error) {
+    console.error('API /api/diary - Subscription check error:', error);
+    return res.status(500).json({ error: 'Chyba při ověřování předplatného.' });
+  }
+  // --- Konec kontroly předplatného ---
 
   if (req.method === 'GET') {
     try {
-      const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
       const { data, error } = await supabaseAdmin
         .from('diary_entries')
         .select('*')
@@ -40,7 +63,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!content || !entry_date) {
         return res.status(400).json({ error: 'Chybí obsah nebo datum zápisu.' });
       }
-      const supabaseAdmin = getSupabaseAdmin(); // Získání admin klienta
       const { data, error } = await supabaseAdmin
         .from('diary_entries')
         .insert([{ 
@@ -66,7 +88,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!id || !content) {
         return res.status(400).json({ error: 'Chybí ID zápisu nebo obsah.' });
       }
-      const supabaseAdmin = getSupabaseAdmin();
       const { data, error } = await supabaseAdmin
         .from('diary_entries')
         .update({ 
