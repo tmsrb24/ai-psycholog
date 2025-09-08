@@ -45,7 +45,7 @@
       },
       {
         "title": "Bezpečnostní neuronová síť",
-        "text": "Speciální \"hlídací\" neuronová síť kontroluje dotaz i odpověď, aby se předešlo škodlivým nebo nebezpečným radám."
+        "text": "Speciální neuronová síť kontroluje každý dotaz i odpověď, aby se předešlo škodlivým nebo nebezpečným radám."
       },
       {
         "title": "Generování odpovědi",

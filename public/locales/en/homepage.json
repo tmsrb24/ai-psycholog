@@ -45,7 +45,7 @@
       },
       {
         "title": "Safety Neural Network",
-        "text": "A special 'guardian' neural network checks both the query and the response to prevent harmful or dangerous advice."
+        "text": "A special neural network checks every query and response to prevent harmful or dangerous advice."
       },
       {
         "title": "Response Generation",
