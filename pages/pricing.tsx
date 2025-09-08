@@ -7,6 +7,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 interface Feature {
   text: string;
@@ -24,9 +25,10 @@ interface Plan {
   borderColor: string;
   features: Feature[];
   buttonText: string;
-  buttonLink: string;
+  buttonLink?: string;
   isRecommended: boolean;
   planId: string;
+  action?: () => void;
 }
 
 type PageProps = {};
@@ -34,6 +36,34 @@ type PageProps = {};
 const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
   const { t } = useTranslation(['pricing', 'common']);
   const router = useRouter();
+  const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleGoPaySubscribe = async () => {
+    setIsLoading(true);
+    if (!session) {
+      router.push('/auth/login?callbackUrl=/pricing');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/gopay/create-payment', {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create payment session.');
+      }
+
+      const { gw_url } = await response.json();
+      window.location.href = gw_url;
+    } catch (error) {
+      console.error('Error creating GoPay payment session:', error);
+      alert('Došlo k chybě při zpracování platby. Zkuste to prosím znovu.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const plans: Plan[] = [
     {
@@ -43,7 +73,7 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
       description: t('plans.basic.description', 'Ideální pro vyzkoušení služby'),
       borderColor: 'from-pink-500 to-orange-500',
       features: [
-        { text: t('plans.basic.features.0', '5 zpráv denně'), included: true },
+        { text: t('plans.basic.features.0', '3 zprávy denně'), included: true },
         { text: t('plans.basic.features.1', 'Základní analýza nálady'), included: true },
         { text: t('plans.basic.features.2', 'Základní témata konverzace'), included: true },
         { text: t('plans.basic.features.3', 'Přístup k osobnímu deníku'), included: false },
@@ -72,7 +102,7 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
         { text: t('plans.premium.features.7', 'Prioritní podpora'), included: true },
       ],
       buttonText: t('plans.premium.buttonText', 'Předplatit Premium'),
-      buttonLink: '/chat',
+      action: handleGoPaySubscribe,
       isRecommended: true,
       planId: 'premium'
     },
@@ -160,11 +190,21 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
               
               {/* Button */}
               <div className="mt-8 pt-8 border-t border-gray-200 dark:border-slate-700 flex-shrink-0">
-                <Link href={plan.buttonLink}>
-                  <a className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-gradient-to-r ${plan.borderColor} hover:shadow-xl`}>
-                    {plan.buttonText}
-                  </a>
-                </Link>
+                {plan.action ? (
+                  <button
+                    onClick={plan.action}
+                    disabled={isLoading}
+                    className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-gradient-to-r ${plan.borderColor} hover:shadow-xl disabled:opacity-50`}
+                  >
+                    {isLoading && plan.planId === 'premium' ? 'Zpracování...' : plan.buttonText}
+                  </button>
+                ) : (
+                  <Link href={plan.buttonLink || '#'}>
+                    <a className={`block w-full text-center py-3 px-6 rounded-lg font-semibold text-white transition-all duration-300 ease-in-out transform hover:scale-105 shadow-lg bg-gradient-to-r ${plan.borderColor} hover:shadow-xl`}>
+                      {plan.buttonText}
+                    </a>
+                  </Link>
+                )}
               </div>
             </div>
           ))}

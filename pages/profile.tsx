@@ -3,11 +3,17 @@ import { useSession, signOut } from 'next-auth/react'; // Added signOut
 import { useRouter } from 'next/router';
 import Layout from '../components/layouts/Layout';
 import Image from 'next/image';
-import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog, FaSpinner } from 'react-icons/fa'; // Added FaSpinner
+import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog, FaSpinner, FaCrown } from 'react-icons/fa'; // Added FaSpinner and FaCrown
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
+
+type Subscription = {
+  plan_id: string;
+  status: string;
+  end_date: string;
+};
 
 type PageProps = {};
 
@@ -22,6 +28,7 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false); // New state for delete
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
 
   useEffect(() => {
     if (!loading && !session) {
@@ -34,6 +41,27 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
       setName(session.user.name || '');
       setEmail(session.user.email || '');
     }
+  }, [session]);
+
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      if (session) {
+        try {
+          const response = await fetch('/api/user/subscription');
+          if (response.ok) {
+            const data = await response.json();
+            setSubscription(data);
+          } else {
+            console.error('Failed to fetch subscription');
+            setSubscription(null);
+          }
+        } catch (error) {
+          console.error('Error fetching subscription:', error);
+          setSubscription(null);
+        }
+      }
+    };
+    fetchSubscription();
   }, [session]);
 
   const handleProfileSubmit = async (e: React.FormEvent) => {
@@ -125,7 +153,7 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
               {t('personalInfo.title')}
             </h2>
             
-            <div className="flex flex-col md:flex-row items-center mb-8 pb-8 ">
+            <div className="flex flex-col md:flex-row items-center mb-8 pb-8 border-b border-gray-200 dark:border-gray-700">
               <div className="mb-6 md:mb-0 md:mr-8 text-center">
                 <div className="relative w-32 h-32 mx-auto">
                   {session.user?.image ? (
@@ -225,6 +253,51 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
+          <div className="p-6 md:p-8">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+              <FaCrown className="mr-3 text-blue-500" />
+              {t('subscription.title', 'Předplatné')}
+            </h2>
+            {subscription ? (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md">
+                  <span className="text-gray-600 dark:text-gray-300">{t('subscription.plan', 'Plán')}</span>
+                  <span className="font-semibold text-gray-900 dark:text-white capitalize">{subscription.plan_id}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md">
+                  <span className="text-gray-600 dark:text-gray-300">{t('subscription.status', 'Stav')}</span>
+                  <span className={`font-semibold px-2 py-1 rounded-full text-xs ${subscription.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'}`}>
+                    {subscription.status}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md">
+                  <span className="text-gray-600 dark:text-gray-300">{t('subscription.endDate', 'Platné do')}</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">{new Date(subscription.end_date).toLocaleDateString('cs-CZ')}</span>
+                </div>
+                <div className="pt-4">
+                  <button 
+                    onClick={() => router.push('/pricing')}
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
+                  >
+                    {t('subscription.manage', 'Spravovat předplatné')}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <p className="text-gray-500 dark:text-gray-400 mb-4">{t('subscription.noSubscription', 'Nemáte žádné aktivní předplatné.')}</p>
+                <button 
+                  onClick={() => router.push('/pricing')}
+                  className="w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800"
+                >
+                  {t('subscription.viewPlans', 'Zobrazit plány')}
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

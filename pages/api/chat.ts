@@ -206,6 +206,53 @@ export default async function handler(
     }
   } else if (req.method === 'POST') {
     try {
+      // Message Limiting Logic
+      const { data: subscription, error: subscriptionError } = await supabaseAdmin
+        .from('subscriptions')
+        .select('plan_id, status')
+        .eq('user_id', userId)
+        .single();
+
+      if (subscriptionError && subscriptionError.code !== 'PGRST116') { // 'PGRST116' means no rows found, which is fine
+        throw subscriptionError;
+      }
+
+      const isFreePlan = !subscription || subscription.plan_id === 'free';
+
+      if (isFreePlan) {
+        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        const { data: countData, error: countError } = await supabaseAdmin
+          .from('daily_message_counts')
+          .select('message_count')
+          .eq('user_id', userId)
+          .eq('message_date', today)
+          .single();
+
+        if (countError && countError.code !== 'PGRST116') {
+          throw countError;
+        }
+
+        const currentCount = countData?.message_count || 0;
+
+        if (currentCount >= 3) {
+          return res.status(429).json({ error: 'Překročili jste denní limit 3 zpráv pro bezplatný plán.' });
+        }
+
+        // Upsert the count
+        const { error: upsertError } = await supabaseAdmin
+          .from('daily_message_counts')
+          .upsert({
+            user_id: userId,
+            message_date: today,
+            message_count: currentCount + 1,
+          }, { onConflict: 'user_id,message_date' });
+
+        if (upsertError) {
+          // Log the error but proceed with the chat, as failing to count shouldn't block the user.
+          console.error('Error upserting message count:', upsertError);
+        }
+      }
+
       await ensurePubMedRagIsInitialized(); // Ensure RAG is ready
       console.log('API route /api/chat POST called with body:', JSON.stringify(req.body, null, 2));
     
