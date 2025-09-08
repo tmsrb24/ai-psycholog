@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/layouts/Layout';
-import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield, FaFileMedical } from 'react-icons/fa';
+import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield, FaFileMedical, FaBrain } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
@@ -161,7 +161,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
       name: 'MUDr. Jana Svobodová',
       specialization: 'Psychiatrie a psychosomatika',
       quote: "Propojení moderních technologií s ověřenými psychologickými přístupy, jaké vidíme u Psychollog.cz, má velký potenciál v destigmatizaci péče o duševní zdraví a v poskytování včasné intervence.",
-      icon: FaLightbulb
+      icon: FaBrain
     }
   ];
 
