@@ -235,7 +235,10 @@ export default async function handler(
         const currentCount = countData?.message_count || 0;
 
         if (currentCount >= 3) {
-          return res.status(429).json({ error: 'Překročili jste denní limit 3 zpráv pro bezplatný plán.' });
+          return res.status(429).json({ 
+            error: 'Překročili jste denní limit 3 zpráv pro bezplatný plán. Pokud chcete pokračovat, bude brzy k dispozici upgrade na Premium plán.',
+            code: 'MESSAGE_LIMIT_EXCEEDED' 
+          });
         }
 
         // Upsert the count

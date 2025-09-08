@@ -19,4 +19,5 @@ export interface ApiResponse {
     comparative: number;
   };
   estimatedReadingTime?: number;
+  code?: string;
 }
