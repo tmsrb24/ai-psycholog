@@ -29,6 +29,8 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
   const [isDeletingAccount, setIsDeletingAccount] = useState(false); // New state for delete
   const [message, setMessage] = useState({ type: '', text: '' });
   const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   useEffect(() => {
     if (!loading && !session) {
@@ -113,6 +115,33 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
       setIsDeletingAccount(false);
     }
   };
+
+  const handleAvatarUpload = async (file: File) => {
+    setIsUploadingAvatar(true);
+    setMessage({ type: '', text: '' });
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      const response = await fetch('/api/user/avatar', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setMessage({ type: 'success', text: t('messages.avatarUpdateSuccess') });
+        // This is a bit of a hack to force a session refresh
+        window.location.reload();
+      } else {
+        setMessage({ type: 'error', text: data.message || t('messages.avatarUpdateError') });
+      }
+    } catch (error) {
+      setMessage({ type: 'error', text: t('messages.serverError') });
+    } finally {
+      setIsUploadingAvatar(false);
+      setAvatarFile(null);
+    }
+  };
   
   if (loading || !session) { 
     return (
@@ -172,11 +201,24 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                   )}
                   <button 
                     className="absolute bottom-1 right-1 bg-gray-700 dark:bg-gray-600 text-white p-2 rounded-full hover:bg-gray-800 dark:hover:bg-gray-500 transition-colors shadow"
-                    title={t('personalInfo.changeAvatarTooltip', 'Změnit profilový obrázek (již brzy)')}
-                    disabled={true} 
+                    title={t('personalInfo.changeAvatarTooltip', 'Změnit profilový obrázek')}
+                    onClick={() => document.getElementById('avatar-upload')?.click()}
                   >
                     <FaCamera size={14} />
                   </button>
+                  <input
+                    type="file"
+                    id="avatar-upload"
+                    className="hidden"
+                    accept="image/png, image/jpeg"
+                    onChange={(e) => {
+                      if (e.target.files && e.target.files[0]) {
+                        setAvatarFile(e.target.files[0]);
+                        // Immediately trigger upload or show a save button
+                        handleAvatarUpload(e.target.files[0]);
+                      }
+                    }}
+                  />
                 </div>
               </div>
               
