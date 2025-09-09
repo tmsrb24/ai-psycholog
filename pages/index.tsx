@@ -477,11 +477,7 @@ const HomePage = () => {
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('safePayment', 'Bezpečné a rychlé online platby')}</p>
             <div className="flex flex-col items-center space-y-4">
-              <div className="w-full flex justify-center">
-                <div className="w-48">
-                  <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={120} height={60} className="object-contain" />
-                </div>
-              </div>
+              <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={120} height={60} className="object-contain" />
               <div className="flex justify-center items-center space-x-6 flex-wrap">
                 <div className="h-10">
                   <Image src="/images/logos/visa.png" alt="Visa Logo" width={50} height={40} className="object-contain h-full w-auto" />
