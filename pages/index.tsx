@@ -494,8 +494,8 @@ const HomePage = () => {
                 <div className="h-10">
                   <Image src="/images/logos/visak.png" alt="Visa Logo" width={50} height={40} className="object-contain h-full w-auto" />
                 </div>
-                <div className="h-10">
-                  <Image src="/images/logos/vo.png" alt="VO Logo" width={50} height={40} className="object-contain h-full w-auto" />
+                <div className="h-8">
+                  <Image src="/images/logos/vo.png" alt="VO Logo" width={50} height={32} className="object-contain h-full w-auto" />
                 </div>
               </div>
             </div>
