@@ -477,13 +477,27 @@ const HomePage = () => {
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('safePayment', 'Bezpečné a rychlé online platby')}</p>
             <div className="flex justify-center items-center space-x-6 flex-wrap">
-              <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={120} height={60} />
-              <Image src="/images/logos/visa.png" alt="Visa Logo" width={105} height={52} />
-              <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={105} height={52} />
-              <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={105} height={52} />
-              <Image src="/images/logos/master.png" alt="Mastercard Logo" width={105} height={52} />
-              <Image src="/images/logos/visak.png" alt="Visa Logo" width={105} height={52} />
-              <Image src="/images/logos/vo.png" alt="VO Logo" width={105} height={52} />
+              <div className="bg-black border-2 border-blue-500 rounded-lg p-2 shadow-[0_0_15px_rgba(59,130,246,0.8)]">
+                <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={120} height={60} />
+              </div>
+              <div className="bg-black border-2 border-blue-500 rounded-lg p-2 shadow-[0_0_15px_rgba(59,130,246,0.8)]">
+                <Image src="/images/logos/visa.png" alt="Visa Logo" width={105} height={52} />
+              </div>
+              <div className="bg-black border-2 border-blue-500 rounded-lg p-2 shadow-[0_0_15px_rgba(59,130,246,0.8)]">
+                <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={105} height={52} />
+              </div>
+              <div className="bg-black border-2 border-blue-500 rounded-lg p-2 shadow-[0_0_15px_rgba(59,130,246,0.8)]">
+                <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={105} height={52} />
+              </div>
+              <div className="bg-black border-2 border-blue-500 rounded-lg p-2 shadow-[0_0_15px_rgba(59,130,246,0.8)]">
+                <Image src="/images/logos/master.png" alt="Mastercard Logo" width={105} height={52} />
+              </div>
+              <div className="bg-black border-2 border-blue-500 rounded-lg p-2 shadow-[0_0_15px_rgba(59,130,246,0.8)]">
+                <Image src="/images/logos/visak.png" alt="Visa Logo" width={105} height={52} />
+              </div>
+              <div className="bg-black border-2 border-blue-500 rounded-lg p-2 shadow-[0_0_15px_rgba(59,130,246,0.8)]">
+                <Image src="/images/logos/vo.png" alt="VO Logo" width={105} height={52} />
+              </div>
             </div>
           </div>
 
@@ -500,7 +514,7 @@ const HomePage = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">{t('cta.title', 'Začněte svou cestu k lepší psychické pohodě ještě dnes')}</h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
-            {t('testimonials.uniqueServiceText', 'Naše platforma Psychollog.cz je unikátní díky kombinaci pokročilé umělé inteligence, která čerpá z ověřených psychologických databází (PubMed Central, Open Psychology Journal, PsyArXiv), a vize spolupráce s odborníky z praxe. Tím zajišťujeme, že poskytovaná podpora je nejen okamžitě dostupná a diskrétní, ale také informačně hodnotná a založená na vědeckých poznatcích. Naším cílem je zpřístupnit kvalitní nástroje pro sebepoznání a duševní pohodu co nejširšímu okruhu lidí.')}
+            {t('cta.subtitle', 'Vyzkoušejte AI Psychologa zdarma a objevte, jak vám může pomoci lépe porozumět vašim emocím a zvládat každodenní výzvy.')}
           </p>
           <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform text-lg">
             {tCommon('buttons.startForFree', 'Začít zdarma')}
