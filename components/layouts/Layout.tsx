@@ -16,7 +16,7 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ 
   children, 
-  title = 'AI Psycholog - Psychologická podpora s umělou inteligencí',
+  title = 'Psychollog',
   description = 'Moderní psychologická podpora s využitím umělé inteligence. Dostupná kdykoliv a kdekoliv.',
   ogImage = 'https://www.psychollog.cz/images/og-image.png', // Default OG image
   canonicalUrl = 'https://www.psychollog.cz'
@@ -68,7 +68,7 @@ const Layout: React.FC<LayoutProps> = ({
             "@context": "https://schema.org",
             "@type": "WebSite",
             "url": "https://www.psychollog.cz/",
-            "name": "AI Psycholog",
+            "name": "Psychollog",
             "potentialAction": {
               "@type": "SearchAction",
               "target": "https://www.psychollog.cz/search?q={search_term_string}",
@@ -81,7 +81,7 @@ const Layout: React.FC<LayoutProps> = ({
           dangerouslySetInnerHTML={{ __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            "name": "AI Psycholog",
+            "name": "Psychollog",
             "url": "https://www.psychollog.cz/",
             "logo": "https://www.psychollog.cz/images/hero-avatar.png",
             "contactPoint": {
