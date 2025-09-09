@@ -50,7 +50,7 @@ const KeyNumbers: React.FC = () => {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
           {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col items-center">
               <stat.icon className="text-blue-500 dark:text-blue-400 text-4xl mb-3" />
