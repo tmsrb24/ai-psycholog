@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/layouts/Layout';
 import KeyNumbers from '../components/KeyNumbers';
-import { FaRobot, FaComments, FaLock, FaChartLine, FaUserFriends, FaMoon, FaCheck, FaStar, FaUsers, FaCalendarAlt, FaFlask, FaTimes, FaUserMd, FaLightbulb, FaHandHoldingHeart, FaSeedling, FaUserShield, FaFileMedical, FaBrain } from 'react-icons/fa';
+import { FaRobot, FaComments, FaLock, FaChartLine, FaCheck, FaUsers, FaTimes, FaUserMd, FaBrain, FaFileMedical, FaUserShield } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
@@ -478,14 +478,14 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
 
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('safePayment', 'Bezpečné a rychlé online platby')}</p>
-            <div className="flex justify-center items-center space-x-4 flex-wrap">
+            <div className="flex justify-center items-center space-x-6 flex-wrap">
               <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={80} height={40} className="opacity-70" />
-              <Image src="/images/logos/visa.png" alt="Visa Logo" width={60} height={40} className="opacity-70" />
-              <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={60} height={40} className="opacity-70" />
-              <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={60} height={40} className="opacity-70" />
-              <Image src="/images/logos/master.png" alt="Mastercard Logo" width={60} height={40} className="opacity-70" />
-              <Image src="/images/logos/visak.png" alt="Visa Logo" width={60} height={40} className="opacity-70" />
-              <Image src="/images/logos/visakuz.png" alt="Visa Logo" width={60} height={40} className="opacity-70" />
+              <Image src="/images/logos/visa.png" alt="Visa Logo" width={70} height={35} className="opacity-70" />
+              <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={70} height={35} className="opacity-70" />
+              <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={70} height={35} className="opacity-70" />
+              <Image src="/images/logos/master.png" alt="Mastercard Logo" width={70} height={35} className="opacity-70" />
+              <Image src="/images/logos/visak.png" alt="Visa Logo" width={70} height={35} className="opacity-70" />
+              <Image src="/images/logos/vo.png" alt="VO Logo" width={70} height={35} className="opacity-70" />
             </div>
           </div>
 
@@ -502,7 +502,7 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">{t('cta.title', 'Začněte svou cestu k lepší psychické pohodě ještě dnes')}</h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
-            {t('cta.subtitle', 'Vyzkoušejte AI Psychologa zdarma a objevte, jak vám může pomoci lépe porozumět vašim emocím a zvládat každodenní výzvy.')}
+            {t('testimonials.uniqueServiceText', 'Naše platforma Psychollog.cz je unikátní díky kombinaci pokročilé umělé inteligence, která čerpá z ověřených psychologických databází (PubMed Central, Open Psychology Journal, PsyArXiv), a vize spolupráce s odborníky z praxe. Tím zajišťujeme, že poskytovaná podpora je nejen okamžitě dostupná a diskrétní, ale také informačně hodnotná a založená na vědeckých poznatcích. Naším cílem je zpřístupnit kvalitní nástroje pro sebepoznání a duševní pohodu co nejširšímu okruhu lidí.')}
           </p>
           <Link href="/chat" className="btn bg-white text-blue-600 hover:bg-gray-100 font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform text-lg">
             {tCommon('buttons.startForFree', 'Začít zdarma')}
@@ -513,10 +513,11 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
   );
 };
 
-export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => ({
+export const getStaticProps: GetStaticProps = async ({ locale }) => ({
   props: {
     ...(await serverSideTranslations(locale ?? 'cs', ['homepage', 'common'])),
   },
 });
 
 export default HomePage;
+
