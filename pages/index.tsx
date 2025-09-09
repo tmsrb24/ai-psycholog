@@ -477,27 +477,27 @@ const HomePage = () => {
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('safePayment', 'Bezpečné a rychlé online platby')}</p>
             <div className="flex flex-col items-center space-y-4">
-              <div className="w-48">
+              <div className="w-48 mx-auto">
                 <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={120} height={60} className="object-contain" />
               </div>
               <div className="flex justify-center items-center space-x-6 flex-wrap">
-                <div className="h-8">
-                  <Image src="/images/logos/visa.png" alt="Visa Logo" width={50} height={32} className="object-contain h-full w-auto" />
+                <div className="h-10">
+                  <Image src="/images/logos/visa.png" alt="Visa Logo" width={50} height={40} className="object-contain h-full w-auto" />
                 </div>
-                <div className="h-8">
-                  <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={50} height={32} className="object-contain h-full w-auto" />
+                <div className="h-10">
+                  <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={50} height={40} className="object-contain h-full w-auto" />
                 </div>
-                <div className="h-8">
-                  <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={50} height={32} className="object-contain h-full w-auto" />
+                <div className="h-10">
+                  <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={50} height={40} className="object-contain h-full w-auto" />
                 </div>
-                <div className="h-8">
-                  <Image src="/images/logos/master.png" alt="Mastercard Logo" width={50} height={32} className="object-contain h-full w-auto" />
+                <div className="h-10">
+                  <Image src="/images/logos/master.png" alt="Mastercard Logo" width={50} height={40} className="object-contain h-full w-auto" />
                 </div>
-                <div className="h-8">
-                  <Image src="/images/logos/visak.png" alt="Visa Logo" width={50} height={32} className="object-contain h-full w-auto" />
+                <div className="h-10">
+                  <Image src="/images/logos/visak.png" alt="Visa Logo" width={50} height={40} className="object-contain h-full w-auto" />
                 </div>
-                <div className="h-8">
-                  <Image src="/images/logos/vo.png" alt="VO Logo" width={50} height={32} className="object-contain h-full w-auto" />
+                <div className="h-10">
+                  <Image src="/images/logos/vo.png" alt="VO Logo" width={50} height={40} className="object-contain h-full w-auto" />
                 </div>
               </div>
             </div>
