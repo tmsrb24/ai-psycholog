@@ -7,6 +7,7 @@ import jsPDF from 'jspdf';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import { robotoFont } from '../lib/fonts';
 import { getSession } from 'next-auth/react';
 
 interface DiaryTag {
@@ -150,7 +151,53 @@ const DiaryPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps
     }
   };
 
-  const handleExportToPdf = () => { /* ... beze změny ... */ };
+  const handleExportToPdf = () => {
+    const doc = new jsPDF();
+    let y = 15;
+
+    doc.addFileToVFS('Roboto-Regular.ttf', robotoFont);
+    doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal');
+    doc.setFont('Roboto');
+
+    doc.setFontSize(18);
+    doc.text('Můj Deník', 105, y, { align: 'center' });
+    y += 10;
+
+    entries.forEach((entry, index) => {
+      if (y > 280) {
+        doc.addPage();
+        y = 15;
+      }
+
+      const moodObj = availableMoods.find(m => m.id === entry.mood_id);
+      const entryTags = entry.tags?.map(tagId => availableTags.find(t => t.id === tagId)).filter(Boolean) as DiaryTag[];
+
+      doc.setFontSize(12);
+      doc.text(new Date(entry.entry_date).toLocaleString(router.locale), 15, y);
+      y += 7;
+
+      if (moodObj) {
+        doc.text(`Nálada: ${moodObj.name}`, 15, y);
+        y += 7;
+      }
+
+      if (entryTags.length > 0) {
+        doc.text(`Štítky: ${entryTags.map(t => t.name).join(', ')}`, 15, y);
+        y += 7;
+      }
+
+      doc.setFontSize(10);
+      const splitContent = doc.splitTextToSize(entry.content, 180);
+      doc.text(splitContent, 15, y);
+      y += (splitContent.length * 5) + 10;
+
+      if (index < entries.length - 1) {
+        doc.line(15, y - 5, 195, y - 5);
+      }
+    });
+
+    doc.save('denik.pdf');
+  };
 
   if (status === "loading") return <Layout title={t('common:loading')}><p className="text-center p-8">{t('loadingAuth', 'Načítání autentizace...')}</p></Layout>;
   if (!session) { if (typeof window !== 'undefined') { router.push(`/auth/login?callbackUrl=${encodeURIComponent(router.pathname)}`); } return <Layout title={t('pageTitle')}><p className="text-center p-8">{t('pleaseLogIn', 'Pro přístup k deníku se prosím přihlaste.')}</p></Layout>; }
