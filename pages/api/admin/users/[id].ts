@@ -46,9 +46,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       
       res.status(200).json({ message: 'Uživatel byl úspěšně smazán.' });
-    } catch (error: any) {
-      console.error(`Error deleting user ${id}:`, error);
-      res.status(500).json({ error: error.message || 'Chyba při mazání uživatele.' });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Error deleting user ${id}:`, error);
+        res.status(500).json({ error: error.message || 'Chyba při mazání uživatele.' });
+      }
     }
   } else if (req.method === 'PUT') {
     try {
@@ -65,9 +67,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (updateError) throw updateError;
 
       res.status(200).json({ message: 'Role uživatele byla úspěšně změněna.' });
-    } catch (error: any) {
-      console.error(`Error updating role for user ${id}:`, error);
-      res.status(500).json({ error: error.message || 'Chyba při změně role uživatele.' });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error(`Error updating role for user ${id}:`, error);
+        res.status(500).json({ error: error.message || 'Chyba při změně role uživatele.' });
+      }
     }
   } else {
     res.setHeader('Allow', ['DELETE', 'PUT']);

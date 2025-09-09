@@ -8,7 +8,7 @@ import type { IconType } from 'react-icons';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import type { GetStaticProps, InferGetStaticPropsType } from 'next';
+import type { GetStaticProps } from 'next';
 
 interface Feature {
   text: string;
@@ -30,9 +30,7 @@ interface Plan {
   isRecommended?: boolean;
 }
 
-type Props = {};
-
-const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
+const HomePage = () => {
   const { t } = useTranslation('homepage'); 
   const { t: tCommon } = useTranslation('common'); 
 
@@ -479,13 +477,13 @@ const HomePage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => {
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('safePayment', 'Bezpečné a rychlé online platby')}</p>
             <div className="flex justify-center items-center space-x-6 flex-wrap">
-              <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={80} height={40} className="opacity-70" />
-              <Image src="/images/logos/visa.png" alt="Visa Logo" width={70} height={35} className="opacity-70" />
-              <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={70} height={35} className="opacity-70" />
-              <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={70} height={35} className="opacity-70" />
-              <Image src="/images/logos/master.png" alt="Mastercard Logo" width={70} height={35} className="opacity-70" />
-              <Image src="/images/logos/visak.png" alt="Visa Logo" width={70} height={35} className="opacity-70" />
-              <Image src="/images/logos/vo.png" alt="VO Logo" width={70} height={35} className="opacity-70" />
+              <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={120} height={60} />
+              <Image src="/images/logos/visa.png" alt="Visa Logo" width={105} height={52} />
+              <Image src="/images/logos/mastercard.png" alt="Mastercard Logo" width={105} height={52} />
+              <Image src="/images/logos/maestro.png" alt="Maestro Logo" width={105} height={52} />
+              <Image src="/images/logos/master.png" alt="Mastercard Logo" width={105} height={52} />
+              <Image src="/images/logos/visak.png" alt="Visa Logo" width={105} height={52} />
+              <Image src="/images/logos/vo.png" alt="VO Logo" width={105} height={52} />
             </div>
           </div>
 
@@ -520,4 +518,3 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => ({
 });
 
 export default HomePage;
-

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Layout from '../../components/layouts/Layout';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-// UserProfileData zde není přímo potřeba, definujeme AdminUser explicitně
-import { UserProfileData } from '../../types/user';
+import Image from 'next/image';
 
 interface AdminUser {
   id: string;
@@ -35,7 +34,7 @@ const AdminUsersPage: React.FC = () => {
         const data = await response.json();
         alert(`Chyba při změně role: ${data.error}`);
       }
-    } catch (err) {
+    } catch {
       alert('Došlo k chybě při komunikaci se serverem.');
     }
   };
@@ -52,7 +51,7 @@ const AdminUsersPage: React.FC = () => {
           const data = await response.json();
           alert(`Chyba při mazání uživatele: ${data.error}`);
         }
-      } catch (err) {
+      } catch {
         alert('Došlo k chybě při komunikaci se serverem.');
       }
     }
@@ -79,8 +78,10 @@ const AdminUsersPage: React.FC = () => {
           }
           const data = await response.json();
           setUsers(data);
-        } catch (err: any) {
-          setError(err.message);
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            setError(err.message);
+          }
         } finally {
           setIsLoading(false);
         }
@@ -141,7 +142,7 @@ const AdminUsersPage: React.FC = () => {
                   <tr key={user.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {user.avatar_url ? (
-                        <img className="h-10 w-10 rounded-full" src={user.avatar_url} alt={user.name || 'Avatar'} />
+                        <Image className="h-10 w-10 rounded-full" src={user.avatar_url} alt={user.name || 'Avatar'} width={40} height={40} />
                       ) : (
                         <div className="h-10 w-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-gray-500 dark:text-gray-400">
                           {user.name ? user.name.charAt(0).toUpperCase() : '?'}

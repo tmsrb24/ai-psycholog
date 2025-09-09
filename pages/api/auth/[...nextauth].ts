@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: {  label: "Password", type: "password" }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           console.error("[NextAuth Credentials] Missing email or password in credentials object");
           return null;
@@ -82,7 +82,7 @@ export const authOptions: NextAuthOptions = {
         userId: user?.id, 
         userEmail: user?.email, 
         accountProvider: account?.provider, 
-        profileSub: (profile as any)?.sub 
+        profileSub: (profile as Record<string, unknown>)?.sub
       });
       return true;
     },
@@ -98,7 +98,7 @@ export const authOptions: NextAuthOptions = {
       if (user && account) {
         console.log("[NextAuth] JWT: 'user' and 'account' objects are present. Processing as new sign-in / account link.");
         
-        const newToken: { [key: string]: any } = {}; // Start with a clean token for new sign-ins
+        const newToken: { [key: string]: unknown } = {}; // Start with a clean token for new sign-ins
         let supabaseUserId: string | null = null;
 
         if (user.id && typeof user.id === 'string' && user.id.length === 36) { 
@@ -132,7 +132,7 @@ export const authOptions: NextAuthOptions = {
                       email_confirm: true, // Email is verified by Google
                       user_metadata: {
                         full_name: user.name || profile?.name,
-                        avatar_url: user.image || (profile as any)?.picture,
+                        avatar_url: user.image || (profile as Record<string, unknown>)?.picture,
                         provider_id: user.id, 
                       }
                     });
@@ -148,15 +148,19 @@ export const authOptions: NextAuthOptions = {
                     } else {
                        console.error("[NextAuth] JWT: createUser call did not return a user object nor an error. SupabaseUserId remains null.");
                     }
-                  } catch (createErr: any) {
-                    console.error("[NextAuth] JWT: Exception during Supabase auth user creation:", createErr.message, createErr.stack);
+                  } catch (createErr: unknown) {
+                    if (createErr instanceof Error) {
+                      console.error("[NextAuth] JWT: Exception during Supabase auth user creation:", createErr.message, createErr.stack);
+                    }
                   }
                 } else {
                   console.warn(`[NextAuth] JWT: Not a Google provider or email missing for creation. User email: ${user.email}, Provider: ${account.provider}`);
                 }
               }
-            } catch (e: any) {
-              console.error("[NextAuth] JWT: General exception while fetching/creating Supabase auth user by email:", e.message, e.stack);
+            } catch (e: unknown) {
+              if (e instanceof Error) {
+                console.error("[NextAuth] JWT: General exception while fetching/creating Supabase auth user by email:", e.message, e.stack);
+              }
             }
           } else {
             console.error("[NextAuth] JWT CRITICAL: user.email is missing from provider, cannot look up or create Supabase user.");
@@ -168,7 +172,7 @@ export const authOptions: NextAuthOptions = {
           newToken.id = supabaseUserId; 
           newToken.email = user.email ?? undefined;
           newToken.name = user.name ?? profile?.name ?? undefined;
-          newToken.image = user.image ?? (profile as any)?.picture ?? undefined;
+          newToken.image = user.image ?? (profile as Record<string, unknown>)?.picture ?? undefined;
           if (account.access_token) newToken.accessToken = account.access_token;
           if (account.provider) newToken.provider = account.provider;
           
@@ -216,9 +220,9 @@ export const authOptions: NextAuthOptions = {
   },
   debug: true,
   logger: {
-    error(code: any, metadata: any) { console.error("[NextAuth ERROR]", { code, ...metadata }); },
-    warn(code: any) { console.warn("[NextAuth WARN]", code); },
-    debug(code: any, metadata: any) { console.log("[NextAuth DEBUG]", { code, ...metadata }); }
+    error(code: string, metadata: unknown) { console.error("[NextAuth ERROR]", { code, metadata }); },
+    warn(code: string) { console.warn("[NextAuth WARN]", code); },
+    debug(code: string, metadata: unknown) { console.log("[NextAuth DEBUG]", { code, metadata }); }
   }
 };
 
