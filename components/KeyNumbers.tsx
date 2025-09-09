@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useInView, motion, animate } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
-import { FaUsers, FaComments } from 'react-icons/fa';
+import { FaUsers, FaComments, FaBook } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 
 interface Stat {
@@ -18,6 +18,7 @@ const KeyNumbers: React.FC = () => {
   const stats: Stat[] = [
     { label: t('keyNumbers.users', 'Registrovaní uživatelé'), value: 72, icon: FaUsers },
     { label: t('keyNumbers.messages', 'Vyměněných zpráv'), value: 3678, icon: FaComments },
+    { label: t('keyNumbers.diaryEntries', 'Deníkových zápisů'), value: 200, icon: FaBook },
   ];
 
   const StatCounter = ({ to }: { to: number }) => {
@@ -49,7 +50,7 @@ const KeyNumbers: React.FC = () => {
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {stats.map((stat) => (
             <div key={stat.label} className="flex flex-col items-center">
               <stat.icon className="text-blue-500 dark:text-blue-400 text-4xl mb-3" />
