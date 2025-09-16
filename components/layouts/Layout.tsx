@@ -1,5 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import WidgetChatButton from '../chat/WidgetChatButton';
@@ -11,21 +12,24 @@ interface LayoutProps {
   title?: string;
   description?: string;
   ogImage?: string;
-  canonicalUrl?: string;
 }
 
-const Layout: React.FC<LayoutProps> = ({ 
-  children, 
+const Layout: React.FC<LayoutProps> = ({
+  children,
   title = 'Psychollog',
   description = 'Moderní psychologická podpora s využitím umělé inteligence. Dostupná kdykoliv a kdekoliv.',
   ogImage = 'https://www.psychollog.cz/images/og-image.png', // Default OG image
-  canonicalUrl = 'https://www.psychollog.cz'
 }) => {
+  const router = useRouter();
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
 
   const toggleWidget = () => {
     setIsWidgetOpen(!isWidgetOpen);
   };
+
+  // Generate canonical URL to the Czech version
+  const canonicalPath = router.asPath.replace(/^\/(en|uk)/, '');
+  const canonicalUrl = `https://www.psychollog.cz${canonicalPath === '' ? '/' : canonicalPath}`;
 
   return (
     <div className="flex flex-col min-h-screen">
