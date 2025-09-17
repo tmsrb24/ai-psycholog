@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaGithub, FaTwitter, FaEnvelope, FaLanguage } from 'react-icons/fa';
+import { FaGithub, FaTwitter, FaEnvelope, FaLanguage, FaPhone, FaInstagram } from 'react-icons/fa';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
@@ -93,15 +93,15 @@ const Footer: React.FC = () => {
                 </a>
               </li>
               <li className="flex items-center">
-                <FaGithub className="text-gray-600 dark:text-gray-400 mr-2" />
-                <a href="https://github.com/tmsrb24/ai-psycholog" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
-                  {t('footer.github', 'GitHub')}
+                <FaPhone className="text-gray-600 dark:text-gray-400 mr-2" />
+                <a href="tel:+420608021681" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
+                  +420 608 021 681
                 </a>
               </li>
               <li className="flex items-center">
-                <FaTwitter className="text-gray-600 dark:text-gray-400 mr-2" />
-                <a href="#" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
-                  {t('footer.twitter', 'Twitter')}
+                <FaInstagram className="text-gray-600 dark:text-gray-400 mr-2" />
+                <a href="https://www.instagram.com/psychollog.cz/" target="_blank" rel="noopener noreferrer" className="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-300">
+                  {t('footer.instagram', 'Instagram')}
                 </a>
               </li>
             </ul>
