@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '../components/layouts/Layout';
-import { FaEnvelope, FaUser, FaPaperPlane, FaComments } from 'react-icons/fa';
+import { FaEnvelope, FaUser, FaPaperPlane, FaComments, FaPhone } from 'react-icons/fa';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetStaticProps, InferGetStaticPropsType } from 'next';
@@ -68,6 +68,11 @@ const KontaktPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
           <p className="text-lg md:text-xl opacity-90">
             {t('header.subtitle', 'Máte dotaz, návrh na zlepšení nebo potřebujete pomoci? Neváhejte nám napsat.')}
           </p>
+          <div className="mt-4 text-lg md:text-xl opacity-90">
+            <a href="tel:+420608021681" className="flex items-center justify-center hover:text-blue-300">
+              <FaPhone className="mr-3" /> +420 608 021 681
+            </a>
+          </div>
         </div>
       </section>
 
