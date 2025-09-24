@@ -39,7 +39,7 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
   const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGoPaySubscribe = async () => {
+  const handlePayUSubscribe = async () => {
     setIsLoading(true);
     if (!session) {
       router.push('/auth/login?callbackUrl=/pricing');
@@ -47,7 +47,7 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
     }
 
     try {
-      const response = await fetch('/api/gopay/create-payment', {
+      const response = await fetch('/api/payu/create-payment', {
         method: 'POST',
       });
 
@@ -55,10 +55,10 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
         throw new Error('Failed to create payment session.');
       }
 
-      const { gw_url } = await response.json();
-      window.location.href = gw_url;
+      const { redirectUri } = await response.json();
+      window.location.href = redirectUri;
     } catch (error) {
-      console.error('Error creating GoPay payment session:', error);
+      console.error('Error creating PayU payment session:', error);
       alert('Došlo k chybě při zpracování platby. Zkuste to prosím znovu.');
     } finally {
       setIsLoading(false);
@@ -102,7 +102,7 @@ const PricingPage = (_props: InferGetStaticPropsType<typeof getStaticProps>) => 
         { text: t('plans.premium.features.7', 'Prioritní podpora'), included: true },
       ],
       buttonText: t('plans.premium.buttonText', 'Předplatit Premium'),
-      action: handleGoPaySubscribe,
+      action: handlePayUSubscribe,
       isRecommended: true,
       planId: 'premium'
     },
