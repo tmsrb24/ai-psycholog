@@ -65,7 +65,7 @@ export async function createPayUPayment(amount: number, orderNumber: string, use
 
   const paymentData = {
     notifyUrl: `${process.env.NEXTAUTH_URL}/api/payu/callback`,
-    continueUrl: `${process.env.NEXTAUTH_URL}/checkout/success`,
+    continueUrl: `${process.env.NEXTAUTH_URL}/profile`,
     customerIp,
     merchantPosId: PAYU_POS_ID,
     description: 'AI Psycholog Premium Subscription',

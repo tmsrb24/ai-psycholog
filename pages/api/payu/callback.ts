@@ -3,6 +3,22 @@ import { verifyPayUPayment } from '../../../lib/payu';
 import { getSupabaseAdmin } from '../../../lib/supabaseClient';
 import crypto from 'crypto';
 
+// Helper to get raw body
+async function getRawBody(req: NextApiRequest): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', (err) => reject(err));
+  });
+}
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -10,11 +26,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const signatureHeader = req.headers['openpayu-signature'] as string;
-  const body = req.body;
-
   if (!signatureHeader) {
     return res.status(400).json({ error: 'Signature header is missing.' });
   }
+
+  const rawBody = await getRawBody(req);
+  const body = JSON.parse(rawBody.toString());
 
   // Verify the signature
   const PAYU_CLIENT_SECRET = process.env.PAYU_CLIENT_SECRET; // Second key (MD5)
@@ -25,7 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const expectedSignature = crypto
     .createHash('md5')
-    .update(JSON.stringify(body) + PAYU_CLIENT_SECRET)
+    .update(rawBody.toString() + PAYU_CLIENT_SECRET)
     .digest('hex');
 
   const signatureParts = signatureHeader.split(';').reduce((acc, part) => {
@@ -35,6 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }, {} as { [key: string]: string });
 
   if (signatureParts.signature !== expectedSignature) {
+    console.error(`Invalid signature. Expected: ${expectedSignature}, Got: ${signatureParts.signature}`);
     return res.status(400).json({ error: 'Invalid signature.' });
   }
 
