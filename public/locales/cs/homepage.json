@@ -28,12 +28,30 @@
       "text": "Náš AI asistent využívá architekturu typu Retrieval-Augmented Generation (RAG) – propojuje jazykový model s vlastní odbornou psychologickou databází. Díky tomu poskytuje přesné, kontextově přizpůsobené odpovědi v reálném čase, které vycházejí z ověřených poznatků a vaší situace."
     }
   },
+  "principles": {
+    "title": "Klíčové principy naší služby",
+    "subtitle": "Naše platforma je postavena na pevných základech, které zaručují kvalitní a bezpečnou podporu.",
+    "cards": [
+      {
+        "title": "Dostupnost",
+        "subtitle": "Podpora na dosah ruky",
+        "text": "Věříme, že pomoc by měla být dostupná okamžitě, bez ohledu na čas nebo místo. Naše služba je vám k dispozici 24/7."
+      },
+      {
+        "title": "Soukromí",
+        "subtitle": "Bezpečný a anonymní prostor",
+        "text": "Vaše důvěra je pro nás klíčová. Zaručujeme 100% anonymitu a bezpečné šifrování všech vašich konverzací."
+      },
+      {
+        "title": "Důvěryhodnost",
+        "subtitle": "Založeno na vědeckých poznatcích",
+        "text": "Naše odpovědi čerpají z ověřených psychologických databází, abychom vám poskytli relevantní a bezpečné informace."
+      }
+    ]
+  },
   "testimonials": {
-    "title": "Názory odborníků",
-    "subtitle": "Co o Psychollog.cz říkají profesionálové z oboru psychologie a psychiatrie.",
     "uniqueServiceTitle": "Proč je naše služba unikátní?",
-    "uniqueServiceText": "Naše platforma Psychollog.cz je unikátní díky kombinaci pokročilé umělé inteligence, která čerpá z ověřených psychologických databází (PubMed Central, Open Psychology Journal, PsyArXiv), a vize spolupráce s odborníky z praxe. Tím zajišťujeme, že poskytovaná podpora je nejen okamžitě dostupná a diskrétní, ale také informačně hodnotná a založená na vědeckých poznatcích. Naším cílem je zpřístupnit kvalitní nástroje pro sebepoznání a duševní pohodu co nejširšímu okruhu lidí.",
-    "avatarAlt": "Avatar pro {{name}}"
+    "uniqueServiceText": "Naše platforma Psychollog.cz je unikátní díky kombinaci pokročilé umělé inteligence, která čerpá z ověřených psychologických databází (PubMed Central, Open Psychology Journal, PsyArXiv), a vize spolupráce s odborníky z praxe. Tím zajišťujeme, že poskytovaná podpora je nejen okamžitě dostupná a diskrétní, ale také informačně hodnotná a založená na vědeckých poznatcích. Naším cílem je zpřístupnit kvalitní nástroje pro sebepoznání a duševní pohodu co nejširšímu okruhu lidí."
   },
   "howItWorks": {
     "title": "Jak to funguje?",

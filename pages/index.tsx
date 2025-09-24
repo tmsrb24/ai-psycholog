@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/layouts/Layout';
 import KeyNumbers from '../components/KeyNumbers';
-import { FaRobot, FaComments, FaLock, FaChartLine, FaCheck, FaUsers, FaTimes, FaUserMd, FaBrain, FaFileMedical, FaUserShield } from 'react-icons/fa';
+import { FaRobot, FaComments, FaLock, FaChartLine, FaCheck, FaUsers, FaTimes, FaUserMd, FaBrain, FaFileMedical, FaUserShield, FaUniversalAccess } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
@@ -143,23 +143,23 @@ const HomePage = () => {
     }
   ];
 
-  const testimonials = [
+  const principles = [
     {
-      name: 'Dr. Eva Novotná, PhD.',
-      specialization: 'Kognitivně-behaviorální terapie (KBT)',
-      quote: "Psychollog.cz představuje inovativní most k dostupnější duševní péči. Oceňuji jeho schopnost poskytnout okamžitou, daty podloženou podporu, která může být skvělým prvním krokem nebo doplňkem tradiční terapie.",
-      icon: FaUserMd
+      name: t('principles.cards.0.title'),
+      specialization: t('principles.cards.0.subtitle'),
+      quote: t('principles.cards.0.text'),
+      icon: FaUniversalAccess
     },
     {
-      name: 'Mgr. Petr Dvořák',
-      specialization: 'Rodinná a párová terapie',
-      quote: "V dnešní uspěchané době je klíčové mít nástroje, které pomáhají lidem reflektovat a pracovat na svých vztazích. Psychollog.cz nabízí diskrétní prostor pro první seznámení s psychologickými koncepty.",
-      icon: FaUsers
+      name: t('principles.cards.1.title'),
+      specialization: t('principles.cards.1.subtitle'),
+      quote: t('principles.cards.1.text'),
+      icon: FaUserShield
     },
     {
-      name: 'MUDr. Jana Svobodová',
-      specialization: 'Psychiatrie a psychosomatika',
-      quote: "Propojení moderních technologií s ověřenými psychologickými přístupy, jaké vidíme u Psychollog.cz, má velký potenciál v destigmatizaci péče o duševní zdraví a v poskytování včasné intervence.",
+      name: t('principles.cards.2.title'),
+      specialization: t('principles.cards.2.subtitle'),
+      quote: t('principles.cards.2.text'),
       icon: FaBrain
     }
   ];
@@ -314,27 +314,27 @@ const HomePage = () => {
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('testimonials.title', 'Názory odborníků')}</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('principles.title')}</h2>
             <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              {t('testimonials.subtitle', 'Co o Psychollog.cz říkají profesionálové z oboru psychologie a psychiatrie.')}
+              {t('principles.subtitle')}
             </p>
           </div>
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
             variants={featureContainerVariants}
           >
-            {testimonials.map((testimonial, index) => (
-              <motion.div 
-                key={index} 
+            {principles.map((principle, index) => (
+              <motion.div
+                key={index}
                 variants={featureCardVariants}
                 className="bg-gray-100/70 dark:bg-slate-700/70 backdrop-blur-sm p-6 rounded-lg shadow-lg text-center transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
               >
                 <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center bg-blue-100 dark:bg-slate-600">
-                  <testimonial.icon className="text-blue-600 dark:text-blue-300" size={48} />
+                  <principle.icon className="text-blue-600 dark:text-blue-300" size={48} />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">{testimonial.name}</h3>
-                <p className="text-sm text-blue-600 dark:text-blue-400 mb-3">{testimonial.specialization}</p>
-                <p className="text-gray-600 dark:text-gray-400 text-sm italic">"{testimonial.quote}"</p>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">{principle.name}</h3>
+                <p className="text-sm text-blue-600 dark:text-blue-400 mb-3">{principle.specialization}</p>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">"{principle.quote}"</p>
               </motion.div>
             ))}
           </motion.div>
@@ -477,7 +477,6 @@ const HomePage = () => {
           <div className="mt-12 text-center">
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">{t('safePayment', 'Bezpečné a rychlé online platby')}</p>
             <div className="flex flex-col items-center space-y-4">
-              <Image src="/images/logos/gopay.png" alt="GoPay Logo" width={120} height={60} className="object-contain" />
               <div className="flex justify-center items-center space-x-6 flex-wrap">
                 <div className="h-10">
                   <Image src="/images/logos/visa.png" alt="Visa Logo" width={50} height={40} className="object-contain h-full w-auto" />
