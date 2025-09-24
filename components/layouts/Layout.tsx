@@ -27,9 +27,11 @@ const Layout: React.FC<LayoutProps> = ({
     setIsWidgetOpen(!isWidgetOpen);
   };
 
-  // Generate canonical URL to the Czech version
-  const canonicalPath = router.asPath.replace(/^\/(en|uk)/, '');
-  const canonicalUrl = `https://www.psychollog.cz${canonicalPath === '' ? '/' : canonicalPath}`;
+  const { locale, asPath, locales } = router;
+  const siteUrl = 'https://www.psychollog.cz';
+
+  // Generate self-referencing canonical URL
+  const canonicalUrl = `${siteUrl}${locale === 'cs' ? '' : `/${locale}`}${asPath === '/' ? '' : asPath}`;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -40,6 +42,12 @@ const Layout: React.FC<LayoutProps> = ({
         <meta name="author" content="Psychollog.cz" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href={canonicalUrl} />
+
+        {/* Hreflang tags */}
+        {locales?.map((loc) => (
+          <link key={loc} rel="alternate" hrefLang={loc} href={`${siteUrl}${loc === 'cs' ? '' : `/${loc}`}${asPath === '/' ? '' : asPath}`} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}${asPath === '/' ? '' : asPath}`} />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
