@@ -2,10 +2,9 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 const PAYU_API_URL = process.env.PAYU_API_URL || 'https://secure.payu.com';
-const PAYU_CLIENT_ID = process.env.PAYU_CLIENT_ID; // POS ID
-const PAYU_CLIENT_SECRET = process.env.PAYU_CLIENT_SECRET; // Second key (MD5)
-const PAYU_OAUTH_CLIENT_ID = process.env.PAYU_OAUTH_CLIENT_ID; // OAuth Client ID
-const PAYU_OAUTH_CLIENT_SECRET = process.env.PAYU_OAUTH_CLIENT_SECRET; // OAuth Client Secret
+const PAYU_CLIENT_ID = process.env.PAYU_CLIENT_ID;
+const PAYU_CLIENT_SECRET = process.env.PAYU_CLIENT_SECRET;
+const PAYU_POS_ID = process.env.PAYU_POS_ID;
 
 interface PayUToken {
   access_token: string;
@@ -21,18 +20,18 @@ async function getAccessToken(): Promise<string> {
     return tokenCache.token;
   }
 
-  if (!PAYU_OAUTH_CLIENT_ID || !PAYU_OAUTH_CLIENT_SECRET) {
-    throw new Error('PayU OAuth client ID or secret is not configured.');
+  if (!PAYU_CLIENT_ID || !PAYU_CLIENT_SECRET) {
+    throw new Error('PayU client ID or secret is not configured.');
   }
 
   const params = new URLSearchParams();
   params.append('grant_type', 'client_credentials');
-  params.append('client_id', PAYU_OAUTH_CLIENT_ID);
-  params.append('client_secret', PAYU_OAUTH_CLIENT_SECRET);
+  params.append('client_id', PAYU_CLIENT_ID);
+  params.append('client_secret', PAYU_CLIENT_SECRET);
 
   try {
     const response = await axios.post<PayUToken>(
-      `${PAYU_API_URL}/pl/v4/oauth/token`,
+      `${PAYU_API_URL}/pl/standard/user/oauth/authorize`,
       params,
       {
         headers: {
@@ -55,8 +54,8 @@ async function getAccessToken(): Promise<string> {
 }
 
 export async function createPayUPayment(amount: number, orderNumber: string, user: { email: string, id: string }) {
-  if (!PAYU_CLIENT_ID) {
-    throw new Error('PayU Client ID (POS ID) is not configured.');
+  if (!PAYU_POS_ID) {
+    throw new Error('PayU POS ID is not configured.');
   }
 
   const accessToken = await getAccessToken();
@@ -66,7 +65,7 @@ export async function createPayUPayment(amount: number, orderNumber: string, use
     notifyUrl: `${process.env.NEXTAUTH_URL}/api/payu/callback`,
     continueUrl: `${process.env.NEXTAUTH_URL}/checkout/success`,
     customerIp,
-    merchantPosId: PAYU_CLIENT_ID,
+    merchantPosId: PAYU_POS_ID,
     description: 'AI Psycholog Premium Subscription',
     currencyCode: 'CZK',
     totalAmount: (amount * 100).toString(), // Amount in cents as a string
