@@ -63,11 +63,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    if (order.status === 'COMPLETED') {
-      const userId = order.extOrderId.split('-')[1];
+    // The orderId from PayU is the actual transaction identifier
+    const payuOrderId = order.orderId;
+    if (!payuOrderId) {
+      return res.status(400).json({ error: 'PayU Order ID is missing in callback.' });
+    }
+
+    // Verify the payment status directly with PayU as a source of truth
+    const paymentDetails = await verifyPayUPayment(payuOrderId);
+    const paymentStatus = paymentDetails?.orders?.[0]?.status;
+
+    if (paymentStatus === 'COMPLETED') {
+      const extOrderId = paymentDetails.orders[0].extOrderId;
+      const userId = extOrderId.split('-')[1];
 
       if (!userId) {
-        throw new Error(`Could not extract user ID from order number: ${order.extOrderId}`);
+        throw new Error(`Could not extract user ID from extOrderId: ${extOrderId}`);
       }
 
       const supabaseAdmin = getSupabaseAdmin();
@@ -75,24 +86,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const endDate = new Date();
       endDate.setDate(startDate.getDate() + 31); // Set subscription for 31 days
 
-      // Upsert subscription for the user
       const { error: upsertError } = await supabaseAdmin
         .from('subscriptions')
-        .upsert({
-          user_id: userId,
-          plan_id: 'premium',
-          status: 'active',
-          start_date: startDate.toISOString(),
-          end_date: endDate.toISOString(),
-        }, { onConflict: 'user_id' });
+        .upsert(
+          {
+            user_id: userId,
+            plan_id: 'premium',
+            status: 'active',
+            start_date: startDate.toISOString(),
+            end_date: endDate.toISOString(),
+          },
+          { onConflict: 'user_id' }
+        );
 
       if (upsertError) {
         throw new Error(`Failed to update subscription for user ${userId}: ${upsertError.message}`);
       }
 
-      console.log(`Successfully activated premium subscription for user ${userId}`);
+      console.log(`Successfully verified and activated premium subscription for user ${userId}`);
     } else {
-      console.log(`PayU payment for order ${order.extOrderId} status is ${order.status}. No action taken.`);
+      console.log(`PayU payment for order ${payuOrderId} has status '${paymentStatus}'. No action taken.`);
     }
 
     res.status(200).send('OK');
