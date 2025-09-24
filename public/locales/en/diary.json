@@ -7,6 +7,11 @@
     "title": "My Diary",
     "subtitle": "A safe space for your thoughts, feelings, and daily reflections."
   },
+  "moodAnalysis": {
+    "title": "Mood Analysis",
+    "loading": "Loading mood data...",
+    "noData": "No mood data available yet."
+  },
   "newEntry": {
     "title": "New Entry",
     "placeholder": "What's on your mind today?",

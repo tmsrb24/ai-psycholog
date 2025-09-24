@@ -7,6 +7,11 @@
     "title": "Můj Deník",
     "subtitle": "Bezpečný prostor pro vaše myšlenky, pocity a každodenní reflexe."
   },
+  "moodAnalysis": {
+    "title": "Analýza nálady",
+    "loading": "Načítání dat o náladě...",
+    "noData": "Zatím nejsou k dispozici žádná data o náladě."
+  },
   "newEntry": {
     "title": "Nový zápis",
     "placeholder": "Co máte dnes na srdci?",

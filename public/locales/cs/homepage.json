@@ -137,5 +137,24 @@
     "title": "Začněte svou cestu k lepší psychické pohodě ještě dnes",
     "subtitle": "Vyzkoušejte AI Psychologa zdarma a objevte, jak vám může pomoci lépe porozumět vašim emocím a zvládat každodenní výzvy."
   },
-  "safePayment": "Bezpečné a rychlé online platby"
+  "safePayment": "Bezpečné a rychlé online platby",
+  "personalization": {
+    "title": "Přizpůsobte si svého asistenta",
+    "subtitle": "Vytvořte si podporu, která vám bude skutečně rozumět. Váš asistent se může přizpůsobit vašim potřebám a preferencím.",
+    "cards": [
+      {
+        "title": "Nastavení osobnosti",
+        "text": "Vyberte si styl komunikace, pohlaví a dokonce i jméno vašeho asistenta. Vytvořte si společníka, se kterým se budete cítit nejpříjemněji."
+      },
+      {
+        "title": "Podpora s ohledem na náladu",
+        "text": "Propojte svého asistenta s deníkem nálad. Bude tak lépe chápat váš emoční stav a poskytovat relevantnější a empatičtější podporu."
+      },
+      {
+        "title": "Váš osobní prostor",
+        "text": "Všechna nastavení můžete kdykoliv změnit ve svém profilu. Vaše cesta k duševní pohodě je plně ve vašich rukou."
+      }
+    ],
+    "button": "Přejít do nastavení"
+  }
 }

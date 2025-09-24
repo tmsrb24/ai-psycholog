@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useSession, signOut } from 'next-auth/react'; // Added signOut
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Layout from '../components/layouts/Layout';
 import Image from 'next/image';
-import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog, FaSpinner, FaCrown } from 'react-icons/fa'; // Added FaSpinner and FaCrown
+import { FaUser, FaEnvelope, FaSave, FaCamera, FaShieldAlt, FaTrashAlt, FaKey, FaCog, FaSpinner, FaCrown } from 'react-icons/fa';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
+import { UserProfileData } from '../types/user';
 
 type Subscription = {
   plan_id: string;
@@ -26,11 +27,17 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
-  const [isDeletingAccount, setIsDeletingAccount] = useState(false); // New state for delete
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [preferences, setPreferences] = useState<UserProfileData['preferences']>({
+    responseLength: 'medium',
+    communicationStyle: 'casual',
+    notificationFrequency: 'none',
+    assistantGender: 'male',
+  });
 
   useEffect(() => {
     if (!loading && !session) {
@@ -43,6 +50,27 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
       setName(session.user.name || '');
       setEmail(session.user.email || '');
     }
+  }, [session]);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (session) {
+        try {
+          const response = await fetch('/api/user/profile');
+          if (response.ok) {
+            const data = await response.json();
+            if (data.preferences) {
+              setPreferences(data.preferences);
+            }
+          } else {
+            console.error('Failed to fetch profile');
+          }
+        } catch (error) {
+          console.error('Error fetching profile:', error);
+        }
+      }
+    };
+    fetchProfile();
   }, [session]);
 
   useEffect(() => {
@@ -75,13 +103,11 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
       const response = await fetch('/api/user/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email }), 
+        body: JSON.stringify({ name, email, preferences }),
       });
       const data = await response.json();
       if (response.ok) {
         setMessage({ type: 'success', text: t('messages.profileUpdateSuccess') });
-        // Optionally, update session data if name/email change affects it
-        // await update({ ...session, user: { ...session?.user, name, email } }); // Requires update from useSession
       } else {
         setMessage({ type: 'error', text: data.message || t('messages.profileUpdateError') });
       }
@@ -99,12 +125,12 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
     setIsDeletingAccount(true);
     setMessage({ type: '', text: '' });
     try {
-      const response = await fetch('/api/user/account', { // New API endpoint
+      const response = await fetch('/api/user/account', {
         method: 'DELETE',
       });
       if (response.ok) {
         setMessage({ type: 'success', text: t('security.deleteAccount.deleteSuccess') });
-        await signOut({ callbackUrl: '/' }); // Sign out and redirect to home
+        await signOut({ callbackUrl: '/' });
       } else {
         const data = await response.json();
         setMessage({ type: 'error', text: data.message || t('security.deleteAccount.deleteError') });
@@ -130,7 +156,6 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
       const data = await response.json();
       if (response.ok) {
         setMessage({ type: 'success', text: t('messages.avatarUpdateSuccess') });
-        // This is a bit of a hack to force a session refresh
         window.location.reload();
       } else {
         setMessage({ type: 'error', text: data.message || t('messages.avatarUpdateError') });
@@ -214,7 +239,6 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
                         setAvatarFile(e.target.files[0]);
-                        // Immediately trigger upload or show a save button
                         handleAvatarUpload(e.target.files[0]);
                       }
                     }}
@@ -270,7 +294,7 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                     onChange={(e) => setEmail(e.target.value)}
                     className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder={t('personalInfo.form.email.placeholder')}
-                    disabled={isUpdatingProfile} // Email change should be handled carefully, perhaps separately
+                    disabled={isUpdatingProfile}
                   />
                 </div>
               </div>
@@ -283,7 +307,7 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                 >
                   {isUpdatingProfile ? (
                     <>
-                      <FaSpinner className="animate-spin mr-2 h-4 w-4" /> {/* Added spinner */}
+                      <FaSpinner className="animate-spin mr-2 h-4 w-4" />
                       {t('personalInfo.form.saving')}
                     </>
                   ) : (
@@ -340,6 +364,81 @@ const ProfilePage = (_props: InferGetServerSidePropsType<typeof getServerSidePro
                 </button>
               </div>
             )}
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg overflow-hidden">
+          <div className="p-6 md:p-8">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center">
+              <FaCog className="mr-3 text-blue-500" />
+              {t('chatbotSettings.title', 'Nastavení Chatbota')}
+            </h2>
+            <form onSubmit={handleProfileSubmit} className="space-y-6">
+              {/* Response Length */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('chatbotSettings.responseLength.label')}</label>
+                <div className="mt-2 flex space-x-4">
+                  <label className="inline-flex items-center">
+                    <input type="radio" className="form-radio" name="responseLength" value="short" checked={preferences.responseLength === 'short'} onChange={(e) => setPreferences({ ...preferences, responseLength: e.target.value as any })} />
+                    <span className="ml-2">{t('chatbotSettings.responseLength.short')}</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input type="radio" className="form-radio" name="responseLength" value="medium" checked={preferences.responseLength === 'medium'} onChange={(e) => setPreferences({ ...preferences, responseLength: e.target.value as any })} />
+                    <span className="ml-2">{t('chatbotSettings.responseLength.medium')}</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input type="radio" className="form-radio" name="responseLength" value="long" checked={preferences.responseLength === 'long'} onChange={(e) => setPreferences({ ...preferences, responseLength: e.target.value as any })} />
+                    <span className="ml-2">{t('chatbotSettings.responseLength.long')}</span>
+                  </label>
+                </div>
+              </div>
+              {/* Communication Style */}
+              <div>
+                <label htmlFor="communicationStyle" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('chatbotSettings.communicationStyle.label')}</label>
+                <select id="communicationStyle" name="communicationStyle" value={preferences.communicationStyle} onChange={(e) => setPreferences({ ...preferences, communicationStyle: e.target.value as any })} className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                  <option value="casual">{t('chatbotSettings.communicationStyle.casual')}</option>
+                  <option value="formal">{t('chatbotSettings.communicationStyle.formal')}</option>
+                </select>
+              </div>
+              {/* Assistant Gender */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('chatbotSettings.assistantGender.label')}</label>
+                <div className="mt-2 flex space-x-4">
+                  <label className="inline-flex items-center">
+                    <input type="radio" className="form-radio" name="assistantGender" value="male" checked={preferences.assistantGender === 'male'} onChange={(e) => setPreferences({ ...preferences, assistantGender: e.target.value as any })} />
+                    <span className="ml-2">{t('chatbotSettings.assistantGender.male')}</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input type="radio" className="form-radio" name="assistantGender" value="female" checked={preferences.assistantGender === 'female'} onChange={(e) => setPreferences({ ...preferences, assistantGender: e.target.value as any })} />
+                    <span className="ml-2">{t('chatbotSettings.assistantGender.female')}</span>
+                  </label>
+                </div>
+              </div>
+              {/* Assistant Name */}
+              <div>
+                <label htmlFor="assistantName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">{t('chatbotSettings.assistantName.label')}</label>
+                <input type="text" name="assistantName" id="assistantName" value={preferences.assistantName || ''} onChange={(e) => setPreferences({ ...preferences, assistantName: e.target.value })} className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" />
+              </div>
+              <div className="pt-2 flex justify-end">
+                <button
+                  type="submit"
+                  className="flex items-center justify-center px-6 py-2.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 disabled:opacity-70"
+                  disabled={isUpdatingProfile}
+                >
+                  {isUpdatingProfile ? (
+                    <>
+                      <FaSpinner className="animate-spin mr-2 h-4 w-4" />
+                      {t('personalInfo.form.saving')}
+                    </>
+                  ) : (
+                    <>
+                      <FaSave className="mr-2" />
+                      {t('personalInfo.form.saveChanges')}
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 

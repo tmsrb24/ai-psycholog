@@ -54,5 +54,27 @@
       "label": "Preferred Interface Language",
       "saving": "Saving language..."
     }
+  },
+  "chatbotSettings": {
+    "title": "Chatbot Settings",
+    "responseLength": {
+      "label": "Response Length",
+      "short": "Short",
+      "medium": "Medium",
+      "long": "Long"
+    },
+    "communicationStyle": {
+      "label": "Communication Style",
+      "formal": "Formal",
+      "casual": "Casual"
+    },
+    "assistantGender": {
+      "label": "Assistant Gender",
+      "male": "Male",
+      "female": "Female"
+    },
+    "assistantName": {
+      "label": "Assistant Name"
+    }
   }
 }

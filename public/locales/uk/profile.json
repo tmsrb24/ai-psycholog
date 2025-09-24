@@ -54,5 +54,27 @@
       "label": "Бажана мова інтерфейсу",
       "saving": "Збереження мови..."
     }
+  },
+  "chatbotSettings": {
+    "title": "Налаштування Чат-бота",
+    "responseLength": {
+      "label": "Довжина відповіді",
+      "short": "Коротка",
+      "medium": "Середня",
+      "long": "Довга"
+    },
+    "communicationStyle": {
+      "label": "Стиль спілкування",
+      "formal": "Формальний",
+      "casual": "Неформальний"
+    },
+    "assistantGender": {
+      "label": "Стать асистента",
+      "male": "Чоловік",
+      "female": "Жінка"
+    },
+    "assistantName": {
+      "label": "Ім'я асистента"
+    }
   }
 }

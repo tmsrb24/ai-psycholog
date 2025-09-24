@@ -54,5 +54,27 @@
       "label": "Preferovaný jazyk rozhraní",
       "saving": "Ukládání jazyka..."
     }
+  },
+  "chatbotSettings": {
+    "title": "Nastavení Chatbota",
+    "responseLength": {
+      "label": "Délka odpovědi",
+      "short": "Krátká",
+      "medium": "Střední",
+      "long": "Dlouhá"
+    },
+    "communicationStyle": {
+      "label": "Styl komunikace",
+      "formal": "Formální",
+      "casual": "Neformální"
+    },
+    "assistantGender": {
+      "label": "Pohlaví asistenta",
+      "male": "Muž",
+      "female": "Žena"
+    },
+    "assistantName": {
+      "label": "Jméno asistenta"
+    }
   }
 }

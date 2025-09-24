@@ -13,7 +13,6 @@ import ChatMessage from '../components/chat/ChatMessage';
 import ChatInput from '../components/chat/ChatInput';
 import LoadingIndicator from '../components/ui/LoadingIndicator';
 import CrisisNotice from '../components/ui/CrisisNotice';
-import ChatSettingsModal from '../components/chat/ChatSettingsModal';
 import { MoodCheck } from '../components/mood/MoodCheck';
 import { Message } from '../types/chat';
 import { UserProfileData } from '../types/user';
@@ -40,12 +39,6 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingEstimatedTime, setLoadingEstimatedTime] = useState(5);
-  const [selectedTopic, setSelectedTopic] = useState<'anxiety' | 'relationships' | 'depression' | 'stress' | 'selfEsteem' | null>(null);
-  const [selectedPersonality, setSelectedPersonality] = useState<'supportive' | 'practical' | 'analytical' | 'mentor' | 'coach' | 'mediator' | null>(null);
-  const [saveHistory, setSaveHistory] = useState(true);
-  const [responseLength, setResponseLength] = useState<'short' | 'medium' | 'long'>('medium');
-  const [assistantGender, setAssistantGender] = useState<'male' | 'female'>('male');
-  const [assistantName, setAssistantName] = useState<string>('');
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null);
@@ -90,11 +83,6 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   useEffect(() => {
     if (profileData) {
       setUserProfileData(profileData);
-      if (profileData.preferences) {
-        setResponseLength(profileData.preferences.responseLength || 'medium');
-        if (profileData.preferences.assistantGender) setAssistantGender(profileData.preferences.assistantGender);
-        if (profileData.preferences.assistantName) setAssistantName(profileData.preferences.assistantName);
-      }
     }
   }, [profileData]);
 
@@ -180,11 +168,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
     setLoading(true); 
     try {
       const requestData = {
-        messages: newMessages, 
-        topic: selectedTopic,
-        personality: selectedPersonality,
-        saveHistory, 
-        responseLength,
+        messages: newMessages,
         userProfile: userProfileData,
         sessionId: currentChatSessionId,
         chatLanguage: i18n.language 
@@ -236,15 +220,6 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
     mediator: { title: t('personalities.mediator') },
   };
 
-  const handleResetSettings = () => {
-    setSelectedTopic(null);
-    setSelectedPersonality(null);
-    setResponseLength('medium');
-    setAssistantGender('male');
-    setAssistantName('');
-    setSaveHistory(true);
-    console.log(t('settingsModal.resetMessageConsole'));
-  };
 
   const formatDateSeparator = (date: Date | undefined): string | null => {
     if (!date) return null;
@@ -392,25 +367,6 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         </div>
       </div>
 
-      <ChatSettingsModal
-        isOpen={showSettingsModal}
-        onClose={() => setShowSettingsModal(false)}
-        selectedTopic={selectedTopic}
-        setSelectedTopic={setSelectedTopic}
-        TOPICS={TOPICS} 
-        selectedPersonality={selectedPersonality}
-        setSelectedPersonality={setSelectedPersonality}
-        PERSONALITIES={PERSONALITIES} 
-        responseLength={responseLength}
-        setResponseLength={setResponseLength}
-        assistantGender={assistantGender}
-        setAssistantGender={setAssistantGender}
-        assistantName={assistantName}
-        setAssistantName={setAssistantName}
-        saveHistory={saveHistory}
-        setSaveHistory={setSaveHistory}
-        onResetSettings={handleResetSettings}
-      />
     </Layout>
   );
 };

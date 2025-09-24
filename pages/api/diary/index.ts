@@ -7,9 +7,16 @@ import { getSupabaseAdmin } from '../../../lib/supabaseClient';
 
 const secret = process.env.NEXTAUTH_SECRET;
 
+const moodToScore: { [key: string]: number } = {
+  'sad': 1,
+  'angry': 2,
+  'neutral': 3,
+  'surprised': 4,
+  'happy': 5,
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const token = await getToken({ req, secret });
-  console.log("API /api/diary - token object:", JSON.stringify(token, null, 2));
 
   if (!token || !token.sub) { // Spoléháme na standardní 'sub' v JWT pro ID uživatele
     console.error("API /api/diary - Unauthorized access or missing sub in token. Token:", JSON.stringify(token, null, 2));
@@ -76,6 +83,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .single(); // Očekáváme jeden záznam
 
       if (error) throw error;
+      if (mood_id && moodToScore[mood_id]) {
+        const score = moodToScore[mood_id];
+        const log_date = new Date(entry_date).toISOString().split('T')[0];
+        await supabaseAdmin.from('mood_log').upsert({ user_id: userId, log_date, score });
+      }
+
       res.status(201).json(data);
     } catch (error: any) {
       console.error('Supabase POST error:', error);
@@ -110,6 +123,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!data) { // Pokud update nic nevrátil (nemělo by se stát, pokud error není)
         return res.status(404).json({ error: 'Zápis nebyl nalezen po aktualizaci.' });
       }
+      if (mood_id && moodToScore[mood_id]) {
+        const score = moodToScore[mood_id];
+        const log_date = new Date(data.entry_date).toISOString().split('T')[0];
+        await supabaseAdmin.from('mood_log').upsert({ user_id: userId, log_date, score });
+      }
+      
       res.status(200).json(data);
     } catch (error: any) {
       console.error('Supabase PUT error:', error);

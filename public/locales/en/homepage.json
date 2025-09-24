@@ -153,5 +153,24 @@
     "title": "Start your journey to better mental well-being today",
     "subtitle": "Try AI Psychologist for free and discover how it can help you better understand your emotions and manage daily challenges."
   },
-  "safePayment": "Safe and fast online payments"
+  "safePayment": "Safe and fast online payments",
+  "personalization": {
+    "title": "Personalize Your Assistant",
+    "subtitle": "Create support that truly understands you. Your assistant can adapt to your needs and preferences.",
+    "cards": [
+      {
+        "title": "Personality Settings",
+        "text": "Choose the communication style, gender, and even the name of your assistant. Create a companion with whom you feel most comfortable."
+      },
+      {
+        "title": "Mood-Aware Support",
+        "text": "Connect your assistant with your mood diary. It will better understand your emotional state and provide more relevant and empathetic support."
+      },
+      {
+        "title": "Your Personal Space",
+        "text": "You can change all settings at any time in your profile. Your journey to mental well-being is fully in your hands."
+      }
+    ],
+    "button": "Go to Settings"
+  }
 }
