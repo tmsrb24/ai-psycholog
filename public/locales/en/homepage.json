@@ -28,10 +28,28 @@
       "text": "Our AI assistant uses a Retrieval-Augmented Generation (RAG) architecture – connecting a language model with its own expert psychological database. This allows it to provide accurate, contextually tailored responses in real time, based on verified knowledge and your situation."
     }
   },
+  "principles": {
+    "title": "Our Commitments",
+    "subtitle": "We build our service on values that protect and support your mental well-being.",
+    "cards": [
+      {
+        "title": "Empathy First",
+        "subtitle": "Technology with a human touch",
+        "text": "Our goal is not to replace human contact, but to offer understanding and support in the moments you need it most."
+      },
+      {
+        "title": "Ethics and Safety",
+        "subtitle": "Your safety is our priority",
+        "text": "We develop and operate our AI in accordance with the strictest ethical standards. We actively prevent harmful advice and protect your data."
+      },
+      {
+        "title": "Continuous Development",
+        "subtitle": "Based on science and feedback",
+        "text": "We collaborate with experts and constantly improve our models based on scientific knowledge and your feedback to provide you with the best possible support."
+      }
+    ]
+  },
   "testimonials": {
-    "title": "Expert Opinions",
-    "subtitle": "What professionals in psychology and psychiatry say about Psychollog.cz.",
-    "avatarAlt": "Photo of {{name}}",
     "uniqueServiceTitle": "Why is our service unique?",
     "uniqueServiceText": "Our Psychollog.cz platform is unique due to the combination of advanced artificial intelligence, which draws from verified psychological databases (PubMed Central, Open Psychology Journal, PsyArXiv), and the vision of collaboration with experts from practice. This ensures that the support provided is not only immediately available and discreet but also informationally valuable and based on scientific knowledge. Our goal is to make quality tools for self-discovery and mental well-being accessible to the widest possible range of people."
   },

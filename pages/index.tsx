@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Layout from '../components/layouts/Layout';
 import KeyNumbers from '../components/KeyNumbers';
-import { FaRobot, FaComments, FaLock, FaChartLine, FaCheck, FaUsers, FaTimes, FaUserMd, FaBrain, FaFileMedical, FaUserShield, FaUniversalAccess } from 'react-icons/fa';
+import { FaRobot, FaComments, FaLock, FaChartLine, FaCheck, FaUsers, FaTimes, FaUserMd, FaBrain, FaFileMedical, FaUserShield, FaHeart } from 'react-icons/fa';
 import type { IconType } from 'react-icons';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
@@ -148,7 +148,7 @@ const HomePage = () => {
       name: t('principles.cards.0.title'),
       specialization: t('principles.cards.0.subtitle'),
       quote: t('principles.cards.0.text'),
-      icon: FaUniversalAccess
+      icon: FaHeart
     },
     {
       name: t('principles.cards.1.title'),

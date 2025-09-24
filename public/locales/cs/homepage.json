@@ -29,23 +29,23 @@
     }
   },
   "principles": {
-    "title": "Klíčové principy naší služby",
-    "subtitle": "Naše platforma je postavena na pevných základech, které zaručují kvalitní a bezpečnou podporu.",
+    "title": "Naše Závazky",
+    "subtitle": "Službu stavíme na hodnotách, které chrání a podporují vaši duševní pohodu.",
     "cards": [
       {
-        "title": "Dostupnost",
-        "subtitle": "Podpora na dosah ruky",
-        "text": "Věříme, že pomoc by měla být dostupná okamžitě, bez ohledu na čas nebo místo. Naše služba je vám k dispozici 24/7."
+        "title": "Empatie na prvním místě",
+        "subtitle": "Technologie s lidským přístupem",
+        "text": "Naším cílem není nahradit lidský kontakt, ale nabídnout porozumění a podporu v momentech, kdy ji nejvíce potřebujete."
       },
       {
-        "title": "Soukromí",
-        "subtitle": "Bezpečný a anonymní prostor",
-        "text": "Vaše důvěra je pro nás klíčová. Zaručujeme 100% anonymitu a bezpečné šifrování všech vašich konverzací."
+        "title": "Etika a Bezpečnost",
+        "subtitle": "Vaše bezpečí je naší prioritou",
+        "text": "Vyvíjíme a provozujeme naši AI v souladu s nejpřísnějšími etickými standardy. Aktivně předcházíme škodlivým radám a chráníme vaše data."
       },
       {
-        "title": "Důvěryhodnost",
-        "subtitle": "Založeno na vědeckých poznatcích",
-        "text": "Naše odpovědi čerpají z ověřených psychologických databází, abychom vám poskytli relevantní a bezpečné informace."
+        "title": "Neustálý Rozvoj",
+        "subtitle": "Založeno na vědě a zpětné vazbě",
+        "text": "Spolupracujeme s odborníky a neustále vylepšujeme naše modely na základě vědeckých poznatků a vaší zpětné vazby, abychom vám poskytovali co nejlepší podporu."
       }
     ]
   },
