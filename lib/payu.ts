@@ -121,7 +121,12 @@ export async function verifyPayUPayment(orderId: string): Promise<any> {
       );
       return response.data;
     } catch (error: any) {
-      console.error('Error verifying PayU payment:', error.response?.data || error.message);
+      console.error('Error verifying PayU payment. Full error object:', JSON.stringify(error, null, 2));
+      if (error.response) {
+        console.error('PayU API Response Data:', JSON.stringify(error.response.data, null, 2));
+        console.error('PayU API Response Status:', error.response.status);
+        console.error('PayU API Response Headers:', JSON.stringify(error.response.headers, null, 2));
+      }
       throw new Error('Could not verify PayU payment.');
     }
   }
