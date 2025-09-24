@@ -2,8 +2,10 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 
 const PAYU_API_URL = process.env.PAYU_API_URL || 'https://secure.payu.com';
-const PAYU_CLIENT_ID = process.env.PAYU_CLIENT_ID;
-const PAYU_CLIENT_SECRET = process.env.PAYU_CLIENT_SECRET;
+const PAYU_CLIENT_ID = process.env.PAYU_CLIENT_ID; // This is the POS ID from the PayU dashboard
+const PAYU_CLIENT_SECRET = process.env.PAYU_CLIENT_SECRET; // This is the "Second key (MD5)"
+const PAYU_OAUTH_CLIENT_ID = process.env.PAYU_OAUTH_CLIENT_ID; // This is the OAuth Client ID
+const PAYU_OAUTH_CLIENT_SECRET = process.env.PAYU_OAUTH_CLIENT_SECRET; // This is the OAuth Client Secret
 const PAYU_POS_ID = process.env.PAYU_POS_ID;
 
 interface PayUToken {
@@ -20,14 +22,14 @@ async function getAccessToken(): Promise<string> {
     return tokenCache.token;
   }
 
-  if (!PAYU_CLIENT_ID || !PAYU_CLIENT_SECRET) {
-    throw new Error('PayU client ID or secret is not configured.');
+  if (!PAYU_OAUTH_CLIENT_ID || !PAYU_OAUTH_CLIENT_SECRET) {
+    throw new Error('PayU OAuth client ID or secret is not configured.');
   }
 
   const params = new URLSearchParams();
   params.append('grant_type', 'client_credentials');
-  params.append('client_id', PAYU_CLIENT_ID);
-  params.append('client_secret', PAYU_CLIENT_SECRET);
+  params.append('client_id', PAYU_OAUTH_CLIENT_ID);
+  params.append('client_secret', PAYU_OAUTH_CLIENT_SECRET);
 
   try {
     const response = await axios.post<PayUToken>(
