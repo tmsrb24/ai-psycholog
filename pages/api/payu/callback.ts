@@ -108,6 +108,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       console.log(`PayU payment for order ${payuOrderId} has status '${paymentStatus}'. No action taken.`);
     }
 
+    // Acknowledge receipt of the callback
     res.status(200).send('OK');
   } catch (error: any) {
     console.error('Error processing PayU callback:', error);
