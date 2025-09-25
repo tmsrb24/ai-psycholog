@@ -11,6 +11,8 @@ interface CreateSessionParams {
   topicKey: TopicKey;
   personalityKey: PersonalityKey;
   responseLength: ResponseLength | undefined;
+  assistantGender: 'male' | 'female' | undefined;
+  assistantName: string | undefined;
   userProfile: UserProfileData | undefined;
 }
 
@@ -30,6 +32,8 @@ export const getOrCreateSession = async (
     personalityKey,
     responseLength,
     userProfile,
+    assistantGender,
+    assistantName,
   } = params;
 
   const sessionTitle = userMessageContent.substring(0, 70) + (userMessageContent.length > 70 ? '...' : '');
@@ -37,8 +41,8 @@ export const getOrCreateSession = async (
     topic: topicKey,
     personality: personalityKey,
     responseLength,
-    assistantGender: userProfile?.preferences?.assistantGender,
-    assistantName: userProfile?.preferences?.assistantName,
+    assistantGender: assistantGender || userProfile?.preferences?.assistantGender,
+    assistantName: assistantName || userProfile?.preferences?.assistantName,
   };
 
   const { data: newSession, error: sessionError } = await supabaseAdmin

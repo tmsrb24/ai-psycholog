@@ -261,18 +261,26 @@ export default async function handler(
     
       const body = req.body as {
         messages: Message[];
-        topic?: TopicKey; 
-        personality?: PersonalityKey; 
-        responseLength?: 'short' | 'medium' | 'long';
-        userProfile?: UserProfileData; 
+        userProfile?: UserProfileData;
         sessionId?: string;
+        chatSettings?: {
+          topic: TopicKey | null;
+          personality: PersonalityKey | null;
+          responseLength: 'short' | 'medium' | 'long';
+          assistantGender: 'male' | 'female';
+          assistantName: string;
+        }
       };
     
       const messages: Message[] = body.messages;
-      const topicKey: TopicKey = body.topic || 'general';
-      const personalityKey: PersonalityKey = body.personality || 'neutral';
-      const responseLength: 'short' | 'medium' | 'long' | undefined = body.responseLength;
       const sessionId: string | undefined = body.sessionId;
+      
+      // Extract settings from the chatSettings object
+      const topicKey: TopicKey = body.chatSettings?.topic || 'general';
+      const personalityKey: PersonalityKey = body.chatSettings?.personality || 'neutral';
+      const responseLength = body.chatSettings?.responseLength || 'medium';
+      const assistantGender = body.chatSettings?.assistantGender;
+      const assistantName = body.chatSettings?.assistantName;
 
       if (!messages || !Array.isArray(messages)) {
         return res.status(400).json({ error: 'Invalid messages format' });
@@ -290,6 +298,8 @@ export default async function handler(
         topicKey,
         personalityKey,
         responseLength,
+        assistantGender,
+        assistantName,
         userProfile: body.userProfile,
       });
 
@@ -324,6 +334,8 @@ export default async function handler(
         topicKey,
         personalityKey,
         responseLength,
+        assistantGender,
+        assistantName,
         body.userProfile,
         userMessageContent
       );

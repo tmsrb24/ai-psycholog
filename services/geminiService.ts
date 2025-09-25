@@ -30,16 +30,21 @@ const buildSystemPrompt = (
   topicKey: TopicKey,
   personalityKey: PersonalityKey,
   responseLength: ResponseLength | undefined,
+  assistantGender: 'male' | 'female' | undefined,
+  assistantName: string | undefined,
   userProfile: UserProfileData | undefined
 ): string => {
   let systemPrompt = CORE_INSTRUCTIONS;
   let specificInstructions = "";
 
-  if (userProfile?.preferences?.assistantGender) {
-    specificInstructions += ` Jsi ${userProfile.preferences.assistantGender === 'male' ? 'muž' : 'žena'}.`;
+  const gender = assistantGender || userProfile?.preferences?.assistantGender;
+  const name = assistantName || userProfile?.preferences?.assistantName;
+
+  if (gender) {
+    specificInstructions += ` Jsi ${gender === 'male' ? 'muž' : 'žena'}.`;
   }
-  if (userProfile?.preferences?.assistantName) {
-    specificInstructions += ` Tvé jméno je ${userProfile.preferences.assistantName}. Používej toto jméno, když mluvíš o sobě nebo když se tě na něj někdo zeptá.`;
+  if (name) {
+    specificInstructions += ` Tvé jméno je ${name}. Používej toto jméno, když mluvíš o sobě nebo když se tě na něj někdo zeptá.`;
   }
   
   specificInstructions += ` ${PERSONALITY_PROMPTS[personalityKey]}`;
@@ -94,6 +99,8 @@ export const getGeminiResponse = async (
   topicKey: TopicKey,
   personalityKey: PersonalityKey,
   responseLength: ResponseLength | undefined,
+  assistantGender: 'male' | 'female' | undefined,
+  assistantName: string | undefined,
   userProfile: UserProfileData | undefined,
   userMessageContent: string
 ): Promise<{ content: string; estimatedReadingTime: number }> => {
@@ -105,7 +112,7 @@ export const getGeminiResponse = async (
     };
   }
 
-  const systemPrompt = buildSystemPrompt(topicKey, personalityKey, responseLength, userProfile);
+  const systemPrompt = buildSystemPrompt(topicKey, personalityKey, responseLength, assistantGender, assistantName, userProfile);
   const formattedMessages = await formatMessagesForGemini(messages, systemPrompt, userMessageContent);
   
   const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent';
