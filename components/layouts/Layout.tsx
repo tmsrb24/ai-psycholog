@@ -30,8 +30,12 @@ const Layout: React.FC<LayoutProps> = ({
   const { locale, asPath, locales } = router;
   const siteUrl = 'https://www.psychollog.cz';
 
+  // Clean up the path for canonical and hreflang URLs
+  const cleanedAsPath = asPath.split('?')[0]; // Remove query params
+  const pathWithoutSlash = cleanedAsPath === '/' ? '' : cleanedAsPath.endsWith('/') ? cleanedAsPath.slice(0, -1) : cleanedAsPath;
+
   // Generate self-referencing canonical URL
-  const canonicalUrl = `${siteUrl}${locale === 'cs' ? '' : `/${locale}`}${asPath === '/' ? '' : asPath}`;
+  const canonicalUrl = `${siteUrl}${locale === 'cs' ? '' : `/${locale}`}${pathWithoutSlash}`;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -45,9 +49,9 @@ const Layout: React.FC<LayoutProps> = ({
 
         {/* Hreflang tags */}
         {locales?.map((loc) => (
-          <link key={loc} rel="alternate" hrefLang={loc} href={`${siteUrl}${loc === 'cs' ? '' : `/${loc}`}${asPath === '/' ? '' : asPath}`} />
+          <link key={loc} rel="alternate" hrefLang={loc} href={`${siteUrl}${loc === 'cs' ? '' : `/${loc}`}${pathWithoutSlash}`} />
         ))}
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}${asPath === '/' ? '' : asPath}`} />
+        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}${pathWithoutSlash}`} />
 
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />

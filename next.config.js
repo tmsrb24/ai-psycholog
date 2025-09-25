@@ -70,6 +70,7 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // HTTP to HTTPS redirect
       {
         source: '/:path*',
         has: [
@@ -80,6 +81,18 @@ const nextConfig = {
           },
         ],
         destination: 'https://www.psychollog.cz/:path*',
+        permanent: true,
+      },
+      // Trailing slash redirect
+      {
+        source: '/:path+/',
+        destination: '/:path+',
+        permanent: true,
+      },
+      // /index redirect
+      {
+        source: '/index',
+        destination: '/',
         permanent: true,
       },
     ];

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Czech URLs -->
   <url>
     <loc>https://www.psychollog.cz/</loc>
     <lastmod>2025-09-08</lastmod>
@@ -32,6 +33,80 @@
   </url>
   <url>
     <loc>https://www.psychollog.cz/reklamacni-rad</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- English URLs -->
+  <url>
+    <loc>https://www.psychollog.cz/en</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/en/chat</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/en/pricing</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/en/kontakt</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/en/gdpr</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/en/obchodni-podminky</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/en/reklamacni-rad</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Ukrainian URLs -->
+  <url>
+    <loc>https://www.psychollog.cz/uk</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/uk/chat</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/uk/pricing</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/uk/kontakt</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/uk/gdpr</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/uk/obchodni-podminky</loc>
+    <lastmod>2025-09-08</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.psychollog.cz/uk/reklamacni-rad</loc>
     <lastmod>2025-09-08</lastmod>
     <priority>0.5</priority>
   </url>
