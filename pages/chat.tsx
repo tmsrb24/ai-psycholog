@@ -53,6 +53,28 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
   const { data: session, status: authStatus } = useSession();
   const router = useRouter();
 
+  // Define types for settings keys
+  type TopicKey = keyof typeof TOPICS;
+  type PersonalityKey = keyof typeof PERSONALITIES;
+
+  // State for Chat Settings
+  const [selectedTopic, setSelectedTopic] = useState<TopicKey | null>(null);
+  const [selectedPersonality, setSelectedPersonality] = useState<PersonalityKey | null>(null);
+  const [responseLength, setResponseLength] = useState<'short' | 'medium' | 'long'>('medium');
+  const [assistantGender, setAssistantGender] = useState<'male' | 'female'>('male');
+  const [assistantName, setAssistantName] = useState('');
+  const [saveHistory, setSaveHistory] = useState(true);
+
+  const onResetSettings = () => {
+    setSelectedTopic(null);
+    setSelectedPersonality(null);
+    setResponseLength('medium');
+    setAssistantGender('male');
+    setAssistantName('');
+    setSaveHistory(true);
+    console.log("Chat settings reset to default.");
+  };
+
   const { data: profileData, isLoading: isProfileLoading } = useQuery({
     queryKey: ['userProfile'],
     queryFn: () => fetch('/api/user/profile').then(res => res.json()),
@@ -170,12 +192,21 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
     setMessages(newMessages);
     setLoading(true); 
     try {
-      const requestData = {
-        messages: newMessages,
-        userProfile: userProfileData,
-        sessionId: currentChatSessionId,
-        chatLanguage: i18n.language 
-      };
+     const chatSettings = {
+       topic: selectedTopic ? TOPICS[selectedTopic].title : null,
+       personality: selectedPersonality ? PERSONALITIES[selectedPersonality].title : null,
+       responseLength,
+       assistantGender,
+       assistantName,
+     };
+
+     const requestData = {
+       messages: newMessages,
+       userProfile: userProfileData,
+       sessionId: currentChatSessionId,
+       chatLanguage: i18n.language,
+       chatSettings,
+     };
       const res = await axios.post('/api/chat', requestData);
       
       if (res.data.sessionId && !currentChatSessionId) setCurrentChatSessionId(res.data.sessionId); 
@@ -375,12 +406,25 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         </div>
       </div>
 
-     {showSettingsModal && userProfileData && (
+     {showSettingsModal && (
        <ChatSettingsModal
          isOpen={showSettingsModal}
          onClose={() => setShowSettingsModal(false)}
-         userProfile={userProfileData}
-         onProfileUpdate={setUserProfileData}
+         selectedTopic={selectedTopic}
+         setSelectedTopic={setSelectedTopic}
+         TOPICS={TOPICS}
+         selectedPersonality={selectedPersonality}
+         setSelectedPersonality={setSelectedPersonality}
+         PERSONALITIES={PERSONALITIES}
+         responseLength={responseLength}
+         setResponseLength={setResponseLength}
+         assistantGender={assistantGender}
+         setAssistantGender={setAssistantGender}
+         assistantName={assistantName}
+         setAssistantName={setAssistantName}
+         saveHistory={saveHistory}
+         setSaveHistory={setSaveHistory}
+         onResetSettings={onResetSettings}
        />
      )}
    </Layout>
