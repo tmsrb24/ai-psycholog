@@ -11,6 +11,7 @@ import {
 import { type IconType } from 'react-icons/lib';
 import ChatMessage from '../components/chat/ChatMessage';
 import ChatInput from '../components/chat/ChatInput';
+import ChatSettingsModal from '../components/chat/ChatSettingsModal';
 import LoadingIndicator from '../components/ui/LoadingIndicator';
 import CrisisNotice from '../components/ui/CrisisNotice';
 import { MoodCheck } from '../components/mood/MoodCheck';
@@ -21,7 +22,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getSession } from 'next-auth/react';
 
-const ChatAnalysis = lazy(() => import('../components/chat/ChatAnalysis'));
+const MoodChart = lazy(() =>
+  import('../components/mood/MoodChart').then(module => ({ default: module.MoodChart }))
+);
 
 type PageProps = {};
 
@@ -64,7 +67,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
 
   const { data: moodData, refetch: refetchMoodData } = useQuery({
     queryKey: ['moodData'],
-    queryFn: () => fetch('/api/mood?range=1').then(res => res.json()),
+    queryFn: () => fetch('/api/mood?range=30').then(res => res.json()),
     enabled: authStatus === 'authenticated',
   });
 
@@ -272,7 +275,12 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
             <Suspense fallback={<SidebarFallback />}>
               {showAnalysis && (
                 <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                  <ChatAnalysis />
+                  <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.analysisTitle', 'Analýza nálady')}</h3>
+                  {moodData && moodData.length > 0 ? (
+                    <MoodChart data={moodData} />
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('mood.noData', 'Nejsou dostupná žádná data o náladě.')}</p>
+                  )}
                 </div>
               )}
             </Suspense>
@@ -367,8 +375,16 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         </div>
       </div>
 
-    </Layout>
-  );
+     {showSettingsModal && userProfileData && (
+       <ChatSettingsModal
+         isOpen={showSettingsModal}
+         onClose={() => setShowSettingsModal(false)}
+         userProfile={userProfileData}
+         onProfileUpdate={setUserProfileData}
+       />
+     )}
+   </Layout>
+ );
 };
 
 export default ChatPage;

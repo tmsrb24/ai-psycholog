@@ -9,12 +9,6 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { robotoFont } from '../lib/fonts';
 import { getSession } from 'next-auth/react';
-import { MoodChart } from '../components/mood/MoodChart';
-
-interface MoodLog {
-  log_date: string;
-  score: number;
-}
 
 interface DiaryTag {
   id: string;
@@ -61,8 +55,6 @@ const DiaryPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps
   const [editContent, setEditContent] = useState('');
   const [editMoodId, setEditMoodId] = useState<DiaryMood['id'] | undefined>(undefined);
   const [editTagIds, setEditTagIds] = useState<DiaryTag['id'][]>([]);
-  const [moodData, setMoodData] = useState<MoodLog[]>([]);
-  const [isLoadingMoodData, setIsLoadingMoodData] = useState(true);
 
   const entriesContainerRef = useRef<HTMLDivElement>(null);
   const fetchEntries = async () => {
@@ -84,27 +76,10 @@ const DiaryPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps
     }
   };
 
-  const fetchMoodData = async () => {
-    if (!session) return;
-    setIsLoadingMoodData(true);
-    try {
-      const response = await fetch('/api/mood');
-      if (!response.ok) {
-        throw new Error('Failed to fetch mood data');
-      }
-      const data = await response.json();
-      setMoodData(data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoadingMoodData(false);
-    }
-  };
 
   useEffect(() => {
     if (status === "authenticated") {
       fetchEntries();
-      fetchMoodData();
     }
   }, [status, session]);
 
@@ -247,16 +222,6 @@ const DiaryPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps
       )}
 
       <div className="max-w-5xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 md:p-8 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">{t('moodAnalysis.title', 'Analýza nálady')}</h2>
-          {isLoadingMoodData ? (
-            <p>{t('moodAnalysis.loading', 'Načítání dat o náladě...')}</p>
-          ) : moodData.length > 0 ? (
-            <MoodChart data={moodData} />
-          ) : (
-            <p>{t('moodAnalysis.noData', 'Zatím nejsou k dispozici žádná data o náladě.')}</p>
-          )}
-        </div>
 
         <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 md:p-8">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">{t('newEntry.title', 'Nový zápis')}</h2>

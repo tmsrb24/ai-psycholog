@@ -520,68 +520,6 @@ const HomePage = () => {
           </Link>
         </div>
       </motion.section>
-      <motion.section 
-        className="py-16 bg-white/50 dark:bg-slate-800/50 backdrop-blur-md rounded-xl my-8 mx-auto max-w-7xl shadow-xl"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-      >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">{t('personalization.title')}</h2>
-            <p className="text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-              {t('personalization.subtitle')}
-            </p>
-          </div>
-          <motion.div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            variants={featureContainerVariants}
-          >
-            <motion.div 
-              variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
-                <FaCog className="text-blue-600 dark:text-blue-300" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('personalization.cards.0.title')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('personalization.cards.0.text')}
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
-                <FaChartLine className="text-blue-600 dark:text-blue-300" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('personalization.cards.1.title')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('personalization.cards.1.text')}
-              </p>
-            </motion.div>
-            <motion.div 
-              variants={featureCardVariants}
-              className="bg-white/70 dark:bg-slate-700/70 backdrop-blur-sm rounded-lg shadow-lg p-6 transition-all duration-300 ease-in-out hover:shadow-2xl border-2 border-transparent hover:border-blue-400 dark:hover:border-blue-500 hover:scale-105 transform"
-            >
-              <div className="bg-blue-100 dark:bg-blue-800/50 p-3 rounded-full w-14 h-14 flex items-center justify-center mb-4">
-                <FaUserShield className="text-blue-600 dark:text-blue-300" size={24} />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{t('personalization.cards.2.title')}</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                {t('personalization.cards.2.text')}
-              </p>
-            </motion.div>
-          </motion.div>
-          <div className="mt-12 text-center">
-            <Link href="/profile" className="btn bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md transition-all duration-200 ease-in-out hover:scale-105 focus:scale-105 transform text-lg">
-              {t('personalization.button')}
-            </Link>
-          </div>
-        </div>
-      </motion.section>
     </Layout>
   );
 };
