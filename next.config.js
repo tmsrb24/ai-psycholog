@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+// Trigger Vercel build after re-linking GitHub account
 const { i18n: i18nConfig } = require('./next-i18next.config.js');
 const { cache: runtimeCaching } = require("next-pwa"); // Upravený import
 
