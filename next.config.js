@@ -1,13 +1,15 @@
 /** @type {import('next').NextConfig} */
 const { i18n: i18nConfig } = require('./next-i18next.config.js');
+const { cache: runtimeCaching } = require("next-pwa"); // Upravený import
 
-// PWA functionality is temporarily disabled for Vercel build diagnostics.
-// const withPWA = require('next-pwa')({
-//   dest: 'public',
-//   register: true,
-//   skipWaiting: true,
-//   disable: process.env.NODE_ENV === 'development',
-// });
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === 'development', // Vypne PWA ve vývojovém prostředí
+  runtimeCaching,
+  buildExcludes: [/middleware-manifest.json$/], // Vyloučení souboru, který může způsobovat problémy
+});
 
 const nextConfig = {
   reactStrictMode: true,
@@ -101,5 +103,4 @@ const nextConfig = {
   // Options for the Sentry webpack plugin are passed in the second argument to withSentryConfig.
 }
 
-// module.exports = withPWA(nextConfig);
-module.exports = nextConfig;
+module.exports = withPWA(nextConfig);
