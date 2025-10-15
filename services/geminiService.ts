@@ -115,7 +115,7 @@ export const getGeminiResponse = async (
   const systemPrompt = buildSystemPrompt(topicKey, personalityKey, responseLength, assistantGender, assistantName, userProfile);
   const formattedMessages = await formatMessagesForGemini(messages, systemPrompt, userMessageContent);
   
-  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent';
 
   try {
     const response = await axios({
