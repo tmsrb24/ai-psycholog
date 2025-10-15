@@ -23,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: token.sub
     }
 
-    const payment = await createPayUPayment(premiumPlanPrice, orderNumber, user);
+    const payment = await createPayUPayment(premiumPlanPrice, orderNumber, user, req);
 
     // The response from PayU includes the redirect URI to redirect the user to.
     res.status(200).json({ redirectUri: payment.redirectUri });

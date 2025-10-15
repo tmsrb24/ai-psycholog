@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import type { NextApiRequest } from 'next';
 
 const PAYU_API_URL = process.env.PAYU_API_URL || 'https://secure.payu.com';
 const PAYU_CLIENT_ID = process.env.PAYU_CLIENT_ID; // This is the POS ID from the PayU dashboard
@@ -55,13 +56,13 @@ async function getAccessToken(): Promise<string> {
   }
 }
 
-export async function createPayUPayment(amount: number, orderNumber: string, user: { email: string, id: string }) {
+export async function createPayUPayment(amount: number, orderNumber: string, user: { email: string, id: string }, req: NextApiRequest) {
   if (!PAYU_POS_ID) {
     throw new Error('PayU POS ID is not configured.');
   }
 
   const accessToken = await getAccessToken();
-  const customerIp = '127.0.0.1'; // In a real scenario, get the user's IP
+  const customerIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
 
   const paymentData = {
     notifyUrl: `${process.env.NEXTAUTH_URL}/api/payu/callback`,

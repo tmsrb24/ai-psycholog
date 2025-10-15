@@ -32,7 +32,7 @@
       "title": "4. Payment Terms and Subscription",
       "content": [
         "The Service is offered in a free (Basic) and a paid (Premium) version. The scope of functions for each version is specified in the price list on the website.",
-        "Subscription payments are processed through the Stripe payment gateway. The subscription renews automatically unless the User cancels it before the end of the current subscription period."
+        "Subscription payments are processed through a secure payment gateway. The subscription renews automatically unless the User cancels it before the end of the current subscription period."
       ]
     },
     {

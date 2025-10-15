@@ -55,7 +55,7 @@
   "buttons": {
     "processing": "Processing..."
   },
-  "safePaymentStripe": "Secure payment via Stripe",
+  "safePaymentStripe": "Secure online payment",
   "faqTitle": "Frequently Asked Questions",
   "faq": [
     {

@@ -55,7 +55,7 @@
   "buttons": {
     "processing": "Обробка..."
   },
-  "safePaymentStripe": "Безпечний платіж через Stripe",
+  "safePaymentStripe": "Безпечний онлайн-платіж",
   "faqTitle": "Часті запитання",
   "faq": [
     {

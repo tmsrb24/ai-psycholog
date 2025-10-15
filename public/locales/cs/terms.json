@@ -32,7 +32,7 @@
       "title": "4. Platební podmínky a předplatné",
       "content": [
         "Služba je nabízena v bezplatné (Základní) a placené (Premium) verzi. Rozsah funkcí jednotlivých verzí je specifikován v ceníku na webových stránkách.",
-        "Platby za předplatné jsou zpracovávány prostřednictvím platební brány Stripe. Předplatné se automaticky obnovuje, pokud jej Uživatel nezruší před koncem aktuálního předplaceného období."
+        "Platby za předplatné jsou zpracovávány prostřednictvím zabezpečené platební brány. Předplatné se automaticky obnovuje, pokud jej Uživatel nezruší před koncem aktuálního předplaceného období."
       ]
     },
     {
