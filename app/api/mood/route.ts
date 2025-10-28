@@ -14,7 +14,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  // Získání aktuálního data v časové zóně Europe/Prague
+  const pragueDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Prague" });
+  const today = new Date(pragueDate).toISOString().split('T')[0]; // YYYY-MM-DD
 
   const { error } = await supabase
     .from('mood_log')

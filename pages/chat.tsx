@@ -15,6 +15,7 @@ import ChatSettingsModal from '../components/chat/ChatSettingsModal';
 import LoadingIndicator from '../components/ui/LoadingIndicator';
 import CrisisNotice from '../components/ui/CrisisNotice';
 import { MoodCheck } from '../components/mood/MoodCheck';
+import BreathingExercise from '../components/ui/BreathingExercise';
 import { Message } from '../types/chat';
 import { UserProfileData } from '../types/user';
 import { useTranslation } from 'next-i18next';
@@ -319,6 +320,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
               <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
               <MoodCheck todayScore={moodData?.[0]?.score} refetch={refetchMoodData} />
             </div>
+            <BreathingExercise />
           </div>
         </div>
         
