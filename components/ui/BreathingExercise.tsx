@@ -25,23 +25,26 @@ const BreathingExercise = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 rounded-lg bg-white dark:bg-gray-800 shadow-lg">
+    <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
       <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('breathingExercise.title', 'Dechové cvičení')}</h3>
       <div 
         className="relative w-32 h-32 flex items-center justify-center cursor-pointer"
         onClick={() => setIsActive(!isActive)}
       >
         <motion.div
-          className="absolute w-full h-full bg-blue-500 rounded-full"
+          className="absolute w-full h-full bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full drop-shadow-glow"
           variants={circleVariants}
           initial="initial"
           animate={isActive ? 'breathing' : 'initial'}
+          style={{
+            filter: isActive ? 'drop-shadow(0 0 1.5rem rgba(79, 70, 229, 0.5))' : 'drop-shadow(0 0 0.5rem rgba(79, 70, 229, 0.3))',
+          }}
         />
         <AnimatePresence>
           {isActive ? (
             <motion.p
               key="breathingText"
-              className="text-white text-center text-sm z-10"
+              className="text-white text-center text-sm z-10 font-medium"
               variants={textVariants}
               initial="initial"
               animate="animate"
@@ -52,7 +55,7 @@ const BreathingExercise = () => {
           ) : (
             <motion.p
               key="startText"
-              className="text-white text-center text-sm z-10"
+              className="text-white text-center text-sm z-10 font-medium"
               variants={textVariants}
               initial="initial"
               animate="animate"

@@ -14,7 +14,7 @@ import ChatInput from '../components/chat/ChatInput';
 import ChatSettingsModal from '../components/chat/ChatSettingsModal';
 import LoadingIndicator from '../components/ui/LoadingIndicator';
 import CrisisNotice from '../components/ui/CrisisNotice';
-import { MoodCheck } from '../components/mood/MoodCheck';
+import MoodLogger from '../components/mood/MoodLogger';
 import BreathingExercise from '../components/ui/BreathingExercise';
 import { Message } from '../types/chat';
 import { UserProfileData } from '../types/user';
@@ -269,7 +269,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
 
   const sidebarItems: SidebarItem[] = [
     { labelKey: 'sidebar.analysis', icon: FaChartLine, action: () => setShowAnalysis(!showAnalysis), active: showAnalysis },
-    { labelKey: 'sidebar.settings', icon: FaCog, action: () => setShowSettingsModal(true), active: showSettingsModal }
+    { labelKey: 'sidebar.settings', icon: FaCog, action: () => setShowSettingsModal(true), active: false }
   ];
 
   const SidebarFallback = () => (
@@ -316,10 +316,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                 </div>
               )}
             </Suspense>
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
-              <MoodCheck todayScore={moodData?.[0]?.score} refetch={refetchMoodData} />
-            </div>
+            <MoodLogger initialMoodData={moodData || []} />
             <BreathingExercise />
           </div>
         </div>

@@ -158,34 +158,16 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
     </div>
   );
 
-  const renderAnalysis = () => (
-    <div className="text-center text-gray-600 dark:text-gray-400 py-10">
-      <FaChartBar className="mx-auto text-4xl text-gray-400 dark:text-gray-500 mb-4" />
-      <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Sekce Analýza</h3>
-      <p className="text-sm">Tato sekce je ve vývoji a brzy bude dostupná.</p>
-    </div>
-  );
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 dark:bg-opacity-80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col border border-gray-200 dark:border-slate-700">
         {/* Modal Header */}
         <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-slate-700">
           <div className="flex items-center space-x-2">
-            <button 
-              onClick={() => setActiveTab('settings')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors ${activeTab === 'settings' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700'}`}
-            >
+            <div className="px-4 py-2 rounded-lg text-sm font-medium flex items-center text-gray-600 dark:text-gray-400">
               <FaCog className="mr-2 text-blue-500" />
               Nastavení
-            </button>
-            <button 
-              onClick={() => setActiveTab('analysis')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors ${activeTab === 'analysis' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700'}`}
-            >
-              <FaChartBar className="mr-2 text-blue-500" />
-              Analýza
-            </button>
+            </div>
           </div>
           <button
             onClick={onClose}
@@ -198,8 +180,7 @@ const ChatSettingsModal: React.FC<ChatSettingsModalProps> = ({
 
         {/* Modal Body - Scrollable */}
         <div className="p-6 overflow-y-auto">
-          {activeTab === 'settings' && renderSettings()}
-          {activeTab === 'analysis' && renderAnalysis()}
+          {renderSettings()}
         </div>
         
         {/* Modal Footer */}
