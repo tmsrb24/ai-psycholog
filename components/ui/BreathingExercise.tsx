@@ -28,7 +28,7 @@ const BreathingExercise = () => {
     <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
       <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('breathingExercise.title', 'Dechové cvičení')}</h3>
       <div 
-        className="relative w-32 h-32 flex items-center justify-center cursor-pointer"
+        className="relative w-48 h-48 flex items-center justify-center cursor-pointer"
         onClick={() => setIsActive(!isActive)}
       >
         <motion.div
