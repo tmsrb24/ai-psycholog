@@ -13,10 +13,12 @@ export async function POST(req: NextRequest) {
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  
+  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
   const { error } = await supabase
     .from('mood_log')
-    .upsert({ user_id: session.user.id, score, note });       // unique(user,day) zajistí update
+    .upsert({ user_id: session.user.id, score, note, log_date: today });
   if (error) return NextResponse.json({ error }, { status: 400 });
   return NextResponse.json({ ok: true });
 }
@@ -35,9 +37,13 @@ export async function GET(req: NextRequest) {
     .from('mood_log')
     .select('log_date, score')
     .eq('user_id', session.user.id)
+    .not('score', 'is', null) // Ignorujeme záznamy s NULL score
     .order('log_date', { ascending: false })
     .limit(parseInt(range));
 
   if (error) return NextResponse.json({ error }, { status: 400 });
-  return NextResponse.json(data);
+  
+  const filteredData = data?.filter(d => d.score > 0); // Dodatečná filtrace pro jistotu
+  
+  return NextResponse.json(filteredData);
 }
