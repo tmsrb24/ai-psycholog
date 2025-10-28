@@ -84,12 +84,6 @@ const nextConfig = {
         destination: 'https://www.psychollog.cz/:path*',
         permanent: true,
       },
-      // Trailing slash redirect
-      {
-        source: '/:path+/',
-        destination: '/:path+',
-        permanent: true,
-      },
       // /index redirect
       {
         source: '/index',

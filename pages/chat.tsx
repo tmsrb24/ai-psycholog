@@ -315,12 +315,10 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
                 </div>
               )}
             </Suspense>
-            {moodData && moodData.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mt-4">
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
-                <MoodCheck todayScore={moodData[0]?.score} refetch={refetchMoodData} />
-              </div>
-            )}
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
+              <MoodCheck todayScore={moodData?.[0]?.score} refetch={refetchMoodData} />
+            </div>
           </div>
         </div>
         
@@ -328,7 +326,7 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
         <div className="flex-grow flex flex-col">
           {/* Message Display Area */}
           <div
-            className="bg-gray-50 dark:bg-slate-800/50 rounded-xl shadow-inner p-4 sm:p-6 flex-grow overflow-y-auto mb-4 max-h-[60vh] md:max-h-[45vh]"
+            className="bg-gray-50 dark:bg-slate-800/50 rounded-xl shadow-inner p-4 sm:p-6 flex-grow overflow-y-auto mb-4 max-h-[70vh] md:max-h-[75vh]"
             ref={chatContainerRef}
           >
             {(isProfileLoading || isHistoryLoading) ? (
@@ -383,13 +381,6 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
             )}
           </div>
           
-          {moodData && moodData.length === 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mb-4">
-              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
-              <MoodCheck todayScore={undefined} refetch={refetchMoodData} />
-            </div>
-          )}
-
           <ChatInput 
             onSendMessage={sendMessage}
             isLoading={loading} 
@@ -397,12 +388,6 @@ const ChatPage = (_props: InferGetServerSidePropsType<typeof getServerSideProps>
           />
           
           <CrisisNotice />
-          {moodData && moodData.length === 0 && (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 mt-4">
-              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('mood.dailyCheckin', 'Jak se dnes cítíte?')}</h3>
-              <MoodCheck todayScore={undefined} refetch={refetchMoodData} />
-            </div>
-          )}
         </div>
       </div>
 
