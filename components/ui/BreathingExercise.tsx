@@ -12,21 +12,19 @@ const BreathingExercise = () => {
         className="relative w-48 h-48 flex items-center justify-center cursor-pointer"
         onClick={() => setIsActive(!isActive)}
       >
-        {/* Central clickable circle */}
-        <div className="absolute w-24 h-24 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full flex items-center justify-center z-10">
+        {/* Central breathing circle */}
+        <div 
+          className={`absolute w-24 h-24 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full flex items-center justify-center z-10 transition-transform duration-2000 ease-in-out ${isActive ? 'animate-breathing' : ''}`}
+        >
            <p className="text-white text-center text-sm font-medium">
              {isActive ? t('breathingExercise.breathe', 'Dýchejte') : t('breathingExercise.start', 'Start')}
            </p>
         </div>
 
-        {/* Pulsing circles */}
-        {isActive && (
-          <>
-            <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '0s' }}></div>
-            <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '1s' }}></div>
-            <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '2s' }}></div>
-          </>
-        )}
+        {/* Pulsing circles for visual effect */}
+        <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '0s' }}></div>
+        <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '2s' }}></div>
       </div>
     </div>
   );
