@@ -1,70 +1,32 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'next-i18next';
 
 const BreathingExercise = () => {
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation('common');
 
-  const circleVariants = {
-    initial: { scale: 1 },
-    breathing: {
-      scale: [1, 1.5, 1],
-      transition: {
-        duration: 8,
-        ease: "easeInOut",
-        repeat: Infinity,
-      },
-    },
-  };
-
-  const textVariants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-  };
-
   return (
-    <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg overflow-hidden">
+    <div className="flex flex-col items-center justify-center p-4 rounded-xl bg-white dark:bg-gray-800 shadow-lg">
       <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-4">{t('breathingExercise.title', 'Dechové cvičení')}</h3>
       <div 
         className="relative w-48 h-48 flex items-center justify-center cursor-pointer"
         onClick={() => setIsActive(!isActive)}
       >
-        <motion.div
-          className="absolute w-full h-full bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full drop-shadow-glow"
-          variants={circleVariants}
-          initial="initial"
-          animate={isActive ? 'breathing' : 'initial'}
-          style={{
-            filter: isActive ? 'drop-shadow(0 0 1.5rem rgba(79, 70, 229, 0.5))' : 'drop-shadow(0 0 0.5rem rgba(79, 70, 229, 0.3))',
-          }}
-        />
-        <AnimatePresence>
-          {isActive ? (
-            <motion.p
-              key="breathingText"
-              className="text-white text-center text-sm z-10 font-medium"
-              variants={textVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-            >
-              {t('breathingExercise.breathe', 'Dýchejte s kruhem')}
-            </motion.p>
-          ) : (
-            <motion.p
-              key="startText"
-              className="text-white text-center text-sm z-10 font-medium"
-              variants={textVariants}
-              initial="initial"
-              animate="animate"
-              exit="exit"
-            >
-              {t('breathingExercise.start', 'Start')}
-            </motion.p>
-          )}
-        </AnimatePresence>
+        {/* Central clickable circle */}
+        <div className="absolute w-24 h-24 bg-gradient-to-br from-blue-400 to-indigo-600 rounded-full flex items-center justify-center z-10">
+           <p className="text-white text-center text-sm font-medium">
+             {isActive ? t('breathingExercise.breathe', 'Dýchejte') : t('breathingExercise.start', 'Start')}
+           </p>
+        </div>
+
+        {/* Pulsing circles */}
+        {isActive && (
+          <>
+            <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '0s' }}></div>
+            <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '2s' }}></div>
+          </>
+        )}
       </div>
     </div>
   );
