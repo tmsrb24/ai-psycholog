@@ -82,9 +82,11 @@
 @keyframes breathing-animation {
   0%, 100% {
     transform: scale(1);
+    background-image: linear-gradient(to bottom right, #60a5fa, #4f46e5); /* Standard blue gradient */
   }
   50% {
     transform: scale(1.5);
+    background-image: linear-gradient(to bottom right, #93c5fd, #818cf8); /* Lighter blue gradient for inhale */
   }
 }
 

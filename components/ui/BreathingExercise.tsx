@@ -22,9 +22,13 @@ const BreathingExercise = () => {
         </div>
 
         {/* Pulsing circles for visual effect */}
-        <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '0s' }}></div>
-        <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '2s' }}></div>
+        {isActive && (
+          <>
+            <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '0s' }}></div>
+            <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '1s' }}></div>
+            <div className="absolute inset-0 rounded-full border-2 border-blue-400/30 animate-pulse-fade" style={{ animationDelay: '2s' }}></div>
+          </>
+        )}
       </div>
     </div>
   );
